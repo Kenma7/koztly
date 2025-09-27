@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('kamar', function (Blueprint $table) {
             $table->id('id_kamar');
             $table->unsignedBigInteger('id_kos');
-             $table->string('nomor_kamar');
+            $table->string('nomor_kamar');
             $table->enum('status', ['tersedia', 'dibooking'])->default('tersedia');
             $table->timestamps();
-
             $table->foreign('id_kos')->references('id_kos')->on('kosan')->onDelete('cascade');
         });
     }
