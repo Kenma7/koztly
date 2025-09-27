@@ -7,10 +7,9 @@ Route::get('/', function () {
 });
 
 
-//Route ke admin
-Route::get('/admin', function () {
-    return ('hello'); // tampilkan dashboard
+//Route admin
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('kost', App\Http\Controllers\Admin\KostController::class);
+    Route::resource('kamar', App\Http\Controllers\Admin\KamarController::class);
+    Route::resource('booking', App\Http\Controllers\Admin\BookingController::class);
 });
-
-
-
