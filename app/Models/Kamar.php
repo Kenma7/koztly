@@ -21,7 +21,7 @@ class Kamar extends Model
     // Relasi ke Kost (satu kamar milik satu kos)
     public function kost()
     {
-        return $this->belongsTo(Kost::class, 'id_kos');
+        return $this->belongsTo(Kosan::class, 'id_kos');
     }
 
     // Relasi ke Booking (satu kamar bisa dibooking banyak kali)

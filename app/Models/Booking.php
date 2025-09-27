@@ -35,7 +35,7 @@ class Booking extends Model
     public function kost()
     {
         return $this->hasOneThrough(
-            Kost::class,   // Model tujuan
+            Kosan::class,   // Model tujuan
             Kamar::class,  // Model perantara
             'id_kamar',    // Foreign key di tabel kamar
             'id_kos',      // Foreign key di tabel kosan
