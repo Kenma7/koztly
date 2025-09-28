@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('booking_kos', function (Blueprint $table) {
             //
-             $table->integer('lama_sewa')->default(1)->after('harga');
+            $table->integer('lama_sewa')->default(1)->after('harga');
         });
     }
 
