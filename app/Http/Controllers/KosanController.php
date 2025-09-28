@@ -11,7 +11,7 @@ class KosanController extends Controller
     //Daftar Kosan
     public function index()
     {
-        $kosan = Kosan::where('status', 'aktif')->get();
+        $kosan = Kosan::where('status', 'aktif')->paginate(8);
         return view('kosan.index', compact('kosan'));
     }
 
@@ -28,6 +28,7 @@ class KosanController extends Controller
         $kos = Kosan::findOrFail($id);
         return view('kosan.booking', compact('kos'));
     }
+
 
     //Proses booking (test pake dummy)
     public function bookingSubmit(Request $request, $id)

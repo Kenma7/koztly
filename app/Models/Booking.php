@@ -1,10 +1,7 @@
 <?php
 
 namespace App\Models;
-<<<<<<< HEAD
 
-=======
->>>>>>> main
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
