@@ -6,8 +6,7 @@ use App\Http\Controllers\KosanController;
 
 Route::get('/', function () {
     return view('welcome');
-});
-
+})->name('home');
 
 //Route admin
 Route::prefix('admin')->name('admin.')->group(function () {

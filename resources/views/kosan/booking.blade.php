@@ -1,41 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Booking Kosan</title>
-</head>
-<body>
-    <h1>Booking Kosan: {{ $kos->nama_kos }}</h1>
+<!-- resources/views/kosan/booking.blade.php -->
+@extends('layouts.app')
 
-    @if(session('success'))
-        <p style="color: green">{{ session('success') }}</p>
-    @endif
+@section('title', 'Booking Kosan - KosanKu')
 
-    @if($errors->any())
-        <ul style="color: red;">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
-
-    <form action="{{ route('kosan.booking.submit', $kos->id_kos) }}" method="POST">
-        @csrf
-        <label>Nama:</label><br>
-        <input type="text" name="nama" value="{{ old('nama') }}" required><br><br>
-
-        <label>No HP:</label><br>
-        <input type="text" name="no_hp" value="{{ old('no_hp') }}" required><br><br>
-
-        <label>Tanggal Mulai:</label><br>
-        <input type="date" name="tanggal_mulai" value="{{ old('tanggal_mulai') }}" required><br><br>
-
-        <label>Lama Sewa (hari):</label><br>
-        <input type="number" name="lama_sewa" value="{{ old('lama_sewa') }}" min="1" required><br><br>
-
-        <button type="submit">Booking Sekarang</button>
-    </form>
-
-    <br>
-    <a href="{{ route('kosan.show', $kos->id_kos) }}">Kembali ke Detail Kosan</a>
-</body>
-</html>
+@section('content')
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold mb-6">Booking Kosan: {{ $kos->nama_kos }}</h1>
+        
+        <form method="POST" action="{{ route('kosan.booking.submit', $kos->id_kos) }}">
+            @csrf
+            
+            <!-- Pilih Kamar -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Pilih Kamar</label>
+                <select name="id_kamar" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="">-- Pilih Kamar --</option>
+                    @foreach($kos->kamar as $kamar)
+                        <option value="{{ $kamar->id_kamar }}">
+                            Kamar {{ $kamar->nomor_kamar }} - Rp {{ number_format($kos->harga, 0, ',', '.') }}/bulan
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <!-- Data Pemesan -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap</label>
+                <input type="text" name="nama" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">No. HP/WhatsApp</label>
+                <input type="text" name="no_hp" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Tanggal Masuk</label>
+                    <input type="date" name="tanggal_masuk" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Lama Sewa (bulan)</label>
+                    <input type="number" name="lama_sewa" min="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold">
+                Booking Sekarang
+            </button>
+        </form>
+    </div>
+</div>
+@endsection

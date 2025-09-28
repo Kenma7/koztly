@@ -15,9 +15,15 @@ class Booking extends Model
 
       protected $fillable = [
         'id_user',
+        'id_kos',
         'id_kamar',
+        'nama',
+        'no_hp',
+        'harga',
         'tanggal_booking',
-        'status',
+        'lama_sewa',
+        'status_pembayaran',
+        'status_sewa',
     ];
 
     // Relasi ke User (1 booking milik 1 user)

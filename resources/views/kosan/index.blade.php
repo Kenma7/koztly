@@ -1,6 +1,26 @@
 @extends('layouts.app')
 
+@section('title', 'Cari Kosan - Koztly')
+
+@section('with-sidebar')
+
+@endsection
+
 @section('content')
+<!-- CSS -->
+ <style>
+/* Hide the default showing info */
+.hidden.sm\\:flex-1.sm\\:flex.sm\\:items-center.sm\\:justify-between > div:first-child {
+    display: none !important;
+}
+
+/* Atau lebih spesifik */
+.text-sm.text-gray-700.leading-5 {
+    display: none !important;
+}
+</style>
+
+<!-- MAIN CONTENT -->
 <div class="container mx-auto px-4 py-8">
 
     <!-- Search Bar -->
@@ -8,7 +28,7 @@
         <div class="flex items-center w-full md:w-2/3 bg-white rounded-full shadow px-4 py-2">
             <input type="text" placeholder="Cari nama properti / alamat / daerah / kota"
                 class="flex-grow px-2 py-1 text-sm focus:outline-none">
-            <button class="flex items-center bg-yellow-400 text-black font-semibold px-4 py-2 rounded-full hover:bg-yellow-500">
+            <button class="flex items-center bg-blue-300 text-black font-semibold px-4 py-2 rounded-full hover:bg-[#B6C9F0]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -32,8 +52,8 @@
                 <div class="p-4">
                     <!-- Kategori -->
                     <span class="text-xs font-bold uppercase 
-                        @if(strtoupper($kos->kategori) == 'PRIA') text-blue-600 
-                        @elseif(strtoupper($kos->kategori) == 'WANITA') text-pink-600 
+                        @if(strtoupper($kos->kategori) == 'PRIA') text-[#B6C9F0]
+                        @elseif(strtoupper($kos->kategori) == 'WANITA') text-[#E93B81] 
                         @else text-orange-600 @endif">
                         {{ $kos->kategori }}
                     </span>
@@ -72,10 +92,60 @@
     </div>
 
 
-    <!-- Pagination -->
-    <div class="mt-8 flex justify-center">
-        {{ $kosan->links() }}
+  <!-- pagination -->
+<div class="mt-8 flex justify-center">
+    <div class="flex items-center space-x-1">
+        <!-- Previous Button -->
+        @if ($kosan->onFirstPage())
+            <span class="px-3 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed">
+                &laquo;
+            </span>
+        @else
+            <a href="{{ $kosan->previousPageUrl() }}" class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                &laquo;
+            </a>
+        @endif
+
+        <!-- Page Numbers -->
+        @foreach ($kosan->getUrlRange(1, $kosan->lastPage()) as $page => $url)
+            @if ($page == $kosan->currentPage())
+                <span class="px-3 py-2 border border-blue-600 bg-blue-600 text-white rounded-lg">
+                    {{ $page }}
+                </span>
+            @else
+                <a href="{{ $url }}" class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                    {{ $page }}
+                </a>
+            @endif
+        @endforeach
+
+        <!-- Next Button -->
+        @if ($kosan->hasMorePages())
+            <a href="{{ $kosan->nextPageUrl() }}" class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                &raquo;
+            </a>
+        @else
+            <span class="px-3 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed">
+                &raquo;
+            </span>
+        @endif
     </div>
+</div>
+
+    <!-- Tambah di atas atau bawah pagination -->
+<div class="flex justify-between items-center mt-8">
+    <div class="text-sm text-gray-600">
+        Show 
+        <select class="border rounded px-2 py-1 mx-1" onchange="window.location.href = this.value">
+            <option value="{{ request()->fullUrlWithQuery(['per_page' => 8]) }}" {{ request('per_page', 8) == 8 ? 'selected' : '' }}>8</option>
+            <option value="{{ request()->fullUrlWithQuery(['per_page' => 16]) }}" {{ request('per_page') == 16 ? 'selected' : '' }}>16</option>
+            <option value="{{ request()->fullUrlWithQuery(['per_page' => 24]) }}" {{ request('per_page') == 24 ? 'selected' : '' }}>24</option>
+        </select>
+        items per page
+    </div>
+    
+   
+</div>
 
     <!-- Banner -->
     <div class="mt-12 bg-indigo-100 p-8 rounded-lg text-center shadow">
@@ -84,7 +154,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-600">
+    <div class="bg-gray-900 mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-300">
         <div>
             <h3 class="font-semibold mb-2">Tentang Kami</h3>
             <ul class="space-y-1 text-sm">
