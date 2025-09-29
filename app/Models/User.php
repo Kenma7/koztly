@@ -19,12 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'username', // tambahkan ini
-        'gender',   // tambahkan jika mau simpan
-        'phone_number',
+        'username',      // username tambahan
+        'gender',        // gender tambahan
+        'phone_number',  // phone number tambahan
         'email',
         'password',
-        'role'
+        'role'           // role tambahan
     ];
 
     /**
@@ -48,5 +48,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Relasi ke Booking
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'id_user', 'id');
     }
 }

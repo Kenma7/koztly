@@ -22,3 +22,23 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+#ignore database dump & sqlite
+*.sql
+*.sqlite
+
+#ignore file editor
+*.bak 
+*.tmp
+*.swp
+
+#ignore OS dump
+Thumbs.db
+ehthumb.db
+Desktop.ini
+.Trash-*
+.nfs*
+
+#test/coverage
+/coverage
+.phpunit.result.cache
