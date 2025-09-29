@@ -7,47 +7,37 @@ use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
-    //
     use HasFactory;
 
-    protected $table = 'booking';
+    protected $table = 'booking_kos';
     protected $primaryKey = 'id_booking';
 
-      protected $fillable = [
-        'id_user',
-        'id_kos',
-        'id_kamar',
-        'nama',
-        'no_hp',
-        'harga',
-        'tanggal_booking',
+    protected $fillable = [
+        'id_user', 
+        'id_kos', 
+        'id_kamar', 
+        'harga', 
         'lama_sewa',
-        'status_pembayaran',
-        'status_sewa',
+        'status_pembayaran', 
+        'bukti_tf', 
+        'status_sewa'
     ];
 
-    // Relasi ke User (1 booking milik 1 user)
+    // Relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
-    // Relasi ke Kamar (1 booking milik 1 kamar)
+    // Relasi ke Kamar
     public function kamar()
     {
         return $this->belongsTo(Kamar::class, 'id_kamar');
     }
 
-    // Relasi opsional ke Kost (lewat Kamar)
+    // Relasi ke Kosan (langsung, bukan lewat kamar)
     public function kost()
     {
-        return $this->hasOneThrough(
-            Kosan::class,   // Model tujuan
-            Kamar::class,  // Model perantara
-            'id_kamar',    // Foreign key di tabel kamar
-            'id_kos',      // Foreign key di tabel kosan
-            'id_kamar',    // Foreign key di tabel booking
-            'id_kos'       // Local key di tabel kamar
-        );
+        return $this->belongsTo(Kosan::class, 'id_kos', 'id_kos');
     }
 }
