@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kamar extends Model
 {
-    //
-     use HasFactory;
+    
+    use HasFactory;
 
     protected $table = 'kamar';
     protected $primaryKey = 'id_kamar';
@@ -16,6 +16,7 @@ class Kamar extends Model
         'id_kos',
         'nomor_kamar',
         'status',
+        
     ];
 
     // Relasi ke Kost (satu kamar milik satu kos)
@@ -24,10 +25,8 @@ class Kamar extends Model
     }
 
 
-    // Relasi ke Booking (satu kamar dibooking 1 kali)
-   public function booking_kos(){
-    return $this->hasOne(Booking::class, 'id_kamar'); 
-}
-
-
+    // Relasi ke Booking (satu kamar dibooking berkali-kali)
+    public function booking_kos(){
+        return $this->hasMany(Booking::class, 'id_kamar'); 
+    }
 }

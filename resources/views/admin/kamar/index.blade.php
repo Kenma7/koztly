@@ -174,7 +174,7 @@
                 @endif
             </td>
             <td class="px-4 py-2 text-sm">
-                @if ($k->status == 'tersedia')
+                @if ($k->status_terbaru == 'tersedia')
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                         Tersedia
                     </span>
@@ -185,16 +185,23 @@
                 @endif
             </td>
             <td class="px-4 py-2 text-center flex justify-center gap-2">
-                <!-- Detail -->
-                <button onclick="showDetail({
-                    nomor_kamar: '{{ $k->nomor_kamar }}',
-                    kosan: { nama_kos: '{{ $k->kosan->nama_kos ?? '' }}' },
-                    status: '{{ $k->status }}',
-                    penyewa: '{{ $k->booking_kos->user->nama ?? '-' }}'
-                })" 
-                class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 flex items-center gap-1">
-                    <i class="fas fa-info-circle"></i> Detail
-                </button>
+
+           @php
+           $bookingData = $k->booking_kos->map(function($b) {
+            return [
+            'username' => $b->user->username ?? '-',
+            'status_sewa' => $b->status_sewa,
+            'created_at' => $b->created_at // tambahkan created_at supaya bisa di-sort
+            ];
+        });
+        @endphp
+        
+        
+        <button class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 flex items-center gap-1 btn-detail"
+        data-nomor="{{ $k->nomor_kamar }}"
+        data-kosan="{{ $k->kosan->nama_kos ?? '-' }}"
+        data-status="{{ $k->status }}"
+        data-booking='@json($bookingData)'><i class="fas fa-info-circle"></i> Detail</button>
 
                 <!-- Tombol Edit -->
                  <button data-id="{{ $k->id_kamar }}"
@@ -281,12 +288,14 @@
             @csrf
             @method('PUT')
 
+            <!-- Nomor Kamar -->
             <div class="mb-4">
                 <label for="edit_nomor_kamar" class="block text-gray-700 text-sm font-medium mb-1">Nomor Kamar</label>
                 <input type="text" name="nomor_kamar" id="edit_nomor_kamar" required
                        class="w-full border border-gray-300 rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-pink-400">
             </div>
 
+            <!-- Kosan -->
             <div class="mb-4">
                 <label for="edit_id_kos" class="block text-gray-700 text-sm font-medium mb-1">Kosan</label>
                 <select name="id_kos" id="edit_id_kos" required
@@ -298,6 +307,7 @@
                 </select>
             </div>
 
+            <!-- Status -->
             <div class="mb-4">
                 <label for="edit_status" class="block text-gray-700 text-sm font-medium mb-1">Status</label>
                 <select name="status" id="edit_status" required
@@ -305,6 +315,21 @@
                     <option value="tersedia">Tersedia</option>
                     <option value="dibooking">Dibooking</option>
                 </select>
+            </div>
+
+            <!-- Checkbox Alasan (hanya muncul jika status = tersedia) -->
+            <div id="alasanContainer" class="mb-4 hidden">
+                <label class="block text-gray-700 text-sm font-medium mb-1">Alasan Perubahan Status</label>
+                <div class="flex flex-col gap-2">
+                    <label class="inline-flex items-center gap-2">
+                        <input type="checkbox" name="alasan[]" value="booking selesai" class="form-checkbox">
+                        Booking selesai
+                    </label>
+                    <label class="inline-flex items-center gap-2">
+                        <input type="checkbox" name="alasan[]" value="booking dibatalkan" class="form-checkbox">
+                        Booking dibatalkan
+                    </label>
+                </div>
             </div>
 
             <div class="flex justify-end gap-2">
@@ -327,7 +352,10 @@
             <p><strong>Nomor Kamar:</strong> <span id="detail_nomor"></span></p>
             <p><strong>Kosan:</strong> <span id="detail_kosan"></span></p>
             <p><strong>Status:</strong> <span id="detail_status"></span></p>
-            <p><strong>Penyewa:</strong> <span id="detail_penyewa"></span></p>
+            <p><strong>Riwayat Penyewa:</strong></p>
+            <ul id="detail_riwayat" class="list-disc list-inside text-sm text-gray-700">
+                <!-- Riwayat akan diisi lewat JS -->
+            </ul>
         </div>
 
         <button onclick="closeDetailModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
@@ -345,36 +373,74 @@
     // Modal Edit
     const modalEdit = document.getElementById('modalEdit');
     const formEdit = document.getElementById('formEdit');
-   function showEdit(btn){
-    const id = btn.dataset.id;
-    const nomor = btn.dataset.nomor;
-    const kos = btn.dataset.kos;
-    const status = btn.dataset.status;
+    const editStatus = document.getElementById('edit_status');
+    const alasanContainer = document.getElementById('alasanContainer');
 
-    document.getElementById('edit_nomor_kamar').value = nomor;
-    document.getElementById('edit_id_kos').value = kos;
-    document.getElementById('edit_status').value = status;
+    // Tampilkan checkbox alasan hanya jika status "tersedia"
+    editStatus.addEventListener('change', function() {
+        if(this.value === 'tersedia') {
+            alasanContainer.classList.remove('hidden');
+        } else {
+            alasanContainer.classList.add('hidden');
+            // reset checkbox
+            alasanContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        }
+    });
 
-    // Set action form ke URL update kamar yang dipilih
-    formEdit.action = '/admin/kamar/' + id;
+    function showEdit(btn){
+        const id = btn.dataset.id;
+        const nomor = btn.dataset.nomor;
+        const kos = btn.dataset.kos;
+        const status = btn.dataset.status;
 
-    modalEdit.classList.remove('hidden');
-}
+        document.getElementById('edit_nomor_kamar').value = nomor;
+        document.getElementById('edit_id_kos').value = kos;
+        document.getElementById('edit_status').value = status;
+
+        // Tampilkan atau sembunyikan alasan sesuai status
+        if(status === 'tersedia') {
+            alasanContainer.classList.remove('hidden');
+        } else {
+            alasanContainer.classList.add('hidden');
+        }
+
+        formEdit.action = '/admin/kamar/' + id;
+        modalEdit.classList.remove('hidden');
+    }
 
     function closeEditModal(){ modalEdit.classList.add('hidden'); }
 
-    // Modal Detail
-    const modalDetail = document.getElementById('modalDetail');
-    function showDetail(kamar){
-        document.getElementById('detail_nomor').innerText = kamar.nomor_kamar;
-        document.getElementById('detail_kosan').innerText = kamar.kosan.nama_kos;
-        document.getElementById('detail_status').innerText = kamar.status;
-        document.getElementById('detail_penyewa').innerText = kamar.penyewa ?? '-';
-        modalDetail.classList.remove('hidden');
-    }
-    function closeDetailModal(){ modalDetail.classList.add('hidden'); }
+   // Detail kamar
+   document.querySelectorAll('.btn-detail').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const nomor = btn.dataset.nomor;
+        const kosan = btn.dataset.kosan;
+        const status = btn.dataset.status;
+        const booking = JSON.parse(btn.dataset.booking);
 
-     // Notifikasi otomatis hilang
+        document.getElementById('detail_nomor').innerText = nomor;
+        document.getElementById('detail_kosan').innerText = kosan;
+        document.getElementById('detail_status').innerText = status;
+
+        const container = document.getElementById('detail_riwayat'); // perbaikan
+        container.innerHTML = ''; // reset
+
+         // Urutkan booking dari terbaru ke lama
+         booking.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+         booking.forEach(b => {
+            const li = document.createElement('li');
+            li.innerText = `${b.username} (${b.status_sewa})`;
+            container.appendChild(li);
+        });
+        modalDetail.classList.remove('hidden');
+    });
+});
+    const modalDetail = document.getElementById('modalDetail');
+        
+    function closeDetailModal() {
+        modalDetail.classList.add('hidden');
+    }
+
         // Auto hide alert
         setTimeout(() => {
             const success = document.getElementById('alert-success');
