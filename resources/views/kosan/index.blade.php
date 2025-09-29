@@ -7,24 +7,12 @@
 @endsection
 
 @section('content')
-<!-- CSS -->
- <style>
-/* Hide the default showing info */
-.hidden.sm\\:flex-1.sm\\:flex.sm\\:items-center.sm\\:justify-between > div:first-child {
-    display: none !important;
-}
-
-/* Atau lebih spesifik */
-.text-sm.text-gray-700.leading-5 {
-    display: none !important;
-}
-</style>
 
 <!-- MAIN CONTENT -->
 <div class="container mx-auto px-4 py-8">
 
     <!-- Search Bar -->
-    <div class="flex justify-center mb-8">
+    <div class="flex justify-center mb-6">
         <div class="flex items-center w-full md:w-2/3 bg-white rounded-full shadow px-4 py-2">
             <input type="text" placeholder="Cari nama properti / alamat / daerah / kota"
                 class="flex-grow px-2 py-1 text-sm focus:outline-none">
@@ -40,9 +28,10 @@
     </div>
 
     <!-- Grid Kosan -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         @foreach ($kosan as $kos)
-            <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
+        <a href="{{ route('kosan.show', $kos->id_kos ) }}"
+            class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
                 <!-- Gambar -->
                 <!--<img src="{{ asset('storage/'.$kos->gambar_kos) }}" alt="{{ $kos->nama_kos }}"
                      class="w-full h-40 object-cover"> -->
@@ -87,13 +76,13 @@
                         <i class="fas fa-tv"></i>
                     </div>
                 </div>
-            </div>
+            </a>
         @endforeach
     </div>
 
 
   <!-- pagination -->
-<div class="mt-8 flex justify-center">
+<div class="mt-6 flex justify-center">
     <div class="flex items-center space-x-1">
         <!-- Previous Button -->
         @if ($kosan->onFirstPage())
@@ -133,12 +122,12 @@
 </div>
 
     <!-- Tambah di atas atau bawah pagination -->
-<div class="flex justify-between items-center mt-8">
+<div class="flex justify-between items-center mt-4">
     <div class="text-sm text-gray-600">
         Show 
         <select class="border rounded px-2 py-1 mx-1" onchange="window.location.href = this.value">
-            <option value="{{ request()->fullUrlWithQuery(['per_page' => 8]) }}" {{ request('per_page', 8) == 8 ? 'selected' : '' }}>8</option>
-            <option value="{{ request()->fullUrlWithQuery(['per_page' => 16]) }}" {{ request('per_page') == 16 ? 'selected' : '' }}>16</option>
+            <option value="{{ request()->fullUrlWithQuery(['per_page' => 9]) }}" {{ request('per_page', 9) == 9 ? 'selected' : '' }}>9</option>
+            <option value="{{ request()->fullUrlWithQuery(['per_page' => 15]) }}" {{ request('per_page') == 15 ? 'selected' : '' }}>15</option>
             <option value="{{ request()->fullUrlWithQuery(['per_page' => 24]) }}" {{ request('per_page') == 24 ? 'selected' : '' }}>24</option>
         </select>
         items per page
@@ -150,28 +139,10 @@
     <!-- Banner -->
     <div class="mt-12 bg-indigo-100 p-8 rounded-lg text-center shadow">
         <h2 class="text-2xl font-bold text-indigo-700 mb-2">Promo Spesial Bulan Ini!</h2>
-        <p class="text-gray-700">Dapatkan diskon khusus untuk kosan pilihan tertentu</p>
+        <p class="text-gray-700">Soon! ntar gua bikin</p>
     </div>
 
-    <!-- Footer -->
-    <div class="bg-gray-900 mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-300">
-        <div>
-            <h3 class="font-semibold mb-2">Tentang Kami</h3>
-            <ul class="space-y-1 text-sm">
-                <li><a href="#">Tentang Aplikasi</a></li>
-                <li><a href="#">Kontak</a></li>
-                <li><a href="#">FAQ</a></li>
-            </ul>
-        </div>
-        <div>
-            <h3 class="font-semibold mb-2">Layanan</h3>
-            <ul class="space-y-1 text-sm">
-                <li><a href="#">Daftar Kos</a></li>
-                <li><a href="#">Booking Kos</a></li>
-                <li><a href="#">Promo</a></li>
-            </ul>
-        </div>
-    </div>
+
 
 </div>
 @endsection

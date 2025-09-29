@@ -12,7 +12,7 @@ class KosanController extends Controller
     //Daftar Kosan
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page',8);
+        $perPage = $request->get('per_page',9);
         $kosan = Kosan::where('status', 'aktif')->paginate( $perPage );
         return view('kosan.index', compact('kosan'));
     }

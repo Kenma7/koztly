@@ -14,6 +14,8 @@ class Kosan extends Model
 
     protected $table = 'kosan';
     protected $primaryKey = 'id_kos';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'nama_kos',
         'lokasi_kos',
