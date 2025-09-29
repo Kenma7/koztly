@@ -26,7 +26,7 @@
         <div class="h-full px-3 py-4 overflow-y-auto relative">
             <!-- Logo Section -->
             <div class="flex items-center justify-center mb-8 mt-4">
-                <img src="{{ asset('public/images/logo-koztly.png') }}" alt="KOZTLY Logo" class="h-12">
+                <img src="/images/logo-koztly.png" alt="Logo" class="w-32 h-auto">
             </div>
             
             <!-- Menu -->
@@ -76,7 +76,7 @@
     <!-- Main Content -->
     <div id="main-content" class="ml-64 transition-all duration-300">
         <!-- Navbar Biru -->
-        <nav class="bg-blue-100 shadow-md fixed top-0 z-20 right-0 left-64 transition-all duration-300" id="navbar">
+        <nav class="bg-blue-300 shadow-md fixed top-0 z-20 right-0 left-64 transition-all duration-300" id="navbar">
             <div class="px-6 py-4">
                 <div class="flex items-center justify-between">
                     <!-- Hamburger Button -->
@@ -104,7 +104,7 @@
             @endif
 
             <!-- Header Dashboard -->
-            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-500 mb-6">
+            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-300 mb-6">
                 <h1 class="text-2xl font-bold mb-2">Selamat Datang di Dashboard</h1>
                 <p class="text-sm text-gray-600">
                     Kelola semua data <span class="font-bold text-[#E93B81]">Koztly</span> dengan mudah dalam satu tempat.
@@ -127,7 +127,7 @@
                 </div>
 
                 <!-- Total Booking -->
-                <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-500">
+                <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-300">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Total Booking</p>
