@@ -80,7 +80,7 @@
             <div class="px-6 py-4">
                 <div class="flex items-center justify-between">
                     <!-- Hamburger Button -->
-                    <button id="toggleSidebar" class="text-white hover:bg-blue-700 p-2 rounded-lg transition">
+                    <button id="toggleSidebar" class="text-white hover:bg-pink-500 p-2 rounded-lg transition">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     <h2 class="text-xl font-semibold text-white">Dashboard Admin</h2>
