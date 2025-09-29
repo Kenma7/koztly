@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('username')->unique()->after('name');
             $table->enum('gender', ['wanita', 'pria'])->after('username');
             $table->string('phone_number')->nullable()->after('email');
-            $table->enum('role', ['admin', 'user'])->default('user')->after('password');
+            $table->enum('role', ['root', 'admin', 'user'])->default('user')->after('password');
         });
     }
 

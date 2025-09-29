@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\BookingController;
 use App\Models\Booking;
@@ -7,6 +8,7 @@ use App\Models\Booking;
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 // Route admin
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -20,6 +22,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('kosan', App\Http\Controllers\Admin\KostController::class);
     Route::resource('kamar', App\Http\Controllers\Admin\KamarController::class);
     Route::resource('booking', App\Http\Controllers\Admin\BookingController::class);
+
+Route::get('/koztly', function () {
+    return view('loading.loading');
+});
+
+Route::get('/landing', function () {
+    return view('landing.index');
+
+});
 });
 
 /*
@@ -27,6 +38,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 | Booking Routes
 |--------------------------------------------------------------------------
 */
+
 
 Route::prefix('user')->name('user.')->group(function () {
     
@@ -47,3 +59,16 @@ Route::prefix('user')->name('user.')->group(function () {
     // Logout
     Route::post('/logout', [App\Http\Controllers\Admin\DashboardController::class, 'logout'])->name('logout');
 });
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth','rolecheck:admin'])->name('dashboard');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
