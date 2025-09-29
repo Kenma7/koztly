@@ -72,7 +72,7 @@
         {{ session('error') }}
     </div>
     @endif
-    
+
     <!-- judul halaman -->
     <div class="bg-white rounded-xl shadow p-6 border-l-4 border-pink-500 m-8">
         <h1 class="text-2xl font-bold mb-3">Kelola Kosan</h1>
@@ -108,12 +108,12 @@
         </h1>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
             <div>
-                <label class="block text-xs font-medium text-gray-700 mb-1">Cari Kosan</label>
+                <label class="block text-xs font-medium text-gray-700 mb-4">Cari Kosan</label>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Nama kosan atau lokasi..."
                        class="w-full border border-gray-300 rounded-2xl px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500">
             </div>
             <div>
-                <label class="block text-xs font-medium text-gray-700 mb-1">Status Kosan</label>
+                <label class="block text-xs font-medium text-gray-700 mb-4">Status Kosan</label>
                 <select name="status" class="w-full border border-gray-300 rounded-2xl px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500">
                     <option value="">Semua Status</option>
                     <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
@@ -121,7 +121,7 @@
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-medium text-gray-700 mb-1">Kategori Kosan</label>
+                <label class="block text-xs font-medium text-gray-700 mb-4">Kategori Kosan</label>
                 <select name="kategori" class="w-full border border-gray-300 rounded-2xl px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500">
                     <option value="">Semua Kategori</option>
                     <option value="wanita" {{ request('kategori') == 'wanita' ? 'selected' : '' }}>Wanita</option>
@@ -178,7 +178,7 @@
                             <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">Non Aktif</span>
                         @endif
                     </td>
-                    <td class="px-4 py-2 flex justify-center gap-2">
+                    <td class="px-4 py-2 flex text-center gap-2">
                         <!-- Tombol Detail -->
                         <a href="#" class="text-blue-500 hover:text-blue-700" onclick="openDetailModal({{ $k->id_kos }})">
                             <i class="fas fa-eye"></i>

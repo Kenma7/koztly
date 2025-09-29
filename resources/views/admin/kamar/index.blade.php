@@ -82,7 +82,7 @@
     @endif
 </div>
 <!-- Judul -->
-<div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-400 m-8 flex flex-col md:flex-row md:justify-between md:items-center">
+<div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-400 m-8 flex flex-col md:flex-row md:justify-between md:items-center ">
     <div>
         <h1 class="text-2xl font-bold mb-3 text-pink-500">Kelola Kamar</h1>
         <p class="text-sm text-gray-600">
@@ -138,13 +138,24 @@
     <div class="flex-1 min-w-[250px] flex flex-col gap-2">
         <h2 class="text-sm font-semibold text-gray-700 mb-2">Top 3 Kosan dengan jumlah kamar terbanyak</h2>
 
-        @foreach ($topKosan as $kosan)
-        <div class="bg-gray-50 rounded-xl p-2 flex justify-between items-center border-l-4 border-pink-400 shadow-sm">
+         @foreach ($topKosan as $kosan)
+    @php
+        $borderColor = 'border-gray-400';
+        $iconColor = 'text-gray-500';
+        if($kosan->kategori === 'pria'){
+            $borderColor = 'border-blue-400';
+            $iconColor = 'text-blue-500';
+        } elseif($kosan->kategori === 'wanita'){
+            $borderColor = 'border-pink-400';
+            $iconColor = 'text-pink-500';
+        }
+    @endphp
+        <div class="bg-gray-50 rounded-xl p-2 flex justify-between items-center border-l-4 {{$borderColor}} shadow-sm">
             <div class="flex flex-col justify-center">
                 <p class="font-medium text-gray-700 text-sm">{{ $kosan->nama_kos }}</p>
                 <p class="text-xs text-gray-500 text-center">{{ $kosan->jumlah_kamar }} kamar</p>
             </div>
-            <i class="fas fa-bed text-pink-500 text-xl"></i>
+            <i class="fas fa-bed {{ $iconColor }} text-xl"></i>
         </div>
         @endforeach
     </div>
