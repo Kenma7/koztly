@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,8 +13,14 @@ class Booking extends Model
     protected $primaryKey = 'id_booking';
 
     protected $fillable = [
-        'id_user', 'id_kos', 'id_kamar', 'harga', 'lama_sewa',
-        'status_pembayaran', 'bukti_tf', 'status_sewa'
+        'id_user', 
+        'id_kos', 
+        'id_kamar', 
+        'harga', 
+        'lama_sewa',
+        'status_pembayaran', 
+        'bukti_tf', 
+        'status_sewa'
     ];
 
     // Relasi ke User
