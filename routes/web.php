@@ -23,14 +23,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('kamar', App\Http\Controllers\Admin\KamarController::class);
     Route::resource('booking', App\Http\Controllers\Admin\BookingController::class);
 
+
+});
+
 Route::get('/koztly', function () {
     return view('loading.loading');
 });
 
 Route::get('/landing', function () {
     return view('landing.index');
-
-});
 });
 
 /*

@@ -325,6 +325,13 @@
                 grid-template-columns: 1fr;
             }
         }
+
+            .size-logo {
+                width: 140px;   /* atur lebar sesuai kebutuhan */
+                height: auto;  /* tinggi menyesuaikan */
+                 margin-left: -10px;
+                 margin-bottom: 20px;
+            }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -335,7 +342,7 @@
             
             <!-- Logo -->
             <div class="flex items-center justify-center mb-8 mt-4">
-                <h1 class="text-2xl font-bold text-[#E93B81]">KOZTLY</h1>
+                <img src="/images/logo1.png" alt="Logo" class="size-logo">
             </div>
             
             <!-- Menu (flex-1 biar ngisi ruang kosong) -->
@@ -447,7 +454,7 @@
                     Rejected
                 </h3>
                 <div class="flex items-center justify-between">
-                    <span class="text-sm text-gray-600">Ditolak</span>
+                    <span class="text-sm text-gray-600">Dibatalkan</span>
                     <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
                         {{ $rejectedBookings ?? 0 }}
                     </span>
