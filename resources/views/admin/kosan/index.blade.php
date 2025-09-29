@@ -98,26 +98,26 @@
             </a>
         </div>
         <table class="min-w-full table-auto">
-            <thead class="bg-gray-100 rounded-t-2xl">
+            <thead class="bg-pink-200 rounded-t-2xl">
                 <tr>
                     <th class="px-4 py-2 text-left text-gray-600">ID</th>
                     <th class="px-4 py-2 text-left text-gray-600">Nama Kosan</th>
                     <th class="px-4 py-2 text-left text-gray-600">Lokasi</th>
                     <th class="px-4 py-2 text-left text-gray-600">Kategori</th>
-                    <th class="px-4 py-2 text-left text-gray-600">Jumlah Kamar</th>
+                    <th class="px-4 py-2 text-center text-gray-600">Jumlah Kamar</th>
                     <th class="px-4 py-2 text-left text-gray-600">Harga</th>
                     <th class="px-4 py-2 text-left text-gray-600">Status</th>
                     <th class="px-4 py-2 text-left text-gray-600">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="text-center">
+            <tbody class="text-justify">
                 @forelse ($kosan as $k)
                 <tr>
                     <td class="px-4 py-2">{{ $k->id_kos }}</td>
                     <td class="px-4 py-2">{{ $k->nama_kos }}</td>
                     <td class="px-4 py-2">{{ $k->lokasi_kos }}</td>
                     <td class="px-4 py-2 capitalize">{{ $k->kategori }}</td>
-                    <td class="px-4 py-2">{{ $k->jumlah_kamar }}</td>
+                    <td class="px-4 py-2 text-center">{{ $k->jumlah_kamar }}</td>
                     <td class="px-4 py-2">Rp {{ number_format($k->harga, 0, ',', '.') }}</td>
                     <td class="px-4 py-2">
                         @if($k->status == 'aktif')
