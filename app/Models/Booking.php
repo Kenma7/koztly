@@ -8,23 +8,18 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $table = 'booking_kos'; // Nama tabel yang benar
+    protected $table = 'booking_kos';
     protected $primaryKey = 'id_booking';
 
     protected $fillable = [
-        'id_user',
-        'id_kos',
-        'id_kamar',
-        'harga',
-        'status_pembayaran',
-        'bukti_tf',
-        'status_sewa',
+        'id_user', 'id_kos', 'id_kamar', 'harga', 'lama_sewa',
+        'status_pembayaran', 'bukti_tf', 'status_sewa'
     ];
 
     // Relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
     // Relasi ke Kamar
