@@ -1,9 +1,10 @@
 <?php
 
-use illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KosanController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,8 +31,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 //Route kosan
 Route::get('/kosan', [KosanController::class, 'index'])->name('kosan.index');
 Route::get('/kosan/{id}', [KosanController::class, 'show'])->name('kosan.show');
-Route::get('/kosan/{id}/booking', [KosanController::class, 'bookingForm'])->name('kosan.booking.form');
-Route::post('/kosan/{id}/booking', [KosanController::class, 'bookingSubmit'])->name('kosan.booking.submit');
+//Route::get('/kosan/{id}/booking', [KosanController::class, 'bookingForm'])->name('kosan.booking.form');
+//Route::post('/kosan/{id}/booking', [KosanController::class, 'bookingSubmit'])->name('kosan.booking.submit');
+
+//Route booking
+Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
+Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::post('/kosan/{id}/booking/confirm', [BookingController::class, 'confirm'])->name('booking.confirm');
+Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
+Route::get('/bookings', [BookingController::class, 'index'])->name('booking.index');
 
 //sidebar toggle
 // routes/web.php
