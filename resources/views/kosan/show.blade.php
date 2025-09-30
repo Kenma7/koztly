@@ -6,29 +6,33 @@
     <div class="lg:col-span-2">
         <!-- Foto utama -->
         <div class="rounded-lg overflow-hidden shadow">
-            <img src="{{ $kos->gambar ?? 'https://via.placeholder.com/800x400' }}" 
-                 alt="{{ $kos->nama }}" 
-                 class="w-full h-72 object-cover">
+            <img src="{{ $kos->gambar_kos 
+                  ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
+                        ? $kos->gambar_kos 
+                        : asset('storage/'.$kos->gambar_kos)) 
+                  : 'https://via.placeholder.com/800x400' }}" 
+                     alt="{{ $kos->nama_kos }}" 
+                     class="w-full h-72 object-cover">
         </div>
 
         <!-- Nama Kos -->
-        <h1 class="mt-6 text-2xl font-bold text-gray-900">{{ $kos->nama }}</h1>
-        <p class="text-gray-600 mt-1">{{ $kos->alamat }}</p>
+        <h1 class="mt-6 text-2xl font-bold text-gray-900">{{ $kos->nama_kos }}</h1>
+        <p class="text-gray-600 mt-1">{{ $kos->lokasi_kos }}</p>
 
         <!-- Info tambahan -->
         <div class="flex items-center space-x-4 mt-3 text-sm text-gray-500">
             <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">
-                {{ $kos->tipe ?? 'Kos Campur' }}
+                {{ $kos->kategori }}
             </span>
-            <span><i class="fas fa-map-marker-alt mr-1"></i> {{ $kos->lokasi ?? 'Jakarta' }}</span>
-            <span class="text-red-500 font-medium">Tersisa {{ $kos->sisa_kamar ?? 1 }} kamar</span>
+            <span><i class="fas fa-map-marker-alt mr-1"></i> {{ $kos->lokasi_kos }}</span>
+            <span class="text-red-500 font-medium">Tersisa {{ $kos->jumlah_kamar }} kamar</span>
         </div>
 
         <!-- Deskripsi -->
         <div class="mt-6">
-            <h2 class="text-lg font-semibold text-gray-800">Deskripsi</h2>
+            <h2 class="text-lg font-semibold text-gray-800">Fasilitas</h2>
             <p class="mt-2 text-gray-600 leading-relaxed">
-                {{ $kos->deskripsi ?? 'Belum ada deskripsi untuk kos ini.' }}
+                {{ $kos->fasilitas ?? 'Belum ada deskripsi untuk kos ini.' }}
             </p>
         </div>
     </div>
@@ -40,18 +44,20 @@
                 Rp{{ number_format($kos->harga ?? 0, 0, ',', '.') }}/bulan
             </h3>
 
-            <!-- Form Booking -->
-            <form action="{{ route('kosan.booking.submit', $kos->id_kos) }}" method="POST" class="mt-6 space-y-4">
+            <!-- Form Booking - FIX ACTION ROUTE -->
+            <form action="{{ route('booking.create', $kos->id_kos) }}" method="GET" class="mt-6 space-y-4">
                 @csrf
+                
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tanggal mulai</label>
                     <input type="date" name="tanggal_mulai" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="{{ date('Y-m-d') }}" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Durasi sewa</label>
-                    <select name="lama_sewa" 
+                    <select name="lama_sewa" id="lama_sewa"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="1">1 Bulan</option>
                         <option value="3">3 Bulan</option>
@@ -60,12 +66,50 @@
                     </select>
                 </div>
 
+                <!-- Rincian Biaya (Auto Update) -->
+                <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">Rincian Biaya</h4>
+                    <div class="flex justify-between text-sm">
+                        <span>Harga per bulan:</span>
+                        <span>Rp {{ number_format($kos->harga, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm mt-1">
+                        <span>Lama sewa:</span>
+                        <span id="display_lama_sewa">1 bulan</span>
+                    </div>
+                    <div class="border-t mt-2 pt-2">
+                        <div class="flex justify-between font-semibold">
+                            <span>Total:</span>
+                            <span id="total_biaya">Rp {{ number_format($kos->harga, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit" 
-                        class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow hover:bg-green-700 transition">
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-semibold mt-4">
                     Ajukan Sewa
                 </button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+// Update rincian biaya secara real-time
+document.getElementById('lama_sewa').addEventListener('change', function() {
+    const hargaPerBulan = {{ $kos->harga }};
+    const lamaSewa = this.value;
+    const totalBiaya = hargaPerBulan * lamaSewa;
+    
+    // Update display
+    document.getElementById('display_lama_sewa').textContent = lamaSewa + ' bulan';
+    document.getElementById('total_biaya').textContent = 'Rp ' + totalBiaya.toLocaleString('id-ID');
+});
+
+// Juga update saat page load pertama kali
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('lama_sewa');
+    select.dispatchEvent(new Event('change'));
+});
+</script>
 @endsection

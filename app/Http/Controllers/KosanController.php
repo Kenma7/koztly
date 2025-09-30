@@ -55,13 +55,11 @@ class KosanController extends Controller
             'id_user' =>'auth()->id() ?? 1',
             'id_kos'=> $id,
             'id_kamar' => $request->id_kamar,
-            'nama'=> $request->nama,
-            'no_hp'=> $request->no_hp,
             'harga'=> $kosan->harga * $request->lama_sewa,
             'tanggal_masuk'=> $request->tanggal_masuk,
             'lama_sewa'=> $request->lama_sewa,
-            'status_pembayaran' => 'pending',
-            'status_sewa' => 'pending'
+            'status_pembayaran' => 'belum dibayar',
+            'status_sewa' => 'menunggu'
         ]);
 
         //Update status kamar jadi dipesan

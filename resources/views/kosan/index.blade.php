@@ -35,8 +35,13 @@
                 <!-- Gambar -->
                 <!--<img src="{{ asset('storage/'.$kos->gambar_kos) }}" alt="{{ $kos->nama_kos }}"
                      class="w-full h-40 object-cover"> -->
-                <img src="https://picsum.photos/300/200?random=1"
-                    class="w-full h-40 object-cover">
+                 <img src="{{ $kos->gambar_kos 
+              ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
+                    ? $kos->gambar_kos 
+                    : asset('storage/'.$kos->gambar_kos)) 
+              : 'https://via.placeholder.com/800x400' }}"  
+                    class="w-full h-48 object-cover" 
+                    alt="{{ $kos->nama_kos }}">
 
                 <div class="p-4">
                     <!-- Kategori -->
@@ -78,6 +83,7 @@
                 </div>
             </a>
         @endforeach
+        {{ $kosan->links() }}
     </div>
 
 
