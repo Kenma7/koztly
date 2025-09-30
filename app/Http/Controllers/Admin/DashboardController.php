@@ -91,6 +91,6 @@ class DashboardController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect('/')->with('success', 'Berhasil logout dari sistem admin');
+        return redirect('/login')->with('success', 'Berhasil logout dari sistem admin');
     }
 }

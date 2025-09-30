@@ -1,6 +1,6 @@
 <?php
 
-use illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KosanController;
