@@ -31,7 +31,26 @@
             opacity: 0;
             display: none;
         }
-    </style>
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        .animate-fade-out {
+            animation: fadeOut 2.0s forwards;
+        }
+        
+</style>
 </head>
 <body class="bg-gray-50">
     
@@ -110,6 +129,15 @@
 
         <!-- Page Content -->
         <main class="mt-20 p-6">
+
+        <!-- Alert Gender -->
+         <div id="gender-alert" class="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 hidden z-50">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="gender-alert-text">Error: Gender user tidak sesuai kategori kosan!</span>
+            <button onclick="closeGenderAlert()" class="ml-auto text-red-700 hover:text-red-900">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
         <!-- Notifikasi -->
         <div class="mb-6">
@@ -251,7 +279,15 @@
             @forelse($bookings as $booking)
                 <tr>
                     <td class="px-4 py-2">{{ $loop->iteration + ($bookings->currentPage()-1)*$bookings->perPage() }}</td>
-                    <td class="px-4 py-2">{{ optional($booking->user)->username ?? '-' }}</td>
+                    <td class="px-4 py-2 flex items-center gap-1">
+                        @if(optional($booking->user)->gender == 'wanita')
+                        <i class="fas fa-female text-pink-500"></i>
+                        @elseif(optional($booking->user)->gender == 'pria')
+                        <i class="fas fa-male text-blue-500"></i>
+                        @endif
+                        {{ optional($booking->user)->username ?? '-' }}
+                    </td>
+
                     <td class="px-4 py-2">{{ optional($booking->kost)->nama_kos ?? '-' }}</td>
                     <td class="px-4 py-2">{{ optional($booking->kamar)->nomor_kamar ?? '-' }}</td>
                     <td class="px-4 py-2 capitalize">{{ $booking->status_sewa }}</td>
@@ -259,18 +295,30 @@
                     <td class="px-4 py-2 flex gap-2">
                       <td class="px-4 py-2 flex gap-2">
     @if($booking->status_sewa == 'menunggu')
-        <form action="{{ route('admin.booking.update', $booking->id_booking) }}" method="POST">
-            @csrf
-            @method('PATCH')
-            <input type="hidden" name="status_sewa" value="aktif">
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm">Terima</button>
-        </form>
-        <form action="{{ route('admin.booking.update', $booking->id_booking) }}" method="POST">
-            @csrf
-            @method('PATCH')
-            <input type="hidden" name="status_sewa" value="batal">
-            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Batal</button>
-        </form>
+        <form action="{{ route('admin.booking.update', $booking->id_booking) }}" method="POST" class="accept-form">
+    @csrf
+    @method('PATCH')
+    <input type="hidden" name="status_sewa" value="aktif">
+    <button 
+        type="submit" 
+        class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm accept-btn"
+        data-user-gender="{{ optional($booking->user)->gender }}"
+        data-kamar-kategori="{{ optional($booking->kost)->kategori }}"
+    >
+        Terima
+    </button>
+</form>
+
+        <form action="{{ route('admin.booking.update', $booking->id_booking) }}" method="POST" class="cancel-form">
+    @csrf
+    @method('PATCH')
+    <input type="hidden" name="status_sewa" value="batal">
+    <button type="submit" class="cancel-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">
+    Batal
+</button>
+
+</form>
+
     @elseif($booking->status_sewa == 'aktif')
         <form action="{{ route('admin.booking.update', $booking->id_booking) }}" method="POST">
             @csrf
@@ -316,11 +364,29 @@
         <h2 class="text-xl font-bold mb-4">Detail Booking #{{ $booking->id_booking }}</h2>
         <ul class="text-gray-700 space-y-2">
           <li><strong>Username:</strong> {{ optional($booking->user)->username ?? '-' }}</li>
-          <li><strong>Kos:</strong> {{ optional($booking->kost)->nama_kos ?? '-' }}</li>
+          <li class="flex items-center gap-2">
+            <strong>Kos:</strong> {{ optional($booking->kost)->nama_kos ?? '-' }}
+            @if(optional($booking->kost)->kategori)
+        @php
+            $kategori = optional($booking->kost)->kategori;
+            $icon = $kategori == 'pria' ? 'fa-male text-blue-500' 
+                    : ($kategori == 'wanita' ? 'fa-female text-pink-500' 
+                    : 'fa-users text-gray-500');
+            $label = $kategori == 'pria' ? 'Pria' 
+                    : ($kategori == 'wanita' ? 'Wanita' : 'Bebas');
+        @endphp
+        <span class="ml-2 px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 flex items-center gap-1">
+            <i class="fas {{ $icon }}"></i> {{ $label }}
+        </span>
+    @endif
+</li>
+
           <li><strong>Kamar:</strong> {{ optional($booking->kamar)->nomor_kamar ?? '-' }} </li>
           <li><strong>Harga:</strong> {{ $booking->harga ?? '-' }}</li>
           <li><strong>Lama Sewa:</strong> {{ $booking->lama_sewa }}</li>
           <li><strong>Status Pembayaran:</strong> {{ $booking->status_pembayaran }}</li>
+          <li><strong>Gender:</strong> {{ optional($booking->user)->gender ?? '-' }}</li>
+          <li><strong>Jumlah Penghuni:</strong> {{ $booking->jumlah_penghuni ?? '-' }}</li><li><strong>Catatan:</strong> {{ $booking->catatan ?? '-' }}</li>
           <li><strong>Bukti Transfer:</strong> 
                 @if($booking->bukti_tf)
                     <a href="{{ asset('storage/bukti_tf/' . $booking->bukti_tf) }}" target="_blank" class="text-blue-500 underline">
@@ -353,6 +419,18 @@
                 </div>
             @endif
         @endforeach
+
+     <!-- Modal Konfirmasi Batal -->
+<div id="cancel-alert" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+  <div class="bg-white rounded-xl shadow-lg w-11/12 md:w-1/3 p-6 text-center">
+    <h2 class="text-lg font-bold text-gray-800 mb-4">Konfirmasi Batal</h2>
+    <p class="text-gray-600 mb-6">Apakah Anda yakin ingin membatalkan booking ini?</p>
+    <div class="flex justify-center gap-4">
+      <button id="confirmCancelBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Yakin</button>
+      <button onclick="closeCancelAlert()" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">Batal</button>
+    </div>
+  </div>
+</div>
 
     </main>
 
@@ -394,6 +472,66 @@
                 logoMini.classList.remove('hidden');
             }
         });
+
+        // Fungsi open/close alert
+function showGenderAlert(message) {
+    const alertBox = document.getElementById('gender-alert');
+    const alertText = document.getElementById('gender-alert-text');
+    alertText.textContent = message;
+    alertBox.classList.remove('hidden');
+    alertBox.classList.add('animate-fade-in');
+
+    // Auto hide setelah 3 detik
+    setTimeout(() => {
+        alertBox.classList.add('animate-fade-out');
+        setTimeout(() => alertBox.classList.add('hidden'), 1000);
+    }, 4000);
+}
+
+function closeGenderAlert() {
+    const alertBox = document.getElementById('gender-alert');
+    alertBox.classList.add('hidden');
+}
+
+// Validasi gender sebelum submit
+document.querySelectorAll('.accept-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        const btn = this.querySelector('.accept-btn');
+        const userGender = btn.getAttribute('data-user-gender');
+        const kamarKategori = btn.getAttribute('data-kamar-kategori');
+
+        if (kamarKategori && userGender) {
+            if ((kamarKategori === 'pria' && userGender !== 'pria') ||
+                (kamarKategori === 'wanita' && userGender !== 'wanita')) {
+                e.preventDefault(); // Stop form submit
+                showGenderAlert('Error: Gender user tidak sesuai kategori kosan!');
+            }
+        }
+    });
+});
+
+let currentForm = null;
+
+  function showCancelAlert(form) {
+    currentForm = form;
+    document.getElementById('cancel-alert').classList.remove('hidden');
+  }
+
+  function closeCancelAlert() {
+    document.getElementById('cancel-alert').classList.add('hidden');
+  }
+
+  document.getElementById('confirmCancelBtn').addEventListener('click', () => {
+    if(currentForm) currentForm.submit();
+  });
+
+  // Ganti tombol batal default di form
+  document.querySelectorAll('.cancel-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      showCancelAlert(this.closest('form'));
+    });
+  });
 
         // Auto hide alert
         setTimeout(() => {
