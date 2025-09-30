@@ -1,0 +1,531 @@
+/* resources/css/sidebar.css */
+
+/* Smooth transitions untuk sidebar */
+#sidebar, .main-content {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar {
+    background-color: white;
+}
+
+/* Smooth transitions untuk text sidebar */
+.sidebar-text, .sidebar-badge, .sidebar-user-info, .sidebar-footer {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    transform: translateX(0);
+    overflow: hidden;
+}
+
+/* Saat minimize, fade out elemen dengan smooth */
+#sidebar.minimized .sidebar-text,
+#sidebar.minimized .sidebar-badge {
+    opacity: 0;
+    transform: translateX(-8px);
+    max-width: 0;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s ease-in-out 0.1s,
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+
+/* User info dan footer saat minimize */
+#sidebar.minimized .sidebar-user-info,
+#sidebar.minimized .sidebar-footer {
+    opacity: 0;
+    transform: translateY(10px);
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Saat expand, fade in elemen dengan smooth */
+#sidebar:not(.minimized) .sidebar-text,
+#sidebar:not(.minimized) .sidebar-badge {
+    opacity: 1;
+    transform: translateX(0);
+    max-width: 200px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease-in-out 0.2s,
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+/* User info dan footer saat expand */
+#sidebar:not(.minimized) .sidebar-user-info,
+#sidebar:not(.minimized) .sidebar-footer {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+
+/* Staggered animation untuk menu items */
+#sidebar.minimized nav a:nth-child(1) .sidebar-text { transition-delay: 0s; }
+#sidebar.minimized nav a:nth-child(2) .sidebar-text { transition-delay: 0.02s; }
+#sidebar.minimized nav a:nth-child(3) .sidebar-text { transition-delay: 0.04s; }
+#sidebar.minimized nav a:nth-child(4) .sidebar-text { transition-delay: 0.06s; }
+#sidebar.minimized nav a:nth-child(5) .sidebar-text { transition-delay: 0.08s; }
+#sidebar.minimized nav a:nth-child(6) .sidebar-text { transition-delay: 0.1s; }
+#sidebar.minimized nav a:nth-child(7) .sidebar-text { transition-delay: 0.12s; }
+
+#sidebar:not(.minimized) nav a:nth-child(1) .sidebar-text { transition-delay: 0.1s; }
+#sidebar:not(.minimized) nav a:nth-child(2) .sidebar-text { transition-delay: 0.12s; }
+#sidebar:not(.minimized) nav a:nth-child(3) .sidebar-text { transition-delay: 0.14s; }
+#sidebar:not(.minimized) nav a:nth-child(4) .sidebar-text { transition-delay: 0.16s; }
+#sidebar:not(.minimized) nav a:nth-child(5) .sidebar-text { transition-delay: 0.18s; }
+#sidebar:not(.minimized) nav a:nth-child(6) .sidebar-text { transition-delay: 0.2s; }
+#sidebar:not(.minimized) nav a:nth-child(7) .sidebar-text { transition-delay: 0.22s; }
+
+/* Badge animations */
+#sidebar.minimized .sidebar-badge {
+    opacity: 0;
+    transform: scale(0.8) translateX(-8px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#sidebar:not(.minimized) .sidebar-badge {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+}
+
+/* Smooth hover effects */
+.menu-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left center;
+}
+
+.menu-item:hover {
+    transform: translateX(4px);
+}
+
+/* Icon transition */
+.menu-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 20px;
+    flex-shrink: 0;
+}
+
+.menu-item:hover .menu-icon {
+    transform: scale(1.1);
+}
+
+/* Smooth badge animation */
+.sidebar-badge {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.menu-item:hover .sidebar-badge {
+    transform: scale(1.05);
+}
+
+/* User avatar animation */
+.sidebar-user-info .rounded-full {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.sidebar-user-info:hover .rounded-full {
+    transform: scale(1.05);
+}
+
+/* Pastikan text tidak wrap dan smooth */
+.sidebar-text {
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* Container untuk menu items */
+.menu-item {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background hover effect */
+.menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s ease-in-out;
+}
+
+.menu-item:hover::before {
+    left: 100%;
+}
+
+/* Active state dengan animation */
+.menu-item.active {
+    background: linear-gradient(135deg, rgb(59 130 246 / 0.1) 0%, rgb(168 85 247 / 0.1) 100%);
+    border-left-color: rgb(59 130 246);
+    color: rgb(59 130 246);
+    animation: activePulse 2s ease-in-out infinite;
+}
+
+@keyframes activePulse {
+    0%, 100% { 
+        background: linear-gradient(135deg, rgb(59 130 246 / 0.1) 0%, rgb(168 85 247 / 0.1) 100%);
+    }
+    50% { 
+        background: linear-gradient(135deg, rgb(59 130 246 / 0.15) 0%, rgb(168 85 247 / 0.15) 100%);
+    }
+}
+
+.menu-item.active .menu-icon {
+    color: rgb(59 130 246);
+    transform: scale(1.1);
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1.1); }
+    50% { transform: scale(1.15); }
+}
+
+/* Smooth width transition untuk sidebar */
+#sidebar {
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main content transition */
+.main-content {
+    transition: margin-left 0.4s ease-in-out, padding 0.4s ease-in-out;
+}
+
+/* Pastikan tidak ada hidden class yang mengganggu */
+.sidebar-text, .sidebar-badge, .sidebar-user-info, .sidebar-footer {
+    /* Hapus properti yang bisa bikin kaku */
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Smooth transition untuk grid/content di main content */
+.main-content > div {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth transition untuk semua elemen di dalam main content */
+.main-content * {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Specific smooth transition untuk grid items */
+.grid, .grid-cols-1, .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.grid > div {
+    transition: all 0.3s ease-in-out;
+    will-change: transform, opacity; 
+}
+
+.grid > div.bg-white:hover {
+    transform: scale(1.02);
+}
+
+
+
+/* Smooth resizing untuk cards */
+.card, .bg-white, .rounded-lg, .shadow {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prevent layout shift dengan transform */
+.main-content .px-6 {
+    transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-content .card {
+    transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+.main-content.minimized .card {
+    transform: translateX(-5px); /* atau kecilin scale dikit */
+}
+
+
+/* Smooth animation untuk text di main content */
+.main-content h1, 
+.main-content h2, 
+.main-content h3, 
+.main-content p, 
+.main-content span {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Specific untuk grid gap transition */
+.gap-4, .gap-6, .gap-8 {
+    transition: gap 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Flexbox transition */
+.flex, .flex-col, .flex-row {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth width transition untuk responsive grid */
+.main-content .w-full, 
+.main-content .w-1\/2, 
+.main-content .w-1\/3, 
+.main-content .w-1\/4 {
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animation untuk content saat sidebar toggle */
+.sidebar-transitioning .main-content > div {
+    opacity: 1; /* tetap solid */
+    transform: scale(0.98);
+}
+
+/* Smooth transition untuk images */
+.main-content img {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Button transitions */
+.main-content .btn, 
+.main-content button, 
+.main-content a {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Table transitions */
+.main-content table {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Form elements transitions */
+.main-content input, 
+.main-content select, 
+.main-content textarea {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Custom animation untuk content resize */
+@keyframes contentResize {
+    0% {
+        opacity: 0.95;
+        transform: scale(0.99);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.main-content.resizing {
+    animation: contentResize 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth transition untuk masonry/grid layout */
+.main-content .grid > * {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prevent janky scrollbar */
+.main-content {
+    scrollbar-gutter: stable;
+}
+
+/* Smooth transition untuk overflow content */
+.main-content .overflow-hidden,
+.main-content .overflow-auto,
+.main-content .overflow-scroll {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth transitions untuk container index */
+.container * {
+    transition: all 0.3s ease-in-out !important;
+}
+
+/* Hide pagination info dengan smooth */
+.hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between > div:first-child,
+.text-sm.text-gray-700.leading-5 {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Smooth loading untuk images */
+img {
+    transition: opacity 0.3s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* Hover effects untuk cards kosan */
+.bg-white.rounded-xl {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Grid animation */
+.grid {
+    transition: gap 0.4s ease-in-out, grid-template-columns 0.4s ease-in-out;
+}
+
+/* Search bar animation */
+.search-bar-container {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-bar-container:hover {
+    transform: translateY(-2px);
+}
+
+/* Card kosan animations */
+.kosan-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.kosan-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+.kosan-image {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kosan-card:hover .kosan-image {
+    transform: scale(1.1);
+}
+
+/* Kategori badge animations */
+.kategori-badge {
+    transition: all 0.3s ease-in-out;
+}
+
+.kosan-card:hover .kategori-badge {
+    transform: scale(1.05);
+}
+
+/* Price and room info */
+.price-room-container {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Facility icons */
+.facility-icons i {
+    transition: all 0.3s ease-in-out;
+}
+
+.facility-icons i:hover {
+    transform: scale(1.2);
+}
+
+/* Pagination animations */
+.pagination-container {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pagination-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pagination-item:hover {
+    transform: scale(1.05);
+}
+
+.pagination-active {
+    transform: scale(1.05);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1.05); }
+    50% { transform: scale(1.08); }
+}
+
+/* Items per page select */
+.items-per-page {
+    transition: all 0.3s ease-in-out;
+}
+
+.items-per-page select {
+    transition: all 0.3s ease-in-out;
+}
+
+.items-per-page select:focus {
+    transform: scale(1.02);
+}
+
+/* Promo banner animations */
+.promo-banner {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+}
+
+.promo-banner:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%);
+}
+
+/* Footer animations */
+.footer-section {
+    transition: all 0.4s ease-in-out;
+}
+
+.footer-link {
+    transition: all 0.3s ease-in-out;
+}
+
+.footer-link:hover {
+    transform: translateX(8px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .kosan-card:hover {
+        transform: translateY(-4px) scale(1.01);
+    }
+    
+    .search-bar-container {
+        margin: 0 1rem;
+    }
+}
+
+/* Loading animation untuk grid */
+.grid-loading {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation untuk grid items */
+.grid > * {
+    animation: stagger 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes stagger {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Delay untuk grid items */
+.grid > *:nth-child(1) { animation-delay: 0.1s; }
+.grid > *:nth-child(2) { animation-delay: 0.2s; }
+.grid > *:nth-child(3) { animation-delay: 0.3s; }
+.grid > *:nth-child(4) { animation-delay: 0.4s; }
+.grid > *:nth-child(5) { animation-delay: 0.5s; }
+.grid > *:nth-child(6) { animation-delay: 0.6s; }

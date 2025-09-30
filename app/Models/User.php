@@ -17,14 +17,14 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'username',      // username tambahan
-        'gender',        // gender tambahan
-        'phone_number',  // phone number tambahan
-        'email',
-        'password',
-        'role'           // role tambahan
+   protected $fillable = [
+    'name',
+    'username', 
+    'gender',   
+    'email',
+    'phone_number', 
+    'password',
+    'role'   
     ];
 
     /**
@@ -50,9 +50,7 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Relasi ke Booking
-     */
+    // Relasi ke Booking
     public function bookings()
     {
         return $this->hasMany(Booking::class, 'id_user', 'id');
