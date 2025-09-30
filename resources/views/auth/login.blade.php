@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <!-- Sweet Alert 2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.min.css">
     <title>Login</title>
     <style>
         * {
@@ -65,6 +68,7 @@
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            min-height: 620px;
         }
 
         /* background blur */
@@ -73,7 +77,7 @@
             inset: 0;
             background: url('images/gambar.jpg') center/cover no-repeat;
             filter: blur(15px);
-            transform: scale(1.1); /* biar blur gak kepotong */
+            transform: scale(1.1);
             z-index: 1;
         }
 
@@ -150,15 +154,6 @@
             margin-bottom: 60px;
         }
 
-        /* .session-status {
-            margin-bottom: 16px;
-            padding: 12px;
-            background: rgba(34, 197, 94, 0.1);
-            border-radius: 8px;
-            color: #E93B81;
-            font-size: 14px;
-        } */
-
         .form-group {
             margin-bottom: 18px;
         }
@@ -189,7 +184,6 @@
             transition: all 0.3s;
         }
 
-        /* Hilangkan icon default password dari browser */
         .form-input::-ms-reveal,
         .form-input::-ms-clear {
             display: none;
@@ -326,6 +320,28 @@
             height: 28px;
             stroke: #E93B81;
         }
+
+        /* Custom Sweet Alert Styling */
+        .swal2-popup {
+            font-family: 'Mulish', sans-serif !important;
+            border-radius: 16px !important;
+        }
+
+        .swal2-title {
+            font-weight: 700 !important;
+            color: #643843 !important;
+        }
+
+        .swal2-confirm {
+            background: #E93B81 !important;
+            border-radius: 8px !important;
+            padding: 10px 24px !important;
+            font-weight: 600 !important;
+        }
+
+        .swal2-confirm:focus {
+            box-shadow: 0 0 0 3px rgba(233, 59, 129, 0.3) !important;
+        }
     </style>
 </head>
 <body>
@@ -359,32 +375,25 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                     </svg>
-                    Login
+                    Masuk
                 </button>
                 <a href="{{ route('register') }}" class="tab tab-inactive">
                     <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                     </svg>
-                    Register
+                    Daftar
                 </a>
             </div>
 
             <!-- Welcome Text -->
             <div class="welcome-section">
-                <h1 class="welcome-title">Welcome Back!</h1>
-                <p class="welcome-subtitle">Sign in to your account</p>
+                <h1 class="welcome-title">Halo, Selamat Datang!</h1>
+                <p class="welcome-subtitle">Masuk Ke Akun Anda</p>
             </div>
 
-            <!-- Session Status -->
-            @if (session('status'))
-                <div class="session-status">
-                    {{ session('status') }}
-                </div>
-            @endif
-
             <!-- Login Form -->
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}" id="loginForm">
                 @csrf
 
                 <!-- Email Address -->
@@ -403,12 +412,9 @@
                                required
                                autofocus
                                autocomplete="username"
-                               placeholder="Email Address"
+                               placeholder="Alamat Email"
                                class="form-input"/>
                     </div>
-                    @error('email')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <!-- Password -->
@@ -425,7 +431,7 @@
                                name="password"
                                required
                                autocomplete="current-password"
-                               placeholder="Password"
+                               placeholder="Kata Sandi"
                                class="form-input"/>
                         <button type="button"
                                 onclick="togglePassword()"
@@ -438,9 +444,6 @@
                             </svg>
                         </button>
                     </div>
-                    @error('password')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <!-- Remember Me & Forgot Password -->
@@ -450,25 +453,24 @@
                                type="checkbox"
                                name="remember"
                                class="remember-checkbox"/>
-                        Remember me
+                        Ingat Saya
                     </label>
 
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="forgot-link">
-                            Forgot password?
+                            Lupa Kata Sandi?
                         </a>
                     @endif
                 </div>
 
                 <!-- Sign In Button -->
                 <button type="submit" class="submit-btn">
-                    Sign in
+                    Masuk
                 </button>
             </form>
         </div>
     </div>
 </div>
-
 
     <script>
         function togglePassword() {
@@ -483,6 +485,37 @@
                 eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
             }
         }
+
+        // Tampilkan Sweet Alert jika ada error dari Laravel
+        @if ($errors->any())
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Gagal',
+                    text: 'Email atau kata sandi yang Anda masukkan salah. Silakan coba lagi.',
+                    confirmButtonText: 'Coba Lagi',
+                    confirmButtonColor: '#E93B81'
+                });
+            });
+        @endif
+
+        // Validasi form sebelum submit
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Validasi input kosong
+            if (!email || !password) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Tidak Lengkap',
+                    text: 'Mohon isi email dan kata sandi dengan lengkap.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#E93B81'
+                });
+            }
+        });
     </script>
 </body>
 </html>

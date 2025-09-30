@@ -65,6 +65,7 @@
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            min-height: 620px;
         }
 
         /* background blur */
@@ -344,21 +345,21 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                         </svg>
-                        Login
+                        Masuk
                     </a>
                     <button class="tab tab-active">
                         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                         </svg>
-                        Register
+                        Daftar
                     </button>
                 </div>
 
                 <!-- Welcome Text -->
                 <div class="welcome-section">
-                    <h1 class="welcome-title">Create Account</h1>
-                    <p class="welcome-subtitle">Sign up to get started</p>
+                    <h1 class="welcome-title">Buat Akun</h1>
+                    <p class="welcome-subtitle">Daftar Untuk Memulai</p>
                 </div>
 
                 <!-- Register Form -->
@@ -380,7 +381,7 @@
                                    value="{{ old('name') }}"
                                    required
                                    autofocus
-                                   placeholder="Full Name"
+                                   placeholder="Nama Lengkap"
                                    class="form-input"/>
                         </div>
                         @error('name')
@@ -402,7 +403,7 @@
                                name="username"
                                value="{{ old('username') }}"
                                required
-                               placeholder="Username"
+                               placeholder="Nama Pengguna"
                                class="form-input"/>
                     </div>
                     @error('username')
@@ -424,7 +425,7 @@
                                name="email"
                                value="{{ old('email') }}"
                                required
-                               placeholder="Email Address"
+                               placeholder="Alamat Email"
                                class="form-input"/>
                     </div>
                     @error('email')
@@ -447,7 +448,7 @@
                                     name="gender"
                                     required
                                     class="form-select">
-                                <option value="">Gender</option>
+                                <option value="">Jenis Kelamin</option>
                                 <option value="wanita" {{ old('gender') == 'wanita' ? 'selected' : '' }}>Wanita</option>
                                 <option value="pria" {{ old('gender') == 'pria' ? 'selected' : '' }}>Pria</option>
                             </select>
@@ -470,7 +471,7 @@
                                type="text"
                                name="phone_number"
                                value="{{ old('phone_number') }}"
-                               placeholder="Phone (Optional)"
+                               placeholder="No.Telp (Opsional)"
                                class="form-input"/>
                     </div>
                     @error('phone_number')
@@ -495,7 +496,7 @@
                                name="password"
                                required
                                autocomplete="new-password"
-                               placeholder="Password"
+                               placeholder="Kata Sandi"
                                class="form-input"/>
                         <button type="button"
                                 onclick="togglePassword('password', 'eye-icon-1')"
@@ -527,7 +528,7 @@
                                name="password_confirmation"
                                required
                                autocomplete="new-password"
-                               placeholder="Confirm Password"
+                               placeholder="Konfir Kata Sandi"
                                class="form-input"/>
                         <button type="button"
                                 onclick="togglePassword('password_confirmation', 'eye-icon-2')"
@@ -548,13 +549,13 @@
 
                     <!-- Register Button -->
                     <button type="submit" class="submit-btn">
-                        Create Account
+                        Daftar
                     </button>
 
                     <!-- Login Link -->
                     <div class="login-link-section">
                         <a href="{{ route('login') }}" class="login-link">
-                            Already registered? Sign in
+                            Sudah Memiliki Akun? Masuk
                         </a>
                     </div>
                 </form>
