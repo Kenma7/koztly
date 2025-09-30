@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700&family=Dancing+Script&display=swap');
+
+/* Navigation */
+        .navbar {
+            /* position: fixed;         */
+            top: 0;                /* mulai dari paling atas */
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            z-index: 10;
+            background: transparent;  /* transparan supaya hero kelihatan */
+            animation: slideDown 1s ease 0.2s forwards;
+        }
+
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            position: relative;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .nav-menu li:nth-child(1) { animation-delay: 0.4s; }
+        .nav-menu li:nth-child(2) { animation-delay: 0.5s; }
+        .nav-menu li:nth-child(3) { animation-delay: 0.6s; }
+        .nav-menu li:nth-child(4) { animation-delay: 0.7s; }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #E93B81;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 12px 40px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-menu a:hover {
+            background: #F5ABC9;
+            color: #ffffff;
+            border-color: #F5ABC9;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            margin-left: -100px;
+        }
+
+        .btn {
+            font-family: 'Mulish', sans-serif;
+            padding: 18px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 200;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-right: -3px;
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideInRight 0.6s ease forwards;
+        }
+
+        .btn:nth-child(1) { animation-delay: 0.8s; }
+        .btn:nth-child(2) { animation-delay: 0.9s; }
+
+        .btn-glass {
+            background: rgba(182, 201, 240, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid #E93B81;
+            color: #E93B81;
+        }
+
+        .btn-glass:hover {
+            background: #F5ABC9;
+            color: #ffffff;
+            border-color: #F5ABC9;
+        }
+
+        .logo {
+            width: 120px;
+            height: auto;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: zoomIn 0.8s ease 0.3s forwards;
+        }
