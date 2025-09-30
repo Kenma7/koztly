@@ -40,9 +40,12 @@
                     <a href="#" class="block px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-cog mr-2 text-xs"></i>Settings
                     </a>
-                    <a href="#" class="block px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-sign-out-alt mr-2 text-xs"></i>Sign Out
-                    </a>
+                   <form method="POST" action="{{ route('logout') }}" class="block">
+                    @csrf
+                        <button type="submit" class="w-full text-left px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-sign-out-alt mr-2 text-xs"></i>Sign Out
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
