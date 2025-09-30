@@ -310,6 +310,11 @@
             color: #643843 !important;
         }
 
+        .swal2-html-container {
+            font-size: 16px !important;
+            color: #643843 !important;
+        }
+
         .swal2-confirm {
             background: #E93B81 !important;
             border-radius: 8px !important;
@@ -557,10 +562,39 @@
             }
         }
 
-        // Validasi client-side untuk password match
+        // Validasi client-side untuk password
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('password_confirmation').value;
+
+            // Validasi panjang password
+            if (password.length < 8) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Password Terlalu Pendek',
+                    html: '<p style="font-size: 15px; color: #643843;">Password harus minimal <strong>8 karakter</strong>.</p>',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#E93B81'
+                });
+                return;
+            }
+
+            // Validasi kombinasi huruf dan angka
+            const hasLetter = /[a-zA-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+
+            if (!hasLetter || !hasNumber) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Password Tidak Valid',
+                    html: '<p style="font-size: 15px; color: #643843;">Password harus mengandung kombinasi <strong>huruf</strong> dan <strong>angka</strong>.</p><p style="font-size: 14px; color: #E93B81; margin-top: 8px;">Contoh: Password123</p>',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#E93B81'
+                });
+                return;
+            }
 
             // Validasi password match
             if (password !== confirmPassword) {
@@ -574,26 +608,13 @@
                 });
                 return;
             }
-
-            // Validasi panjang password
-            if (password.length < 8) {
-                e.preventDefault();
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Password Terlalu Pendek',
-                    text: 'Password harus minimal 8 karakter.',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#E93B81'
-                });
-                return;
-            }
         });
 
-        // Tampilkan Sweet Alert untuk error dari Laravel
+        // Tampilkan Sweet Alert untuk error dan success
         document.addEventListener('DOMContentLoaded', function() {
+            // Error handling
             @if ($errors->any())
                 @if ($errors->has('email'))
-                    // Error email sudah terdaftar
                     Swal.fire({
                         icon: 'error',
                         title: 'Email Sudah Terdaftar',
@@ -602,7 +623,6 @@
                         confirmButtonColor: '#E93B81'
                     });
                 @elseif ($errors->has('username'))
-                    // Error username sudah terdaftar
                     Swal.fire({
                         icon: 'error',
                         title: 'Username Sudah Digunakan',
@@ -611,7 +631,6 @@
                         confirmButtonColor: '#E93B81'
                     });
                 @elseif ($errors->has('password'))
-                    // Error validasi password
                     Swal.fire({
                         icon: 'error',
                         title: 'Password Tidak Valid',
@@ -620,7 +639,6 @@
                         confirmButtonColor: '#E93B81'
                     });
                 @else
-                    // Error umum
                     Swal.fire({
                         icon: 'error',
                         title: 'Terjadi Kesalahan',
@@ -631,13 +649,21 @@
                 @endif
             @endif
 
-            @if (session('status'))
+            // Success notification - REDIRECT KE LOGIN
+            @if (session('registered'))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Registrasi Berhasil',
-                    text: '{{ session('status') }}',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#E93B81'
+                    title: 'Registrasi Berhasil!',
+                    html: '<p style="margin-bottom: 10px; font-size: 15px; color: #643843;">Akun Anda berhasil didaftarkan.</p><p style="font-weight: 600; font-size: 15px; color: #E93B81;">Silakan masuk menggunakan akun yang sudah Anda daftarkan.</p>',
+                    confirmButtonText: 'Masuk',
+                    confirmButtonColor: '#E93B81',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect ke halaman login
+                        window.location.href = "{{ route('login') }}";
+                    }
                 });
             @endif
         });
