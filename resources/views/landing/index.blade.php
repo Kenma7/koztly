@@ -21,6 +21,171 @@
             box-sizing: border-box;
         }
 
+/* Navigation Styles */
+.navbar {
+    position: fixed;        
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    z-index: 1000;
+    background: transparent;
+    transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Navbar hidden saat scroll */
+.navbar-hidden {
+    transform: translateY(-100%);
+}
+
+/* Navbar transparan di hero section */
+.navbar-transparent {
+    background-color: transparent;
+}
+
+/* Navbar berbackground di luar hero section */
+.navbar-colored {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+    margin-left: 50px;
+}
+
+.nav-menu li {
+    position: relative;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.nav-menu li:nth-child(1) { animation-delay: 0.4s; }
+.nav-menu li:nth-child(2) { animation-delay: 0.5s; }
+.nav-menu li:nth-child(3) { animation-delay: 0.6s; }
+.nav-menu li:nth-child(4) { animation-delay: 0.7s; }
+
+.nav-menu a {
+    text-decoration: none;
+    color: #E93B81;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    padding: 12px 40px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.nav-menu a:hover {
+    background: #F5ABC9;
+    color: #ffffff;
+}
+
+/* Auth Buttons */
+.auth-buttons {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.btn {
+    font-family: 'Mulish', sans-serif;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 200;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    opacity: 0;
+    transform: translateX(30px);
+    animation: slideInRight 0.6s ease forwards;
+}
+
+.btn:nth-child(1) { animation-delay: 0.8s; }
+.btn:nth-child(2) { animation-delay: 0.9s; }
+
+.btn-glass {
+    background: rgba(182, 201, 240, 0.1);
+    backdrop-filter: blur(20px);
+    border: 2px solid #E93B81;
+    color: #E93B81;
+}
+
+.btn-glass:hover {
+    background: #F5ABC9;
+    color: #ffffff;
+    border-color: #F5ABC9;
+}
+
+/* Logo */
+.logo {
+    width: 120px;
+    height: auto;
+    margin-left: -12px;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: zoomIn 0.8s ease 0.3s forwards;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+}
+
+@keyframes ripple-animation {
+    to { transform: scale(4); opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar { padding: 15px 20px; }
+    .nav-menu { gap: 15px; }
+    .nav-menu a { padding: 10px 20px; font-size: 14px; }
+    .auth-buttons { gap: 10px; }
+    .btn { padding: 12px 18px; font-size: 14px; }
+    .logo { width: 100px; }
+}
+
+@media (max-width: 480px) {
+    .nav-menu { display: none; }
+    .auth-buttons { margin-left: auto; }
+}
+
+
         body {
             font-family: 'Mulish', sans-serif;
             background: white;
@@ -55,8 +220,8 @@
         /* Button positioned at bottom left */
         .bottom-left-button {
             position: absolute;
-            bottom: 15px;
-            left: 25px;
+            bottom: 18px;
+            left: 33px;
             z-index: 10;
             opacity: 0;
             transform: translateY(50px);
@@ -65,11 +230,11 @@
 
         .btn-outlined {
         display: inline-flex;
-        align-items: center;
+        align-items: center;    
         padding: 17px 227px;
         background: transparent;
         border: 2px solid #E93B81;
-        border-radius: 50px;
+        border-radius: 22px;
         color: #E93B81;
         text-decoration: none;
         font-family: 'Mulish', sans-serif;
@@ -83,7 +248,6 @@
         background: #F5ABC9;
         color: white;
         border-color: #F5ABC9;
-        transform: translateX(5px);
     }
 
         .content-right {
@@ -153,7 +317,7 @@
             position: absolute;
             bottom: -280px;
             right: -35px;
-            width: 158%;
+            width: 163%;
             z-index: 1;
             pointer-events: none;
             opacity: 0;
@@ -1905,6 +2069,25 @@
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+<nav class="navbar" id="navbar">
+    <div class="logo-container">
+        <img src="images/logo.png" alt="Koztly Logo" class="logo">
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="#beranda">Beranda</a></li>
+        <li><a href="#tentang">Tentang</a></li>
+        <li><a href="#testimoni">Testimoni</a></li>
+        <li><a href="#kontak">Kontak</a></li>
+    </ul>
+
+    <div class="auth-buttons">
+        <a href="/login" class="btn btn-glass">Masuk</a>
+        <a href="/register" class="btn btn-glass">Daftar</a>
+    </div>
+</nav>
+
         <!-- Section Beranda -->
         <section id="beranda" class="hero-container">
             <main class="main-content">
@@ -1926,8 +2109,8 @@
 
             <!-- Button di posisi bawah kiri -->
             <div class="bottom-left-button">
-                <a href="#" class="btn-outlined">
-                    <span>Lihat Kos</span>
+                <a href="#section-kos" class="btn-outlined">
+                    <span>Cari Kos</span>
                 </a>
             </div>
         </section>
@@ -2177,7 +2360,7 @@
                 <p>Kami siap membantu menjawab pertanyaan Anda seputar Koztly. Silakan hubungi kami melalui informasi di bawah ini.</p>
             </div>
             <div class="hero-image animate-on-scroll">
-                <img src="https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800" alt="Modern Kitchen">
+                <img src="images/gambar.jpg" alt="Modern Kitchen">
             </div>
         </div>
 
@@ -2334,6 +2517,101 @@
     </footer>
 
     <script>
+// Navbar Scroll Behavior - Perbaikan dengan background
+class NavbarController {
+    constructor() {
+        this.navbar = document.getElementById('navbar');
+        this.heroSection = this.findHeroSection();
+        this.isInHeroSection = true;
+
+        this.init();
+    }
+
+    // Cari hero section (misal 'beranda') atau section pertama
+    findHeroSection() {
+        let heroSection = document.getElementById('beranda');
+        if (!heroSection) {
+            const sections = document.querySelectorAll('section');
+            if (sections.length > 0) heroSection = sections[0];
+        }
+        return heroSection;
+    }
+
+    init() {
+        window.addEventListener('scroll', this.handleScroll.bind(this));
+        this.addSmoothScrolling();
+        this.handleScroll();
+    }
+
+    handleScroll() {
+        if (!this.heroSection) {
+            this.showNavbar(true);
+            return;
+        }
+
+        const scrollY = window.scrollY;
+        const heroTop = this.heroSection.offsetTop;
+        const heroHeight = this.heroSection.offsetHeight;
+
+        const isInHero = scrollY >= heroTop && scrollY <= heroTop + heroHeight - 100;
+
+        if (isInHero) {
+            if (!this.isInHeroSection) {
+                this.showNavbar(true); // transparan
+                this.isInHeroSection = true;
+            }
+        } else {
+            if (this.isInHeroSection) {
+                this.showNavbar(false); // beri background
+                this.isInHeroSection = false;
+            }
+        }
+    }
+
+    hideNavbar() {
+        this.navbar.classList.add('navbar-hidden');
+    }
+
+    showNavbar(isTransparent = false) {
+        this.navbar.classList.remove('navbar-hidden');
+        if (isTransparent) {
+            this.navbar.classList.add('navbar-transparent');
+            this.navbar.classList.remove('navbar-colored');
+        } else {
+            this.navbar.classList.remove('navbar-transparent');
+            this.navbar.classList.add('navbar-colored');
+        }
+    }
+
+    addSmoothScrolling() {
+        document.querySelectorAll('.nav-menu a').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = anchor.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // tampilkan navbar dulu dengan background
+                        this.showNavbar(false);
+                        this.isInHeroSection = false;
+
+                        const yOffset = -this.navbar.offsetHeight;
+                        const y = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    }
+}
+
+// Inisialisasi setelah DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    new NavbarController();
+});
+
+        
+        // ini cobaaa lagi
          document.addEventListener('DOMContentLoaded', function() {
             // Intersection Observer untuk animasi scroll
             const observerOptions = {

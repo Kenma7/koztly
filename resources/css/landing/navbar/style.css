@@ -83,6 +83,7 @@
             backdrop-filter: blur(20px);
             border: 2px solid #E93B81;
             color: #E93B81;
+            text-decoration: none;
         }
 
         .btn-glass:hover {
