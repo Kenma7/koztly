@@ -494,6 +494,8 @@
                         </span>
                     </div>
                 </div>
+                
+
             </div>
 
 
@@ -590,23 +592,18 @@
                                     <img src="https://via.placeholder.com/400x200?text=Kos+Image" alt="Kos"
                                         class="w-full h-48 object-cover rounded-t-xl">
                                 @endif
-                                <!-- Status Sewa - Bottom Left -->
+
+                                <!-- Status Badge - Top Left -->
                                 <div class="absolute top-3 left-3">
-                                    @if ($booking->status_sewa === 'menunggu')
-                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-yellow-500 text-white shadow-md">
-                                            <i class="fas fa-clock"></i> Menunggu
+                                    @if ($booking->status_pembayaran === 'sudah dibayar')
+                                        <span
+                                            class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-500 text-white shadow-md">
+                                            <i class="fas fa-check-circle"></i> sudah dibayar
                                         </span>
-                                    @elseif ($booking->status_sewa === 'aktif')
-                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-500 text-white shadow-md">
-                                            <i class="fas fa-play"></i> Aktif
-                                        </span>
-                                    @elseif ($booking->status_sewa === 'selesai')
-                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-500 text-white shadow-md">
-                                            <i class="fas fa-check-circle"></i> Selesai
-                                        </span>
-                                    @elseif ($booking->status_sewa === 'batal')
-                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-500 text-white shadow-md">
-                                            <i class="fas fa-times-circle"></i> Batal
+                                    @elseif ($booking->status_pembayaran === 'belum dibayar')
+                                        <span
+                                            class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-yellow-500 text-white shadow-md">
+                                            <i class="fas fa-clock"></i> belum dibayar
                                         </span>
                                     @endif
                                 </div>

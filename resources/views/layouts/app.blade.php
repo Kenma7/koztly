@@ -26,7 +26,7 @@
     </div>
 
      <!-- Main Content -->
-        <div class="main-content bg-gray-50 flex-1 ml-64 min-h-screen transition-all duration-300">
+        <div class="main-content flex-1 ml-64 min-h-screen transition-all duration-300">
             <div class="px-6 py-6 transition-all duration-400">
                 @yield('content')
             </div>
@@ -37,7 +37,7 @@
    
 
 </body>
-</html class="h-full">
+</html>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -55,7 +55,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="dark:bg-gray-900">
 
             <!-- Page Heading -->
             @isset($header)
