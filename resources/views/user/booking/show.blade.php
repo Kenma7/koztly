@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+    <!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
 @section('content')
 <div class="px-4 rounded-lg">
     <div class="container mx-auto px-4" style="max-width: 1400px;">
@@ -421,7 +424,7 @@
                                 Bukti Transfer
                             </h3>
                             <div class="rounded-lg overflow-hidden border-2 border-green-300">
-                                <img src="{{ asset('storage/' . $booking->bukti_tf) }}" 
+                                <img src="{{ asset('/uploads/' . $booking->bukti_tf) }}" 
                                      alt="Bukti Transfer" 
                                      class="w-full">
                             </div>
@@ -429,39 +432,42 @@
                         @endif
 
                         <div class="mt-5 space-y-2">
-                            @if($booking->status_pembayaran == 'belum dibayar' && $booking->status_sewa == 'menunggu')
+                        @if($booking->status_pembayaran == 'belum dibayar' && $booking->status_sewa == 'menunggu')
                             
                             <a href="{{ route('user.booking.edit', $booking->id_booking) }}" 
-                               class="block w-full bg-[#b8caef] hover:bg-[#9ab5e8] text-white font-bold py-2 px-4 rounded-lg text-center text-sm">
+                            class="block w-full bg-[#b8caef] hover:bg-[#9ab5e8] text-white font-bold py-2 px-4 rounded-lg text-center text-sm">
                                 <i class="fas fa-edit mr-1"></i>
                                 Edit Booking
                             </a>
 
-                            <form action="{{ route('user.booking.cancel', $booking->id_booking) }}" method="POST">
+                            <form id="cancel-form-{{ $booking->id_booking }}" 
+                                action="{{ route('user.booking.cancel', $booking->id_booking) }}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" 
-                                        onclick="return confirm('Yakin ingin membatalkan booking ini?')"
+                                <button type="button" 
+                                        onclick="confirmCancel('{{ $booking->id_booking }}')"
                                         class="w-full bg-white hover:bg-red-50 text-red-600 border-2 border-red-600 font-bold py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2">
                                     <i class="fas fa-times-circle"></i>
                                     Batalkan Booking
                                 </button>
                             </form>
-                            @endif
+                        @endif
 
-                            @if($booking->status_sewa == 'batal')
-                            <form action="{{ route('user.booking.destroy', $booking->id_booking) }}" method="POST">
+                        @if($booking->status_sewa == 'batal')
+                            <form id="delete-form-{{ $booking->id_booking }}" 
+                                action="{{ route('user.booking.destroy', $booking->id_booking) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" 
-                                        onclick="return confirm('Yakin ingin menghapus booking ini?')"
+                                <button type="button" 
+                                        onclick="confirmDelete('{{ $booking->id_booking }}')"
                                         class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2">
                                     <i class="fas fa-trash-alt"></i>
                                     Hapus Booking
                                 </button>
                             </form>
-                            @endif
-                        </div>
+                        @endif
+                    </div>
+
                     </div>
                 </div>
                 {{-- Informasi Penting --}}
@@ -531,6 +537,11 @@
         </div>
     </div>
 
+
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </html>
 
 <script>
@@ -540,5 +551,40 @@ function openModal(src) {
 }
 function closeModal() {
     document.getElementById('imageModal').classList.add('hidden');
+}
+</script>
+<script>
+function confirmCancel(bookingId) {
+    Swal.fire({
+        title: 'Yakin ingin membatalkan booking ini?',
+        text: "Booking ini akan dibatalkan dan tidak bisa dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e11d48', // merah
+        cancelButtonColor: '#6b7280',  // abu-abu
+        cancelButtonText: 'Tidak',
+        confirmButtonText: 'Ya, Batalkan',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('cancel-form-' + bookingId).submit();
+        }
+    });
+}
+
+function confirmDelete(bookingId) {
+    Swal.fire({
+        title: 'Yakin ingin menghapus booking ini?',
+        text: "Data booking akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626', // merah tua
+        cancelButtonColor: '#6b7280',
+        cancelButtonText: 'Tidak',
+        confirmButtonText: 'Ya, Hapus',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + bookingId).submit();
+        }
+    });
 }
 </script>

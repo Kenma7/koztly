@@ -359,7 +359,7 @@
             <!-- Menu (flex-1 biar ngisi ruang kosong) -->
             <ul class="space-y-2 font-medium flex-1">
                 <li>
-                    <a href="{{ route('user.dashboard') }}"
+                    <a href="{{ route('kosan.index') }}"
                         class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
                         <i class="fas fa-th-large w-5"></i>
                         <span class="ml-3">Dashboard</span>
@@ -372,13 +372,6 @@
                         <span class="ml-3">Riwayat Booking</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('user.profile.edit') }}"
-                        class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-door-open w-5"></i>
-                        <span class="ml-3">Profile</span>
-                    </a>
-                </li>
             </ul>
 
             <!-- Logout -->
@@ -386,7 +379,7 @@
                 @csrf
                 <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50">
                     <i class="fas fa-sign-out-alt w-5"></i>
-                    <span class="ml-3">Logout</span>
+                    <span class="ml-3">Keluar</span>
                 </button>
             </form>
 
@@ -396,18 +389,58 @@
     <!-- Main Content -->
     <div class="sm:ml-64">
         <!-- Navbar -->
-        <nav class="bg-white border-b border-gray-200 fixed top-0 z-30 w-full sm:w-[calc(100%-16rem)] ">
+        <nav class="bg-white border-b border-gray-200 fixed top-0 z-30 w-full sm:w-[calc(100%-16rem)]">
             <div class="px-6 py-4">
                 <div class="flex items-center justify-between">
                     <button id="toggleSidebar" class="text-gray-600 sm:hidden">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <h2 class="text-xl font-semibold text-gray-800">Riwayat Booking</h2>
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-600">Admin</span>
-                        <div
-                            class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                            A
+                    
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        @yield('page-title', 'Dashboard')
+                    </h2>
+                    
+                    <!-- Profile Dropdown -->
+                    <div class="relative">
+                        <button id="profileDropdown" class="flex items-center gap-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition">
+                            <span class="text-sm text-gray-600 font-medium hidden sm:block">
+                                {{ Auth::check() ? Auth::user()->name : 'Guest' }}
+                            </span>
+                            <div class="w-10 h-10 bg-gradient-to-r from-[#ea3882] to-[#d12670] rounded-full flex items-center justify-center text-white font-bold shadow-sm">
+                                {{ Auth::check() ? strtoupper(substr(Auth::user()->name, 0, 1)) : 'G' }}
+                            </div>
+                            <i class="fas fa-chevron-down text-gray-400 text-xs hidden sm:block"></i>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div id="profileMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
+                            <!-- User Info -->
+                            <div class="px-4 py-3 border-b border-gray-100">
+                                <p class="text-sm font-semibold text-gray-800">
+                                    {{ Auth::check() ? Auth::user()->name : 'Guest' }}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    {{ Auth::check() ? Auth::user()->email : '' }}
+                                </p>
+                            </div>
+
+                            <!-- Menu Items -->
+                            <a href="{{ route('user.profile') }}" 
+                            class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-[#cbd5e0] transition">
+                                <i class="fas fa-user text-[#ea3882] w-4"></i>
+                                <span>Profile Saya</span>
+                            </a>
+
+                            <hr class="my-2">
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" 
+                                        class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition w-full text-left">
+                                    <i class="fas fa-sign-out-alt w-4"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -595,15 +628,21 @@
 
                                 <!-- Status Badge - Top Left -->
                                 <div class="absolute top-3 left-3">
-                                    @if ($booking->status_pembayaran === 'sudah dibayar')
-                                        <span
-                                            class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-500 text-white shadow-md">
-                                            <i class="fas fa-check-circle"></i> sudah dibayar
+                                    @if ($booking->status_sewa === 'menunggu')
+                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-yellow-500 text-white shadow-md">
+                                            <i class="fas fa-clock"></i> Menunggu
                                         </span>
-                                    @elseif ($booking->status_pembayaran === 'belum dibayar')
-                                        <span
-                                            class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-yellow-500 text-white shadow-md">
-                                            <i class="fas fa-clock"></i> belum dibayar
+                                    @elseif ($booking->status_sewa === 'aktif')
+                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-green-500 text-white shadow-md">
+                                            <i class="fas fa-play"></i> Aktif
+                                        </span>
+                                    @elseif ($booking->status_sewa === 'selesai')
+                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-500 text-white shadow-md">
+                                            <i class="fas fa-check-circle"></i> Selesai
+                                        </span>
+                                    @elseif ($booking->status_sewa === 'batal')
+                                        <span class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-red-500 text-white shadow-md">
+                                            <i class="fas fa-times-circle"></i> Batal
                                         </span>
                                     @endif
                                 </div>
@@ -772,3 +811,31 @@
 </body>
 
 </html>
+
+<script>
+    // Toggle Profile Dropdown
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileMenu = document.getElementById('profileMenu');
+
+    profileDropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileMenu.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target) && !profileMenu.contains(e.target)) {
+            profileMenu.classList.add('hidden');
+        }
+    });
+
+    // Toggle Sidebar for Mobile
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    if (toggleSidebar && sidebar) {
+        toggleSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    }
+</script>

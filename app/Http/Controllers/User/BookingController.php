@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class BookingController extends Controller
 {
@@ -19,12 +20,12 @@ class BookingController extends Controller
             ->where('id_user', $userId)
             ->orderBy('created_at', 'desc');
 
-        // 🔍 Filter berdasarkan search
+        // Filter berdasarkan search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->whereHas('kamar.kosan', function ($q) use ($search) {
                 $q->where('nama_kos', 'like', "%{$search}%")
-                ->orWhere('lokasi_kos', 'like', "%{$search}%");
+                  ->orWhere('lokasi_kos', 'like', "%{$search}%");
             });
         }
 
@@ -44,14 +45,13 @@ class BookingController extends Controller
         $bookings = $query->paginate(9);
 
         // Statistik berdasarkan status_sewa
-        $totalBookings    = Booking::where('id_user', $userId)->count();
+        $totalBookings = Booking::where('id_user', $userId)->count();
         $menungguBookings = Booking::where('id_user', $userId)->where('status_sewa', 'menunggu')->count();
-        $aktifBookings    = Booking::where('id_user', $userId)->where('status_sewa', 'aktif')->count();
-        $selesaiBookings  = Booking::where('id_user', $userId)->where('status_sewa', 'selesai')->count();
-        $batalBookings    = Booking::where('id_user', $userId)->where('status_sewa', 'batal')->count();
+        $aktifBookings = Booking::where('id_user', $userId)->where('status_sewa', 'aktif')->count();
+        $selesaiBookings = Booking::where('id_user', $userId)->where('status_sewa', 'selesai')->count();
+        $batalBookings = Booking::where('id_user', $userId)->where('status_sewa', 'batal')->count();
         $belumBayarBookings = Booking::where('id_user', $userId)->where('status_pembayaran', 'belum dibayar')->count();
         $sudahBayarBookings = Booking::where('id_user', $userId)->where('status_pembayaran', 'sudah dibayar')->count();
-
 
         return view('user.booking.index', compact(
             'bookings',
@@ -63,7 +63,6 @@ class BookingController extends Controller
             'belumBayarBookings',
             'sudahBayarBookings'
         ));
-
     }
 
     public function show($id)
@@ -76,6 +75,68 @@ class BookingController extends Controller
             ->firstOrFail();
 
         return view('user.booking.show', compact('booking'));
+    }
+
+    public function edit($id)
+    {
+        $userId = 1; // Hardcode untuk testing
+        
+        $booking = Booking::with(['kamar.kosan', 'user'])
+            ->where('id_booking', $id)
+            ->where('id_user', $userId)
+            ->firstOrFail();
+
+        // Cek apakah booking bisa diedit (hanya yang status menunggu, belum dibayar, dan belum upload bukti)
+        if ($booking->status_sewa !== 'menunggu' || 
+            $booking->status_pembayaran !== 'belum dibayar' || 
+            $booking->bukti_tf !== null) {
+            return redirect()->route('user.booking.show', $id)
+                ->with('error', 'Booking ini tidak dapat diedit. Hanya booking dengan status menunggu dan belum upload bukti transfer yang bisa diubah.');
+        }
+
+        return view('user.booking.edit', compact('booking'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $userId = 1; // Hardcode untuk testing
+        
+        $booking = Booking::where('id_booking', $id)
+            ->where('id_user', $userId)
+            ->firstOrFail();
+
+        // Validasi: hanya booking dengan status menunggu, belum bayar, dan belum upload bukti yang bisa diupdate
+        if ($booking->status_sewa !== 'menunggu' || 
+            $booking->status_pembayaran !== 'belum dibayar' || 
+            $booking->bukti_tf !== null) {
+            return redirect()->route('user.booking.show', $id)
+                ->with('error', 'Booking ini tidak dapat diubah.');
+        }
+
+        // Validasi input
+        $validated = $request->validate([
+            'lama_sewa' => 'required|integer|min:1|max:12',
+            'catatan' => 'nullable|string|max:500'
+        ], [
+            'lama_sewa.required' => 'Durasi sewa harus diisi',
+            'lama_sewa.integer' => 'Durasi sewa harus berupa angka',
+            'lama_sewa.min' => 'Durasi sewa minimal 1 bulan',
+            'lama_sewa.max' => 'Durasi sewa maksimal 12 bulan',
+            'catatan.max' => 'Catatan maksimal 500 karakter'
+        ]);
+
+        // Update booking
+        $booking->lama_sewa = $validated['lama_sewa'];
+        
+        // Jika ada kolom catatan di database, update juga
+        if (isset($validated['catatan'])) {
+            $booking->catatan = $validated['catatan'];
+        }
+        
+        $booking->save();
+
+        return redirect()->route('user.booking.show', $id)
+            ->with('success', 'Booking berhasil diupdate. Total pembayaran: Rp ' . number_format($booking->harga * $booking->lama_sewa, 0, ',', '.'));
     }
 
     public function cancel($id)
@@ -92,5 +153,77 @@ class BookingController extends Controller
 
         return redirect()->route('user.booking.index')
             ->with('success', 'Booking berhasil dibatalkan.');
+    }
+
+    public function destroy($id)
+    {
+        $userId = 1; // Hardcode untuk testing
+        
+        $booking = Booking::where('id_booking', $id)
+            ->where('id_user', $userId)
+            ->where('status_sewa', 'batal')
+            ->firstOrFail();
+
+        // Hapus bukti transfer jika ada
+        if ($booking->bukti_tf) {
+            $filePath = public_path('uploads/' . $booking->bukti_tf);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
+        $booking->delete();
+
+        return redirect()->route('user.booking.index')
+            ->with('success', 'Booking berhasil dihapus.');
+    }
+
+    public function uploadBukti(Request $request, $id)
+    {
+        $userId = 1; // Hardcode untuk testing
+        
+        $booking = Booking::where('id_booking', $id)
+            ->where('id_user', $userId)
+            ->where('status_pembayaran', 'belum dibayar')
+            ->where('status_sewa', 'menunggu')
+            ->firstOrFail();
+
+        $request->validate([
+            'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ], [
+            'bukti_tf.required' => 'File bukti transfer harus diupload',
+            'bukti_tf.image' => 'File harus berupa gambar',
+            'bukti_tf.mimes' => 'Format file harus jpeg, png, atau jpg',
+            'bukti_tf.max' => 'Ukuran file maksimal 2MB'
+        ]);
+
+        // Hapus bukti lama jika ada
+        if ($booking->bukti_tf) {
+            $oldFilePath = public_path('uploads/' . $booking->bukti_tf);
+            if (file_exists($oldFilePath)) {
+                unlink($oldFilePath);
+            }
+        }
+
+        // Upload file baru
+        $file = $request->file('bukti_tf');
+        $filename = 'bukti_tf_' . $booking->id_booking . '_' . time() . '.' . $file->getClientOriginalExtension();
+        
+        // Pastikan folder uploads ada
+        $uploadPath = public_path('uploads');
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+        
+        // Pindahkan file
+        $file->move($uploadPath, $filename);
+
+        // Update database - ubah status pembayaran menjadi sudah dibayar
+        $booking->bukti_tf = $filename;
+        $booking->status_pembayaran = 'sudah dibayar';
+        $booking->save();
+
+        return redirect()->route('user.booking.show', $id)
+            ->with('success', 'Bukti transfer berhasil diupload. Menunggu konfirmasi admin untuk aktivasi sewa.');
     }
 }

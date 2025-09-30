@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\BookingController;
 use App\Http\Controllers\KosanController;
 use Illuminate\Support\Facades\Auth;
@@ -34,13 +34,16 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/', [BookingController::class, 'index'])->name('index');
     Route::get('/{id}', [BookingController::class, 'show'])->name('show');
     Route::get('/{id}/edit', [BookingController::class, 'edit'])->name('edit'); // <--- ini
+    Route::put('/booking/{id}/update', [BookingController::class, 'update'])->name('update');
     Route::put('/{id}', [BookingController::class, 'update'])->name('update'); // <--- ini
     Route::delete('/{id}', [BookingController::class, 'destroy'])->name('destroy'); // <-- ini
+    Route::delete('/booking/{id}/destroy', [BookingController::class, 'destroy'])->name('destroy');
     Route::post('/{id}/upload-bukti', [BookingController::class, 'uploadBukti'])->name('upload-bukti');
     Route::put('/{id}/cancel', [BookingController::class, 'cancel'])->name('cancel');
     });
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
