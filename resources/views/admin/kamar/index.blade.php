@@ -6,10 +6,110 @@
 <title>Kelola Kamar</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar-bg {
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"%3E%3Ccircle cx="10" cy="10" r="1.5" fill="rgba(233, 59, 129, 0.1)"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23pattern)"/%3E%3C/svg%3E');
+            background-size: 200px 200px;
+        }
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        #main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .sidebar-mini {
+            width: 80px;
+        }
+        .sidebar-full {
+            width: 256px;
+        }
+        .menu-text {
+            transition: opacity 0.2s ease-in-out;
+        }
+        .sidebar-mini .menu-text {
+            opacity: 0;
+            display: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
+    
+ <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar-full fixed left-0 top-0 z-40 h-screen bg-white shadow-lg sidebar-bg transition-all duration-300">
+        <div class="h-full px-3 py-4 overflow-y-auto relative">
+            <!-- Logo Section -->
+            <div class="flex items-center justify-center mb-8 mt-4">
+                <img id="logo-full" src="/images/logo-koztly.png" alt="Logo" class="w-32 h-auto transition-all duration-300">
+                <img id="logo-mini" src="/images/logo-koztly.png" alt="Logo" class="w-10 h-auto hidden transition-all duration-300">
+            </div>
+            
+            <!-- Menu -->
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 hover:text-pink-600 transition" title="Dashboard">
+                        <i class="fas fa-th-large w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.kosan.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition" title="Kelola Kosan">
+                        <i class="fas fa-home w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Kelola Kosan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.kamar.index') }}" class="flex items-center p-3 text-white bg-pink-500 rounded-lg hover:bg-pink-600 transition" title="Kelola Kamar">
+                        <i class="fas fa-door-open w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Kelola Kamar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.booking.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50  hover:text-pink-600 transition" title="Kelola Booking">
+                        <i class="fas fa-calendar-check w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Kelola Booking</span>
+                    </a>
+                </li>
+            </ul>
 
-<!-- Notifikasi -->
+            <!-- Logout Button at Bottom -->
+            <div class="absolute bottom-4 left-3 right-3">
+                <form action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50 transition" title="Logout">
+                        <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Overlay untuk mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
+     <div id="main-content" class="ml-64 transition-all duration-300">
+        <!-- Navbar Biru -->
+        <nav class="bg-blue-300 shadow-md fixed top-0 z-20 right-0 left-64 transition-all duration-300" id="navbar">
+            <div class="px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <!-- Hamburger Button -->
+                    <button id="toggleSidebar" class="text-white hover:bg-pink-500 p-2 rounded-lg transition">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold text-white">Dashboard Admin</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-white">Admin</span>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold">
+                            A
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+        <!-- Page Content -->
+        <main class="mt-20 p-6">
+    <!-- Notifikasi -->
 <div class="m-8">
     @if(session('success'))
         <div id="alert-success" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
@@ -31,9 +131,8 @@
         </div>
     @endif
 </div>
-
 <!-- Judul -->
-<div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-400 m-8 flex flex-col md:flex-row md:justify-between md:items-center">
+<div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-400 m-8 flex flex-col md:flex-row md:justify-between md:items-center ">
     <div>
         <h1 class="text-2xl font-bold mb-3 text-pink-500">Kelola Kamar</h1>
         <p class="text-sm text-gray-600">
@@ -89,13 +188,24 @@
     <div class="flex-1 min-w-[250px] flex flex-col gap-2">
         <h2 class="text-sm font-semibold text-gray-700 mb-2">Top 3 Kosan dengan jumlah kamar terbanyak</h2>
 
-        @foreach ($topKosan as $kosan)
-        <div class="bg-gray-50 rounded-xl p-2 flex justify-between items-center border-l-4 border-pink-400 shadow-sm">
+         @foreach ($topKosan as $kosan)
+    @php
+        $borderColor = 'border-gray-400';
+        $iconColor = 'text-gray-500';
+        if($kosan->kategori === 'pria'){
+            $borderColor = 'border-blue-400';
+            $iconColor = 'text-blue-500';
+        } elseif($kosan->kategori === 'wanita'){
+            $borderColor = 'border-pink-400';
+            $iconColor = 'text-pink-500';
+        }
+    @endphp
+        <div class="bg-gray-50 rounded-xl p-2 flex justify-between items-center border-l-4 {{$borderColor}} shadow-sm">
             <div class="flex flex-col justify-center">
                 <p class="font-medium text-gray-700 text-sm">{{ $kosan->nama_kos }}</p>
                 <p class="text-xs text-gray-500 text-center">{{ $kosan->jumlah_kamar }} kamar</p>
             </div>
-            <i class="fas fa-bed text-pink-500 text-xl"></i>
+            <i class="fas fa-bed {{ $iconColor }} text-xl"></i>
         </div>
         @endforeach
     </div>
@@ -235,6 +345,7 @@
         </tbody>
     </table>
 </div>
+    </main>
 
 <!-- Modal Tambah Kamar -->
 <div id="modalTambah" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
@@ -365,6 +476,50 @@
 </div>
 
 <script>
+// Sidebar 
+        let sidebarOpen = true;
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const navbar = document.getElementById('navbar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const logoFull = document.getElementById('logo-full');
+        const logoMini = document.getElementById('logo-mini');
+
+        toggleBtn.addEventListener('click', function() {
+            sidebarOpen = !sidebarOpen;
+            
+            if (sidebarOpen) {
+                // Full sidebar
+                sidebar.classList.remove('sidebar-mini');
+                sidebar.classList.add('sidebar-full');
+                mainContent.classList.remove('ml-20');
+                mainContent.classList.add('ml-64');
+                navbar.classList.remove('left-20');
+                navbar.classList.add('left-64');
+                logoFull.classList.remove('hidden');
+                logoMini.classList.add('hidden');
+            } else {
+                // Mini sidebar (icon only)
+                sidebar.classList.remove('sidebar-full');
+                sidebar.classList.add('sidebar-mini');
+                mainContent.classList.remove('ml-64');
+                mainContent.classList.add('ml-20');
+                navbar.classList.remove('left-64');
+                navbar.classList.add('left-20');
+                logoFull.classList.add('hidden');
+                logoMini.classList.remove('hidden');
+            }
+        });
+
+
+        // Click overlay to close sidebar (mobile)
+        overlay.addEventListener('click', function() {
+            if (!sidebarOpen) {
+                toggleBtn.click();
+            }
+        });
+
     // Modal Tambah
     const modalTambah = document.getElementById('modalTambah');
     document.getElementById('btnTambah').addEventListener('click', () => modalTambah.classList.remove('hidden'));

@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700&family=Dancing+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik+Lines&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
   
     
@@ -298,21 +300,6 @@
                 transform: translateY(0);
             }
         }
-
-/* Section Kontak */
-/* .section-kontak {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #E93B81, #ff6ba8);
-    color: white;
-    min-height: 50vh;
-}
-
-.container {
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-} */
 
 /* Section Testimoni */
 .section-testimoni {
@@ -1192,12 +1179,121 @@
             }
         }
 
+        
+        /* Animasi Keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Base styles untuk elemen yang akan dianimasi */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, transform;
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animasi keluar khusus untuk left/right */
+        .animate-on-scroll.fade-in-left.animated {
+            transform: translateX(0);
+        }
+
+        .animate-on-scroll.fade-in-left:not(.animated) {
+            transform: translateX(-50px);
+        }
+
+        .animate-on-scroll.fade-in-right.animated {
+            transform: translateX(0);
+        }
+
+        .animate-on-scroll.fade-in-right:not(.animated) {
+            transform: translateX(50px);
+        }
+
+        /* Animasi keluar untuk scale */
+        .animate-on-scroll.scale-in.animated {
+            transform: scale(1) translateY(0);
+        }
+
+        .animate-on-scroll.scale-in:not(.animated) {
+            transform: scale(0.8) translateY(20px);
+        }
+
+
         .section-kontak {
             margin: 0 auto;
         }
 
         .hero-section { 
-            background: linear-gradient(135deg, #E93B81 0%, #F5ABC9 50%, #FFE5E2 100%);
+            background: linear-gradient(125deg, #F5ABC9 0%, #FFE5E2 100%);
             padding: 60px;
             position: relative;
             min-height: 200px;
@@ -1210,9 +1306,9 @@
         }
 
         .hero-content h1 {
-            color: #643843;
+            color: #E93B81;
             font-size: 48px;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             margin-left: 100px;
         }
 
@@ -1220,7 +1316,7 @@
             color: #643843;
             font-size: 14px;
             line-height: 1.6;
-            max-width: 400px;
+            max-width: 600px;
             margin-left: 100px;
         }
 
@@ -1229,7 +1325,7 @@
             right: 200px;
             top: 50px;
             width: 300px;
-            height: 500px;
+            height: 550px;
             z-index: 2;
         }
 
@@ -1250,6 +1346,7 @@
             gap: 30px;
             position: relative;
             margin-left: 120px;
+            margin-top: 10px;
         }
 
         .info-content {
@@ -1258,22 +1355,23 @@
         }
 
         .info-cards h2 {
-            color: #643843;
+            color: #E93B81;
             font-size: 24px;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
+            margin-top: -30px
         }
 
-        .info-cards > p {
-            color: #666;
+        .info-cards p {
+            color: #643843;
             font-size: 14px;
             margin-bottom: 40px;
             line-height: 1.6;
         }
 
-        .info-content > p {
-            color: #666;
+        .info-content p {
+            color: #643843;
             font-size: 14px;
-            margin-bottom: 40px;
+            margin-bottom: 25px;
             line-height: 1.6;
         }
 
@@ -1288,6 +1386,11 @@
             min-width: 200px;
             text-align: center;
             margin-left: -70px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         .card-icon {
@@ -1299,49 +1402,89 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(233, 59, 129, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .card-icon:hover::before {
+            width: 100px;
+            height: 100px;
         }
 
         .card-icon i {
-            color: white;
-            font-size: 20px;
+            color: #E93B81;
+            font-size: 14px;
+            background: white;
+            padding: 8px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card:hover .card-icon {
+            background: #E93B81;
+            box-shadow: 0 8px 16px rgba(233, 59, 129, 0.3);
+        }
+
+        .card:hover .card-icon i {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .card h3 {
-            color: #2c4547;
+            color: #643843;
             font-size: 16px;
-            margin-bottom: 8px;
+            margin-bottom: 2px;
+            font-weight: 800;
         }
 
         .card p {
-            color: #999;
+            color: #643843;
             font-size: 13px;
         }
 
         .bottom-section {
             display: flex;
             gap: 40px;
-            padding: 40px;
+            padding: 35px 150px;
             background: white;
             flex-wrap: wrap;
-            margin-top: 20px;
+            margin-top: 70px;
         }
 
         .form-section {
             flex: 1;
             min-width: 300px;
-            background: #FFE5E2;
+            background: linear-gradient(125deg, #F5ABC9 0%, #FFE5E2 100%);
             padding: 40px;
             border-radius: 8px;
         }
 
         .form-section h2 {
-            color: #643843;
+            color: #E93B81;
             font-size: 24px;
             margin-bottom: 15px;
             font-weight: 700
         }
 
-        .form-section > p {
+        .form-section p {
             color: #643843;
             font-size: 13px;
             margin-bottom: 30px;
@@ -1356,13 +1499,13 @@
         .form-group textarea {
             width: 100%;
             padding: 15px;
-            border: none;
-            border-bottom: 0.5px solid #643843;
+            border: 1.5px solid #643843;
+            border-radius: 20px;
             background: transparent;
             color: #643843;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
         .form-group input::placeholder,
@@ -1373,7 +1516,9 @@
 
         .form-group input:focus,
         .form-group textarea:focus {
-            border-bottom-color: #7ba599;
+            border-color: #E93B81;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(233, 59, 129, 0.2);
         }
 
         .form-group textarea {
@@ -1390,12 +1535,14 @@
             border-radius: 25px;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
-        /* .submit-btn:hover {
-            background: #E93B81;
-        } */
+        .submit-btn:hover {
+            background: #d63571;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(233, 59, 129, 0.3);
+        }
 
         .location-section {
             flex: 1;
@@ -1408,7 +1555,7 @@
             margin-bottom: 15px;
         }
 
-        .location-section > p {
+        .location-section p {
             color: #643843;
             font-size: 13px;
             margin-bottom: 25px;
@@ -1431,15 +1578,6 @@
             border: none;
         }
 
-        .map-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-        }
-
         .social-media h3 {
             color: #E93B81;
             font-size: 20px;
@@ -1456,21 +1594,28 @@
             width: 50px;
             height: 50px;
             background: #B6C9F0;
-            border-radius: 250px 250px 0 0 ;
+            border-radius: 250px 250px 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
         .social-icon:hover {
-            background: #7ba599;
+            background: #E93B81;
+            transform: translateY(-5px) rotate(5deg);
         }
 
         .social-icon i {
-            color: white;
-            font-size: 16px;
+            color: #E93B81;
+            font-size: 14px;
+            background: white;
+            padding: 8px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         @media (max-width: 768px) {
@@ -1485,6 +1630,11 @@
 
             .hero-content h1 {
                 font-size: 36px;
+                margin-left: 20px;
+            }
+
+            .hero-content p {
+                margin-left: 20px;
             }
 
             .hero-image {
@@ -1498,10 +1648,220 @@
                 padding: 40px 20px;
                 max-width: 100%;
                 flex-direction: column;
+                margin-left: 0;
             }
 
             .info-content {
                 max-width: 100%;
+            }
+
+            .card {
+                margin-left: 0;
+            }
+
+            .bottom-section {
+                padding: 40px 20px;
+            }
+
+            .form-section {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Footer Styles */
+        .footer-section {
+            background: 
+                 linear-gradient(125deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)),
+                                 url('images/gambar.jpg'); /* gambar kamu */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            margin-top: 50px;
+            color: white; /* Supaya teksnya otomatis putih */
+        }
+
+        .footer-container {
+            margin: 0 auto;
+        }
+
+        .footer-line {
+            background: linear-gradient(125deg, #F5ABC9 0%, #FFE5E2 100%);
+            padding: 10px 0;
+            margin-bottom: 50px;
+            box-shadow: 0 5px 20px rgba(233, 59, 129, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding: 10px 90px;
+        }
+
+        .footer-column h4 {
+            color: #E93B81;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .footer-brand {
+            max-width: 350px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            margin-top: -5px;
+        }
+
+        .footer-logo img {
+            width: 150px;
+            height: 50px;
+            margin-left: -15px;
+            object-fit: cover;
+        }
+
+        .footer-logo h3 {
+            color: #E93B81;
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .footer-brand p {
+            color: #E93B81;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .footer-social-icons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social-icons .social-icon-footer {
+            width: 45px;
+            height: 45px;
+            background: #E93B81;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: -5px;
+        }
+
+        .footer-social .social-icon:hover {
+            background: #E93B81;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 59, 129, 0.3);
+        }
+
+        .footer-social-icons .social-icon-footer i {
+            color: white;
+            font-size: 16px;
+            background: transparent;
+            padding: 0;
+        }
+
+        .footer-social .social-icon:hover i {
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: #E93B81;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .footer-column ul li a:hover {
+            color: #E93B81;
+        }
+
+        .working-hours {
+            color: #E93B81;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .working-hours li {
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 30px;
+            border-top: 2px solid rgba(233, 59, 129, 0.3);
+        }
+
+        .footer-bottom p {
+            color: #E93B81;
+            font-size: 15px;
+            margin: 0;
+            font-weight: 800;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 40px 20px;
+                min-height: auto;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+                margin-left: 0;
+            }
+
+            .hero-content p {
+                margin-left: 0;
+            }
+
+            .hero-image {
+                position: static;
+                width: 100%;
+                height: 300px;
+                margin-top: 30px;
+            }
+
+            .info-cards {
+                padding: 40px 20px;
+                max-width: 100%;
+                flex-direction: column;
+                margin-left: 0;
+            }
+
+            .info-content {
+                max-width: 100%;
+            }
+
+            .card {
+                margin-left: 0;
             }
 
             .info-cards,
@@ -1512,11 +1872,39 @@
             .form-section {
                 padding: 30px 20px;
             }
+
+            .footer-section {
+                padding: 40px 20px 20px;
+            }
+
+            .footer-newsletter {
+                padding: 30px 20px;
+            }
+
+            .footer-newsletter h2 {
+                font-size: 24px;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-form input {
+                min-width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .footer-brand {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-        <!-- @include('landing.navbar') -->
         <!-- Section Beranda -->
         <section id="beranda" class="hero-container">
             <main class="main-content">
@@ -1781,46 +2169,45 @@
 </section>
 
 
-    <!-- Section Kontak -->
     <section id="kontak" class="section-kontak">
          <!-- Hero Section -->
         <div class="hero-section">
-            <div class="hero-content">
-                <h1>Contact Us</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+            <div class="hero-content animate-on-scroll">
+                <h1>Hubungi Kita</h1>
+                <p>Kami siap membantu menjawab pertanyaan Anda seputar Koztly. Silakan hubungi kami melalui informasi di bawah ini.</p>
             </div>
-            <div class="hero-image">
-                <img src="images/gambar.jpg" alt="Modern Kitchen">
+            <div class="hero-image animate-on-scroll">
+                <img src="https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800" alt="Modern Kitchen">
             </div>
         </div>
 
         <!-- Info Cards -->
         <div class="info-cards">
             <div class="info-content">
-                <h2>Contact Information</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+                <h2 class="animate-on-scroll">Informasi Kontak</h2>
+                <p class="animate-on-scroll">Butuh bantuan atau informasi lebih lanjut? Tim Koztly siap memberikan solusi terbaik untuk kebutuhan</p>
                 
                 <div class="cards-container">
-                    <div class="card">
+                    <div class="card animate-on-scroll">
                         <div class="card-icon">
                             <i class="fas fa-phone"></i>
                         </div>
                         <h3>(+456) 5464 55</h3>
-                        <p>Lorem ipsum dolor sit</p>
+                        <p>Layanan pelanggan</p>
                     </div>
-                    <div class="card">
+                    <div class="card animate-on-scroll">
                         <div class="card-icon">
                             <i class="fas fa-envelope"></i>
                         </div>
-                        <h3>mail@sitchn.com</h3>
-                        <p>Lorem ipsum dolor sit</p>
+                        <h3>koztly@gmail.com</h3>
+                        <p>Kirim pesan</p>
                     </div>
-                    <div class="card">
+                    <div class="card animate-on-scroll">
                         <div class="card-icon">
                             <i class="fas fa-map-marker-alt"></i>
                         </div>
-                        <h3>London Eye, UK</h3>
-                        <p>Lorem ipsum dolor sit</p>
+                        <h3>Karawang, Indonesia</h3>
+                        <p>Kantor pusat Koztly</p>
                     </div>
                 </div>
             </div>
@@ -1829,34 +2216,38 @@
 
         <!-- Form and Location Section -->
         <div class="bottom-section">
-            <div class="form-section">
-                <h2>Get In Touch !</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+            <div class="form-section animate-on-scroll">
+                <h2>Punya pertanyaan seputar Koztly?</h2>
+                <p>Butuh bantuan cari kos impianmu atau ingin kerja sama dengan kami? tinggalkan pesanmu disini!</p>
                 
                 <form id="contactForm">
                     <div class="form-group">
-                        <input type="text" placeholder="Name" required>
+                        <input type="text" placeholder="Nama" required>
                     </div>
                     <div class="form-group">
                         <input type="email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <textarea placeholder="Message" required></textarea>
+                        <textarea placeholder="Pesan" required></textarea>
                     </div>
-                    <button type="submit" class="submit-btn">Submit Details</button>
+                    <button type="submit" class="submit-btn">Kirim Pesan</button>
                 </form>
             </div>
 
-            <div class="location-section">
-                <h2>Our Location</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+            <div class="location-section animate-on-scroll">
+                <h2>Lokasi Kami</h2>
+                <p>Jika kamu ingin bertemu secara langsung, silakan datang ke kantor kami pada alamat berikut.</p>
                 
                 <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.540815519273!2d-0.12174618423184768!3d51.50323587963595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487604c38c8cd1d9%3A0xb78f2474b9a45aa9!2sLondon%20Eye!5e0!3m2!1sen!2sid!4v1632847264123!5m2!1sen!2sid" allowfullscreen="" loading="lazy"></iframe>
+                    <iframe
+                        src="https://www.google.com/maps?q=Jl.%20HS.%20Ronggo%20Waluyo,%20Puseurjaya,%20Telukjambe%20Timur,%20Karawang,%20Jawa%20Barat%2041361&output=embed"
+                        allowfullscreen=""
+                        loading="lazy">
+                    </iframe>
                 </div>
 
                 <div class="social-media">
-                    <h3>Social Media</h3>
+                    <h3>Sosial Media</h3>
                     <div class="social-icons">
                         <div class="social-icon">
                             <i class="fab fa-facebook-f"></i>
@@ -1876,7 +2267,160 @@
         </div>
     </section>
 
+     <!-- Footer Section -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <!-- Newsletter Section -->
+            <div class="footer-line">
+            </div>
+
+            <!-- Footer Content -->
+            <div class="footer-content">
+                <!-- Logo & Description -->
+                <div class="footer-column footer-brand">
+                    <div class="footer-logo">
+                        <img src="images/logo.png" alt="Koztly Logo">
+                    </div>
+                    <p>Platform pencarian kos terpercaya yang membantu kamu menemukan hunian nyaman dan sesuai kebutuhan dengan mudah</p>
+                    <div class="footer-social-icons">
+                        <div class="social-icon-footer">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="social-icon-footer">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <div class="social-icon-footer">
+                            <i class="fab fa-linkedin-in"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="footer-column">
+                    <h4>Navigasi</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#tentang">Tentang</a></li>
+                        <li><a href="#kontak">Kontak</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-column">
+                    <h4>Link Cepat</h4>
+                    <ul>
+                        <li><a href="#kontak">Hubungi Kami</a></li>
+                        <li><a href="#faq">Kos</a></li>
+                        <li><a href="#blog">Testimoni</a></li>
+                    </ul>
+                </div>
+
+                <!-- Working Hours -->
+                <div class="footer-column">
+                    <h4>Jam Kerja</h4>
+                    <ul class="working-hours">
+                        <li>Senin - Jumat: 08.00 - 17.00</li>
+                        <li>Sabtu: 09.00 - 15.00</li>
+                        <li>Minggu & Libur Nasional: Tutup</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy 2025 Koztly Indonesia - Hak Cipta Dilindungi</p>
+        </div>
+    </footer>
+
     <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            // Intersection Observer untuk animasi scroll
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Animasi masuk
+                        const element = entry.target;
+                        element.classList.add('animated');
+                        
+                        // Tentukan jenis animasi berdasarkan posisi elemen
+                        if (element.classList.contains('hero-content')) {
+                            element.classList.add('fade-in-left');
+                        } else if (element.classList.contains('hero-image')) {
+                            element.classList.add('fade-in-right');
+                        } else if (element.classList.contains('card')) {
+                            // Semua card fade in barengan
+                            element.classList.add('scale-in');
+                        } else if (element.classList.contains('form-section')) {
+                            element.classList.add('fade-in-left');
+                        } else if (element.classList.contains('location-section')) {
+                            element.classList.add('fade-in-right');
+                        } else {
+                            element.classList.add('slide-up-fade');
+                        }
+                    } else {
+                        // Animasi keluar - reset dengan smooth transition
+                        const element = entry.target;
+                        element.classList.remove('animated', 'fade-in-up', 'fade-in-left', 'fade-in-right', 'fade-in-down', 'scale-in', 'slide-up-fade');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe semua elemen dengan class animate-on-scroll
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            if (animatedElements.length > 0) {
+                animatedElements.forEach(el => {
+                    if (el) observer.observe(el);
+                });
+            }
+
+            // Form submission handler
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Animasi button saat submit
+                    const submitBtn = this.querySelector('.submit-btn');
+                    submitBtn.style.transform = 'scale(0.95)';
+                    
+                    setTimeout(() => {
+                        submitBtn.style.transform = 'scale(1)';
+                        alert('Terima kasih! Pesan Anda telah terkirim.');
+                        this.reset();
+                    }, 200);
+                });
+            }
+
+            // Social media click handlers dengan smooth animation
+            const socialIcons = document.querySelectorAll('.social-icon');
+            socialIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const iconClass = this.querySelector('i').className;
+                    let platform = '';
+                    
+                    if (iconClass.includes('facebook')) platform = 'Facebook';
+                    else if (iconClass.includes('twitter')) platform = 'Twitter';
+                    else if (iconClass.includes('instagram')) platform = 'Instagram';
+                    else if (iconClass.includes('linkedin')) platform = 'LinkedIn';
+                    
+                    // Pulse animation on click
+                    this.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                    
+                    console.log(`Clicked ${platform} icon`);
+                });
+            });
+        });
+        
+        // ini cobaaa lagi
         // Scroll-triggered animations yang mengikuti progress scroll
         function handleScrollAnimations() {
             const scrolled = window.pageYOffset;
@@ -2392,6 +2936,7 @@
         });
 
         // ini coba
+        
 
     </script>
 </body>
