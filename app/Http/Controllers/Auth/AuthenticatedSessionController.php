@@ -29,11 +29,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Arahkan berdasarkan role
+        // Redirect otomatis sesuai role
         if ($request->user()->role === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
         }
 
+        // User biasa
         return redirect()->intended(route('dashboard'));
     }
 
@@ -42,12 +43,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::guard('web')->logout();           // Logout user/admin
+        $request->session()->invalidate();       // Hapus session
+        $request->session()->regenerateToken();  // Regenerate CSRF token
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        // Setelah logout diarahkan ke landing.landing
+        // Setelah logout, semua diarahkan ke landing
         return redirect()->route('landing');
     }
 }
