@@ -41,10 +41,6 @@ Desktop.ini
 
 #test/coverage
 /coverage
-<<<<<<< HEAD
 .phpunit.result.cache
 
 /koztly
-=======
-.phpunit.result.cache
->>>>>>> a1e647272ea359ca33cdfeed7ee77995b77a4294
