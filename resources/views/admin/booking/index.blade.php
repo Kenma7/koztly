@@ -7,55 +7,95 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar-bg {
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"%3E%3Ccircle cx="10" cy="10" r="1.5" fill="rgba(233, 59, 129, 0.1)"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23pattern)"/%3E%3C/svg%3E');
+            background-size: 200px 200px;
+        }
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        #main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 flex min-h-screen">
-
+<body class="bg-gray-50">
+    
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed left-0 top-0 z-40 w-64 h-screen bg-white shadow-lg">
-        <div class="h-full px-3 py-4 overflow-y-auto">
+    <aside id="sidebar" class="fixed left-0 top-0 z-40 w-64 h-screen bg-white shadow-lg sidebar-bg">
+        <div class="h-full px-3 py-4 overflow-y-auto relative">
+            <!-- Logo Section -->
             <div class="flex items-center justify-center mb-8 mt-4">
-                <h1 class="text-2xl font-bold text-pink-500">KOZTLY</h1>
+                <img src="/images/logo-koztly.png" alt="Logo" class="w-32 h-auto">
             </div>
+            
+            <!-- Menu -->
             <ul class="space-y-2 font-medium">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 transition">
                         <i class="fas fa-th-large w-5"></i>
                         <span class="ml-3">Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.kosan.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                    <a href="{{ route('admin.kosan.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition">
                         <i class="fas fa-home w-5"></i>
                         <span class="ml-3">Kelola Kosan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.kamar.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                    <a href="{{ route('admin.kamar.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition">
                         <i class="fas fa-door-open w-5"></i>
                         <span class="ml-3">Kelola Kamar</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.booking.index') }}" class="flex items-center p-3 text-white bg-pink-500 rounded-lg hover:bg-pink-600">
+                    <a href="{{ route('admin.booking.index') }}" class="flex items-center p-3 text-white bg-pink-500 rounded-lg hover:bg-pink-600 hover:text-white transition">
                         <i class="fas fa-calendar-check w-5"></i>
                         <span class="ml-3">Kelola Booking</span>
                     </a>
                 </li>
-                <li class="mt-8">
-                    <form action="{{ route('admin.logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50">
-                            <i class="fas fa-sign-out-alt w-5"></i>
-                            <span class="ml-3">Logout</span>
-                        </button>
-                    </form>
-                </li>
             </ul>
+
+            <!-- Logout Button at Bottom -->
+            <div class="absolute bottom-4 left-3 right-3">
+                <form action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-sign-out-alt w-5"></i>
+                        <span class="ml-3">Logout</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 ml-64 p-6">
+    <!-- Overlay untuk mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
+     <div id="main-content" class="ml-64 transition-all duration-300">
+        <!-- Navbar Biru -->
+        <nav class="bg-blue-300 shadow-md fixed top-0 z-20 right-0 left-64 transition-all duration-300" id="navbar">
+            <div class="px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <!-- Hamburger Button -->
+                    <button id="toggleSidebar" class="text-white hover:bg-pink-500 p-2 rounded-lg transition">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold text-white">Dashboard Admin</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-white">Admin</span>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold">
+                            A
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+        <!-- Page Content -->
+        <main class="mt-20 p-6">
 
         <!-- Notifikasi -->
         <div class="mb-6">
@@ -263,8 +303,8 @@
         <ul class="text-gray-700 space-y-2">
           <li><strong>Username:</strong> {{ optional($booking->user)->username ?? '-' }}</li>
           <li><strong>Kos:</strong> {{ optional($booking->kost)->nama_kos ?? '-' }}</li>
-          <li><strong>Kamar:</strong> {{ optional($booking->kamar)->nomor_kamar ?? '-' }}</l
-          <li><strong>Harga:</strong> {{ $booking->harga }}</li>
+          <li><strong>Kamar:</strong> {{ optional($booking->kamar)->nomor_kamar ?? '-' }} </li>
+          <li><strong>Harga:</strong> {{ $booking->harga ?? '-' }}</li>
           <li><strong>Lama Sewa:</strong> {{ $booking->lama_sewa }}</li>
           <li><strong>Status Pembayaran:</strong> {{ $booking->status_pembayaran }}</li>
           <li><strong>Bukti Transfer:</strong> 
@@ -305,6 +345,62 @@
 
     <!-- JS -->
     <script>
+    // Sidebar 
+    let sidebarOpen = true;
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const navbar = document.getElementById('navbar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggleBtn = document.getElementById('toggleSidebar');
+
+        toggleBtn.addEventListener('click', function() {
+            sidebarOpen = !sidebarOpen;
+            
+            if (sidebarOpen) {
+                // Show sidebar
+                sidebar.style.transform = 'translateX(0)';
+                mainContent.classList.remove('ml-0');
+                mainContent.classList.add('ml-64');
+                navbar.classList.remove('left-0');
+                navbar.classList.add('left-64');
+                overlay.classList.add('hidden');
+            } else {
+                // Hide sidebar
+                sidebar.style.transform = 'translateX(-100%)';
+                mainContent.classList.remove('ml-64');
+                mainContent.classList.add('ml-0');
+                navbar.classList.remove('left-64');
+                navbar.classList.add('left-0');
+            }
+        });
+
+        // Click overlay to close sidebar (mobile)
+        overlay.addEventListener('click', function() {
+            if (!sidebarOpen) {
+                toggleBtn.click();
+            }
+        });
+
+        // Auto hide alert
+        setTimeout(() => {
+            const success = document.getElementById('alert-success');
+            if (success) {
+                success.classList.add('opacity-0');
+                setTimeout(() => success.remove(), 500);
+            }
+        }, 3000);
+
+        // Responsive: Auto hide sidebar on mobile
+        function checkScreenSize() {
+            if (window.innerWidth < 768) {
+                if (sidebarOpen) {
+                    toggleBtn.click();
+                }
+            }
+        }
+        
+        window.addEventListener('load', checkScreenSize);
+        window.addEventListener('resize', checkScreenSize);
 
     function openModal(id) {
         document.getElementById('modal-' + id).classList.remove('hidden');
