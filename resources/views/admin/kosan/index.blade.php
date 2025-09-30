@@ -6,7 +6,7 @@
     <title>Kelola Kosan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
+    <style>
         .sidebar-bg {
             background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"%3E%3Ccircle cx="10" cy="10" r="1.5" fill="rgba(233, 59, 129, 0.1)"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23pattern)"/%3E%3C/svg%3E');
             background-size: 200px 200px;
@@ -17,42 +17,56 @@
         #main-content {
             transition: margin-left 0.3s ease-in-out;
         }
+        .sidebar-mini {
+            width: 80px;
+        }
+        .sidebar-full {
+            width: 256px;
+        }
+        .menu-text {
+            transition: opacity 0.2s ease-in-out;
+        }
+        .sidebar-mini .menu-text {
+            opacity: 0;
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
     
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed left-0 top-0 z-40 w-64 h-screen bg-white shadow-lg sidebar-bg">
+ <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar-full fixed left-0 top-0 z-40 h-screen bg-white shadow-lg sidebar-bg transition-all duration-300">
         <div class="h-full px-3 py-4 overflow-y-auto relative">
             <!-- Logo Section -->
             <div class="flex items-center justify-center mb-8 mt-4">
-                <img src="/images/logo-koztly.png" alt="Logo" class="w-32 h-auto">
+                <img id="logo-full" src="/images/logo-koztly.png" alt="Logo" class="w-32 h-auto transition-all duration-300">
+                <img id="logo-mini" src="/images/logo-koztly.png" alt="Logo" class="w-10 h-auto hidden transition-all duration-300">
             </div>
             
             <!-- Menu -->
             <ul class="space-y-2 font-medium">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 transition">
-                        <i class="fas fa-th-large w-5"></i>
-                        <span class="ml-3">Dashboard</span>
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 hover:text-pink-600 transition" title="Dashboard">
+                        <i class="fas fa-th-large w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.kosan.index') }}" class="flex items-center p-3 text-white bg-pink-500  rounded-lg hover:bg-pink-600 hover:text-white transition">
-                        <i class="fas fa-home w-5"></i>
-                        <span class="ml-3">Kelola Kosan</span>
+                    <a href="{{ route('admin.kosan.index') }}" class="flex items-center p-3 text-white bg-pink-500 rounded-lg hover:bg-pink-600 transition" title="Kelola Kosan">
+                        <i class="fas fa-home w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Kelola Kosan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.kamar.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition">
-                        <i class="fas fa-door-open w-5"></i>
-                        <span class="ml-3">Kelola Kamar</span>
+                    <a href="{{ route('admin.kamar.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 transition" title="Kelola Kamar">
+                        <i class="fas fa-door-open w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Kelola Kamar</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin.booking.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition">
-                        <i class="fas fa-calendar-check w-5"></i>
-                        <span class="ml-3">Kelola Booking</span>
+                    <a href="{{ route('admin.booking.index') }}" class="flex items-center p-3 text-gray-700 rounded-lg hover:bg-pink-50 hover:text-pink-600 transition" title="Kelola Booking">
+                        <i class="fas fa-calendar-check w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Kelola Booking</span>
                     </a>
                 </li>
             </ul>
@@ -61,15 +75,14 @@
             <div class="absolute bottom-4 left-3 right-3">
                 <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50 transition">
-                        <i class="fas fa-sign-out-alt w-5"></i>
-                        <span class="ml-3">Logout</span>
+                    <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50 transition" title="Logout">
+                        <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                        <span class="ml-3 menu-text">Logout</span>
                     </button>
                 </form>
             </div>
         </div>
     </aside>
-
     <!-- Overlay untuk mobile -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden"></div>
      <div id="main-content" class="ml-64 transition-all duration-300">
@@ -110,7 +123,7 @@
 
     <!-- judul halaman -->
     <div class="bg-white rounded-xl shadow p-6 border-l-4 border-pink-500 m-8">
-        <h1 class="text-2xl font-bold mb-3">Kelola Kosan</h1>
+        <h1 class="text-2xl font-bold mb-3 text-blue-400">Kelola Kosan</h1>
         <p class="text-sm text-gray-600">
             Kelola semua kosan yang sudah terdaftar di <span class="font-bold text-[#E93B81]">Koztly</span> dengan mudah dalam satu tempat.
         </p>
@@ -391,32 +404,39 @@
 
     <!-- Script modal -->
     <script>
-            // Sidebar 
-    let sidebarOpen = true;
+      // Sidebar 
+        let sidebarOpen = true;
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('main-content');
         const navbar = document.getElementById('navbar');
         const overlay = document.getElementById('sidebar-overlay');
         const toggleBtn = document.getElementById('toggleSidebar');
+        const logoFull = document.getElementById('logo-full');
+        const logoMini = document.getElementById('logo-mini');
 
         toggleBtn.addEventListener('click', function() {
             sidebarOpen = !sidebarOpen;
             
             if (sidebarOpen) {
-                // Show sidebar
-                sidebar.style.transform = 'translateX(0)';
-                mainContent.classList.remove('ml-0');
+                // Full sidebar
+                sidebar.classList.remove('sidebar-mini');
+                sidebar.classList.add('sidebar-full');
+                mainContent.classList.remove('ml-20');
                 mainContent.classList.add('ml-64');
-                navbar.classList.remove('left-0');
+                navbar.classList.remove('left-20');
                 navbar.classList.add('left-64');
-                overlay.classList.add('hidden');
+                logoFull.classList.remove('hidden');
+                logoMini.classList.add('hidden');
             } else {
-                // Hide sidebar
-                sidebar.style.transform = 'translateX(-100%)';
+                // Mini sidebar (icon only)
+                sidebar.classList.remove('sidebar-full');
+                sidebar.classList.add('sidebar-mini');
                 mainContent.classList.remove('ml-64');
-                mainContent.classList.add('ml-0');
+                mainContent.classList.add('ml-20');
                 navbar.classList.remove('left-64');
-                navbar.classList.add('left-0');
+                navbar.classList.add('left-20');
+                logoFull.classList.add('hidden');
+                logoMini.classList.remove('hidden');
             }
         });
 
