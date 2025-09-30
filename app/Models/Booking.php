@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,8 +13,14 @@ class Booking extends Model
     protected $primaryKey = 'id_booking';
 
     protected $fillable = [
-        'id_user', 'id_kos', 'id_kamar', 'harga', 'lama_sewa',
-        'status_pembayaran', 'bukti_tf', 'status_sewa'
+        'id_user', 
+        'id_kos', 
+        'id_kamar', 
+        'harga', 
+        'lama_sewa',
+        'status_pembayaran', 
+        'bukti_tf', 
+        'status_sewa'
     ];
 
     // Relasi ke User
@@ -25,7 +32,7 @@ class Booking extends Model
     // Relasi ke Kamar
     public function kamar()
     {
-        return $this->belongsTo(Kamar::class, 'id_kamar');
+        return $this->belongsTo(Kamar::class, 'id_kamar', 'id_kamar');
     }
 
     // Relasi ke Kosan (langsung, bukan lewat kamar)
@@ -33,4 +40,10 @@ class Booking extends Model
     {
         return $this->belongsTo(Kosan::class, 'id_kos', 'id_kos');
     }
+
+    public function kosan()
+    {
+        return $this->belongsTo(Kosan::class, 'id_kos', 'id_kos');
+    }
+
 }

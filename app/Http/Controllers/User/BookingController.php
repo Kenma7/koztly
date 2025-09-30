@@ -9,86 +9,80 @@ use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
-    /**
-     * Display a listing of user bookings
-     */
     public function index(Request $request)
     {
+        // UNTUK TESTING: Hardcode user_id = 1
+        // Nanti ganti jadi: Auth::id() kalau sudah ada login
+        $userId = 1; 
+        
         $query = Booking::with(['kamar.kosan', 'user'])
-            ->where('id_user', Auth::id())
+            ->where('id_user', $userId)
             ->orderBy('created_at', 'desc');
 
-        // Filter berdasarkan status jika ada
-        if ($request->has('status')) {
-            if ($request->status === 'pending') {
-                $query->where('status_pembayaran', 'pending');
+        // 🔍 Filter berdasarkan search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('kamar.kosan', function ($q) use ($search) {
+                $q->where('nama_kos', 'like', "%{$search}%")
+                ->orWhere('lokasi_kos', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan status_sewa
+        if ($request->has('status') && $request->status !== null) {
+            if ($request->status === 'menunggu') {
+                $query->where('status_sewa', 'menunggu');
             } elseif ($request->status === 'aktif') {
-                $query->where('status_pembayaran', 'lunas')
-                      ->where('status_sewa', 'aktif');
+                $query->where('status_sewa', 'aktif');
             } elseif ($request->status === 'selesai') {
                 $query->where('status_sewa', 'selesai');
+            } elseif ($request->status === 'batal') {
+                $query->where('status_sewa', 'batal');
             }
         }
 
         $bookings = $query->paginate(9);
 
-        return view('user.booking.index', compact('bookings'));
+        // Statistik berdasarkan status_sewa
+        $totalBookings    = Booking::where('id_user', $userId)->count();
+        $menungguBookings = Booking::where('id_user', $userId)->where('status_sewa', 'menunggu')->count();
+        $aktifBookings    = Booking::where('id_user', $userId)->where('status_sewa', 'aktif')->count();
+        $selesaiBookings  = Booking::where('id_user', $userId)->where('status_sewa', 'selesai')->count();
+        $batalBookings    = Booking::where('id_user', $userId)->where('status_sewa', 'batal')->count();
+
+        return view('user.booking.index', compact(
+            'bookings',
+            'totalBookings',
+            'menungguBookings',
+            'aktifBookings',
+            'selesaiBookings',
+            'batalBookings'
+        ));
+
     }
 
-    /**
-     * Display the specified booking detail
-     */
     public function show($id)
     {
+        $userId = 1; // Hardcode untuk testing
+        
         $booking = Booking::with(['kamar.kosan', 'user'])
             ->where('id_booking', $id)
-            ->where('id_user', Auth::id())
+            ->where('id_user', $userId)
             ->firstOrFail();
 
         return view('user.booking.show', compact('booking'));
     }
 
-    /**
-     * Upload bukti transfer
-     */
-    public function uploadBukti(Request $request, $id)
-    {
-        $request->validate([
-            'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-        ]);
-
-        $booking = Booking::where('id_booking', $id)
-            ->where('id_user', Auth::id())
-            ->firstOrFail();
-
-        if ($request->hasFile('bukti_tf')) {
-            // Hapus file lama jika ada
-            if ($booking->bukti_tf && file_exists(storage_path('app/public/' . $booking->bukti_tf))) {
-                unlink(storage_path('app/public/' . $booking->bukti_tf));
-            }
-
-            // Simpan file baru
-            $path = $request->file('bukti_tf')->store('bukti_transfer', 'public');
-            $booking->bukti_tf = $path;
-            $booking->save();
-
-            return redirect()->back()->with('success', 'Bukti transfer berhasil diupload!');
-        }
-
-        return redirect()->back()->with('error', 'Gagal mengupload bukti transfer.');
-    }
-
-    /**
-     * Cancel booking
-     */
     public function cancel($id)
     {
+        $userId = 1; // Hardcode untuk testing
+        
         $booking = Booking::where('id_booking', $id)
-            ->where('id_user', Auth::id())
-            ->where('status_pembayaran', 'pending')
+            ->where('id_user', $userId)
+            ->where('status_pembayaran', 'belum dibayar')
             ->firstOrFail();
 
-        $booking->status_pembayaran = 'dibatalkan';
+        $booking->status_sewa = 'batal';
         $booking->save();
 
         return redirect()->route('user.booking.index')
