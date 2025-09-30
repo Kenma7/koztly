@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Booking extends Model
 {
@@ -18,10 +19,25 @@ class Booking extends Model
         'id_kamar', 
         'harga', 
         'lama_sewa',
+        'tanggal_masuk',
+        'jumlah_penghuni',
+        'catatan',
         'status_pembayaran', 
         'bukti_tf', 
         'status_sewa'
     ];
+
+    protected $attributes = [
+    'status_pembayaran' => 'belum dibayar',
+    'status_sewa' => 'menunggu',
+    ];
+
+
+     // Accessor untuk tanggal_keluar otomatis
+    public function getTanggalKeluarAttribute()
+    {
+        return Carbon::parse($this->tanggal_masuk)->addMonths($this->lama_sewa);
+    }
 
     // Relasi ke User
     public function user()
@@ -36,8 +52,13 @@ class Booking extends Model
     }
 
     // Relasi ke Kosan (langsung, bukan lewat kamar)
+   public function kosan()
+    {
+    return $this->belongsTo(Kosan::class, 'id_kos', 'id_kos');
+    }
+
     public function kost()
     {
-        return $this->belongsTo(Kosan::class, 'id_kos', 'id_kos');
+    return $this->belongsTo(Kosan::class, 'id_kos', 'id_kos');
     }
 }

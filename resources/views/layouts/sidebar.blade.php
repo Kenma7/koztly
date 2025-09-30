@@ -40,7 +40,7 @@
 </a>
 
 <!-- Bookings -->
-<a href="{{ route('booking.index') }}"
+<a href="#"
    class="flex items-center py-2.5 px-3 rounded-lg transition-all duration-200 group border-l-4
    {{ request()->routeIs('kosan.booking.*')
         ? 'bg-blue-50 text-blue-600 border-blue-500'

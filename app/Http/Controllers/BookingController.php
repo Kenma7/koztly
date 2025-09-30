@@ -44,6 +44,16 @@ class BookingController extends Controller
      */
     public function store(Request $request, $id)
     {
+        logger('=== DEBUG BOOKING STORE ===');
+        logger('Kosan ID: ' . $id);
+
+         $kosan = Kosan::find($id);
+    if (!$kosan) {
+        logger('Kosan not found for ID: ' . $id);
+        return back()->with('error', 'Kosan tidak ditemukan!');
+    }
+    logger('Kosan found: ' . $kosan->nama_kos);
+
         $request->validate([
             'jumlah_penghuni' => 'required|integer|min:1|max:4',
             'catatan' => 'nullable|string|max:500',
@@ -52,10 +62,19 @@ class BookingController extends Controller
             'total_biaya' => 'required|integer'
         ]);
 
+         logger('Validation passed');
+
         // Cari kamar yang tersedia
         $kamar = \App\Models\Kamar::where('id_kos', $id)
                                  ->where('status', 'tersedia')
                                  ->first();
+        
+          logger('Kamar found:', [$kamar ? $kamar->toArray() : 'NULL']);
+
+           if (!$kamar) {
+        logger('No available kamar for kos: ' . $id);
+        return back()->with('error', 'Maaf, tidak ada kamar tersedia untuk kosan ini.');
+    }
 
         if (!$kamar) {
             return back()->with('error', 'Maaf, tidak ada kamar tersedia untuk kosan ini.');
@@ -68,6 +87,7 @@ class BookingController extends Controller
             'id_kamar' => $kamar->id_kamar,
             'harga' => $request->total_biaya,
             'lama_sewa' => $request->lama_sewa,
+            'tanggal_masuk' => $request->tanggal_mulai,
             'jumlah_penghuni' => $request->jumlah_penghuni,
             'catatan' => $request->catatan,
             'status_pembayaran' => 'belum dibayar',
@@ -76,7 +96,7 @@ class BookingController extends Controller
         ]);
 
         // Update status kamar jadi dipesan
-        $kamar->update(['status' => 'dipesan']);
+        $kamar->update(['status' => 'dibooking']);
 
         return redirect()->route('booking.show', $booking->id_booking)
             ->with('success', 'Booking berhasil diajukan! Status: Menunggu persetujuan. ID: ' . $booking->id_booking);
@@ -86,7 +106,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::with(['kosan', 'kamar'])->findOrFail($id);
-        return view('sewa.detail', compact('booking'));
+        return view('booking.show', compact('booking'));
     }
 
     // Riwayat booking
