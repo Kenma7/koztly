@@ -49,6 +49,9 @@ class BookingController extends Controller
         $aktifBookings    = Booking::where('id_user', $userId)->where('status_sewa', 'aktif')->count();
         $selesaiBookings  = Booking::where('id_user', $userId)->where('status_sewa', 'selesai')->count();
         $batalBookings    = Booking::where('id_user', $userId)->where('status_sewa', 'batal')->count();
+        $belumBayarBookings = Booking::where('id_user', $userId)->where('status_pembayaran', 'belum dibayar')->count();
+        $sudahBayarBookings = Booking::where('id_user', $userId)->where('status_pembayaran', 'sudah dibayar')->count();
+
 
         return view('user.booking.index', compact(
             'bookings',
@@ -56,7 +59,9 @@ class BookingController extends Controller
             'menungguBookings',
             'aktifBookings',
             'selesaiBookings',
-            'batalBookings'
+            'batalBookings',
+            'belumBayarBookings',
+            'sudahBayarBookings'
         ));
 
     }

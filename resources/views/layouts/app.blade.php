@@ -26,7 +26,7 @@
     </div>
 
      <!-- Main Content -->
-        <div class="main-content bg-pink-50 flex-1 ml-64 min-h-screen transition-all duration-300">
+        <div class="main-content bg-gray-50 flex-1 ml-64 min-h-screen transition-all duration-300">
             <div class="px-6 py-6 transition-all duration-400">
                 @yield('content')
             </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-gray-50 py-8" style="min-h-screen">
+<div class="px-4 rounded-lg">
     <div class="container mx-auto px-4" style="max-width: 1400px;">
         
         <a href="{{ route('user.booking.index') }}" 
@@ -33,10 +33,10 @@
             <div class="lg:col-span-2 space-y-6">
                 
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="bg-gradient-to-r from-[#ea3882] to-[#d12670] p-6 text-white">
-                        <div class="flex justify-between items-start flex-wrap gap-4">
+                    <div class="rounded-lg bg-gradient-to-r from-[#ea3882] to-[#d12670] p-6 text-white">
+                        <div class="flex justify-between items-start flex-wrap gap-4 ">
                             <div>
-                                <h1 class="text-2xl font-bold mb-1">Detail Booking</h1>
+                                <h1 class="text-2xl font-semibold mb-1">Detail Booking</h1>
                                 <p class="text-pink-100">
                                     ID Booking: <span class="font-mono font-semibold">#{{ str_pad($booking->id_booking, 6, '0', STR_PAD_LEFT) }}</span>
                                 </p>
@@ -99,23 +99,23 @@
                         </div>
 
                         <div class="grid md:grid-cols-3 gap-4 mb-5">
-                            <div class="bg-[#ffe6e2] p-4 rounded-lg border border-[#f5acca]">
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-pink-500 shadow-lg">
                                 <p class="text-xs text-[#ea3882] font-semibold mb-1 flex items-center gap-2">
                                     <i class="fas fa-home"></i> Nama Kos
                                 </p>
                                 <p class="font-bold text-gray-800">{{ $booking->kost->nama_kos ?? 'N/A' }}</p>
                             </div>
 
-                            <div class="bg-[#b8caef] p-4 rounded-lg border border-[#9ab5e8]">
-                                <p class="text-xs text-[#5a7bb5] font-semibold mb-1 flex items-center gap-2">
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-orange-500 shadow-lg">
+                                <p class="text-xs text-orange-500 font-semibold mb-1 flex items-center gap-2">
                                     <i class="fas fa-door-open"></i> Nomor Kamar
                                 </p>
                                 <p class="font-bold text-gray-800">{{ $booking->kamar->nomor_kamar ?? 'N/A' }}</p>
                             </div>
 
-                            <div class="bg-[#f5acca] p-4 rounded-lg border border-[#ea3882]">
-                                <p class="text-xs text-[#d12670] font-semibold mb-1 flex items-center gap-2">
-                                    <i class="fas fa-venus-mars"></i> Kategori
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-purple-500 shadow-lg">
+                                <p class="text-xs text-purple-500 font-semibold mb-1 flex items-center gap-2">
+                                    <i class="fas fa-venus-mars"></i> Kategori Kos
                                 </p>
                                 <p class="font-bold text-gray-800">
                                     @if($booking->kost->kategori == 'putra')
@@ -131,27 +131,62 @@
                             </div>
                         </div>
 
-                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
-                            <p class="text-xs text-gray-600 font-semibold mb-2 flex items-center gap-2">
+                        <div class="p-4 rounded-lg mb-4 border-l-4 border-green-500 shadow-lg">
+                            <p class="text-xs text-green-600 font-semibold mb-2 flex items-center gap-2">
                                 <i class="fas fa-map-marker-alt"></i> Lokasi
                             </p>
                             <p class="text-gray-800 text-sm">{{ $booking->kost->lokasi_kos ?? 'N/A' }}</p>
                         </div>
 
                         @if($booking->kost && $booking->kost->fasilitas)
-                        <div class="bg-[#b8caef] bg-opacity-20 p-4 rounded-lg border border-[#b8caef]">
+                        <div class="p-4 rounded-lg mb-4 border-l-4 border-blue-500 shadow-lg">
                             <p class="text-xs text-[#5a7bb5] font-semibold mb-3 flex items-center gap-2">
                                 <i class="fas fa-check-circle"></i> Fasilitas
                             </p>
+
+                            @php
+                                $fasilitasArray = explode(',', $booking->kost->fasilitas);
+                                $iconMap = [
+                                    'wifi' => 'fa-wifi',
+                                    'ac' => 'fa-snowflake',
+                                    'kipas' => 'fa-fan',
+                                    'kasur' => 'fa-bed',
+                                    'lemari' => 'fa-door-closed',
+                                    'meja' => 'fa-table',
+                                    'kursi' => 'fa-chair',
+                                    'tv' => 'fa-tv',
+                                    'kamar mandi' => 'fa-bath',
+                                    'dapur' => 'fa-utensils',
+                                    'parkir' => 'fa-parking',
+                                    'mesin cuci' => 'fa-tshirt',
+                                    'laundry' => 'fa-tshirt',
+                                    'kulkas' => 'fa-temperature-low',
+                                ];
+                            @endphp
+
                             <div class="flex flex-wrap gap-2">
-                                @foreach(explode(',', $booking->kost->fasilitas) as $fasilitas)
-                                <span class="px-3 py-1 bg-white text-[#5a7bb5] rounded-full text-xs font-medium border border-[#b8caef]">
-                                    {{ trim($fasilitas) }}
-                                </span>
+                                @foreach($fasilitasArray as $fasilitas)
+                                    @php
+                                        $fasilitasLower = strtolower(trim($fasilitas));
+                                        $icon = 'fa-check-circle'; // default icon
+
+                                        foreach ($iconMap as $keyword => $iconClass) {
+                                            if (strpos($fasilitasLower, $keyword) !== false) {
+                                                $icon = $iconClass;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+
+                                    <span class="flex items-center gap-1 px-3 py-1 bg-white text-[#5a7bb5] rounded-full text-xs font-medium border border-[#b8caef]">
+                                        <i class="fas {{ $icon }}"></i>
+                                        {{ ucfirst(trim($fasilitas)) }}
+                                    </span>
                                 @endforeach
                             </div>
                         </div>
-                        @endif
+                    @endif
+
 
                         @if($booking->kost && $booking->kost->deskripsi)
                         <div class="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -342,8 +377,8 @@
 
                             <div class="bg-[#ffe6e2] p-4 rounded-lg border-2 border-[#f5acca] mt-3">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-[#ea3882] font-bold">Total</span>
-                                    <span class="font-bold text-[#ea3882] text-xl">
+                                    <span class="text-black font-bold">Total</span>
+                                    <span class="font-bold text-black text-xl">
                                         Rp {{ number_format($booking->harga * $booking->lama_sewa, 0, ',', '.') }}
                                     </span>
                                 </div>
@@ -365,7 +400,7 @@
                                 <i class="fas fa-upload text-[#ea3882]"></i>
                                 Upload Bukti Transfer
                             </h3>
-                            <form action="{{ route('user.bookings.upload-bukti', $booking->id_booking) }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('user.booking.upload-bukti', $booking->id_booking) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
                                     <input type="file" name="bukti_tf" accept="image/*" required
@@ -429,30 +464,59 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-yellow-50 rounded-lg p-5 border-2 border-yellow-200 shadow">
-                    <div class="flex items-start">
-                        <div class="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-info-circle text-yellow-900"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-gray-800 mb-2 text-sm">Informasi Penting</h3>
-                            <ul class="text-xs text-gray-700 space-y-2">
-                                <li class="flex items-start gap-2">
-                                    <i class="fas fa-check text-green-600 mt-0.5"></i>
-                                    <span>Upload bukti transfer untuk verifikasi pembayaran</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <i class="fas fa-check text-green-600 mt-0.5"></i>
-                                    <span>Verifikasi pembayaran 1x24 jam</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <i class="fas fa-check text-green-600 mt-0.5"></i>
-                                    <span>Hubungi admin jika ada kendala</span>
-                                </li>
-                            </ul>
+                {{-- Informasi Penting --}}
+                @if($booking->status_pembayaran == 'belum dibayar')
+                    <div class="bg-yellow-50 rounded-lg p-3 border-2 border-yellow-200 shadow">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-info-circle text-yellow-900"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800 mb-2 text-sm">Informasi Penting</h3>
+                                <ul class="text-xs text-gray-700 space-y-2">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-green-600 mt-0.5"></i>
+                                        <span>Upload bukti transfer untuk verifikasi pembayaran</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-green-600 mt-0.5"></i>
+                                        <span>Verifikasi pembayaran 1x24 jam</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-green-600 mt-0.5"></i>
+                                        <span>Hubungi admin jika ada kendala</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @elseif($booking->status_pembayaran == 'sudah dibayar')
+                    <div class="bg-yellow-50 rounded-lg p-2 border-2 border-yellow-200 shadow">
+                        <div class="flex items-start p-3 gap-3">
+                            <div class="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-info-circle text-yellow-900"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800 mb-2 text-sm">Informasi Penting</h3>
+                                <ul class="text-xs text-gray-700 space-y-2">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-green-600 mt-0.5"></i>
+                                        <span>Patuhi aturan kos yang berlaku (jam malam, kebersihan, dll)</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-green-600 mt-0.5"></i>
+                                        <span>Hubungi admin jika ada kendala atau kebutuhan mendesak</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fas fa-check text-green-600 mt-0.5"></i>
+                                        <span>Perpanjangan sewa bisa dilakukan sebelum masa sewa habis</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>
@@ -461,11 +525,13 @@
 @endsection
     <!-- Modal untuk gambar -->
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="relative bg-white rounded-lg shadow-lg p-2 w-[400px] h-[530px]">
+        <div class="relative bg-white rounded-lg shadow-lg p-2 inline-block">
             <span class="absolute top-2 right-3 text-gray-800 text-2xl cursor-pointer" onclick="closeModal()">&times;</span>
-            <img id="modalImg" class="w-full h-auto rounded-lg">
+            <img id="modalImg" class="max-w-[70vw] max-h-[70vh] object-contain rounded-lg">
         </div>
     </div>
+
+</html>
 
 <script>
 function openModal(src) {
