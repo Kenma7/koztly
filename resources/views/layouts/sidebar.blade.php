@@ -26,6 +26,7 @@
             <span class="ml-3 sidebar-text font-medium">Daftar Kost</span>
         </a>
 
+
     <!-- Bookings -->
     <a href="#"
     class="flex items-center py-2.5 px-3 rounded-lg transition-all duration-200 group border-l-4
@@ -38,6 +39,7 @@
                 : 'text-gray-400 group-hover:text-blue-500' }} transition-colors"></i>
         <span class="ml-3 sidebar-text font-medium">Bookings</span>
     </a>
+
 
 
         <!-- Chat -->

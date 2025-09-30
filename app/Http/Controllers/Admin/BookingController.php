@@ -93,7 +93,10 @@ class BookingController extends Controller
      */
     public function show(string $id)
     {
-        // Bisa ditambahkan untuk view detail booking
+        
+        // Data detail booking, sudah termasuk user.gender, jumlah_penghuni, catatan
+        $booking = Booking::with(['user', 'kost', 'kamar'])->findOrFail($id);
+        return view('admin.booking.show', compact('booking'));
     }
 
     /**

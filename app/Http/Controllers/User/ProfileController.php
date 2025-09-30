@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // <-- ini wajib ditambah
 
@@ -17,9 +18,10 @@ class ProfileController extends Controller
     return view('user.profile.index', compact('user'));
 }
 
-public function update(Request $request)
+public function update(Request $request, $id)
 {
-    $user = Auth::user();
+    $user = User::find($id);
+
 
     $request->validate([
         'name' => 'required|string|max:255',
