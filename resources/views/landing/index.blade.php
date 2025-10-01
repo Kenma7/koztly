@@ -21,6 +21,171 @@
             box-sizing: border-box;
         }
 
+/* Navigation Styles */
+.navbar {
+    position: fixed;        
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    z-index: 1000;
+    background: transparent;
+    transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Navbar hidden saat scroll */
+.navbar-hidden {
+    transform: translateY(-100%);
+}
+
+/* Navbar transparan di hero section */
+.navbar-transparent {
+    background-color: transparent;
+}
+
+/* Navbar berbackground di luar hero section */
+.navbar-colored {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+    margin-left: 50px;
+}
+
+.nav-menu li {
+    position: relative;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.nav-menu li:nth-child(1) { animation-delay: 0.4s; }
+.nav-menu li:nth-child(2) { animation-delay: 0.5s; }
+.nav-menu li:nth-child(3) { animation-delay: 0.6s; }
+.nav-menu li:nth-child(4) { animation-delay: 0.7s; }
+
+.nav-menu a {
+    text-decoration: none;
+    color: #E93B81;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    padding: 12px 40px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.nav-menu a:hover {
+    background: #F5ABC9;
+    color: #ffffff;
+}
+
+/* Auth Buttons */
+.auth-buttons {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.btn {
+    font-family: 'Mulish', sans-serif;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 200;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    opacity: 0;
+    transform: translateX(30px);
+    animation: slideInRight 0.6s ease forwards;
+}
+
+.btn:nth-child(1) { animation-delay: 0.8s; }
+.btn:nth-child(2) { animation-delay: 0.9s; }
+
+.btn-glass {
+    background: rgba(182, 201, 240, 0.1);
+    backdrop-filter: blur(20px);
+    border: 2px solid #E93B81;
+    color: #E93B81;
+}
+
+.btn-glass:hover {
+    background: #F5ABC9;
+    color: #ffffff;
+    border-color: #F5ABC9;
+}
+
+/* Logo */
+.logo {
+    width: 120px;
+    height: auto;
+    margin-left: -12px;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: zoomIn 0.8s ease 0.3s forwards;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+}
+
+@keyframes ripple-animation {
+    to { transform: scale(4); opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar { padding: 15px 20px; }
+    .nav-menu { gap: 15px; }
+    .nav-menu a { padding: 10px 20px; font-size: 14px; }
+    .auth-buttons { gap: 10px; }
+    .btn { padding: 12px 18px; font-size: 14px; }
+    .logo { width: 100px; }
+}
+
+@media (max-width: 480px) {
+    .nav-menu { display: none; }
+    .auth-buttons { margin-left: auto; }
+}
+
+
         body {
             font-family: 'Mulish', sans-serif;
             background: white;
@@ -55,8 +220,8 @@
         /* Button positioned at bottom left */
         .bottom-left-button {
             position: absolute;
-            bottom: 15px;
-            left: 25px;
+            bottom: 18px;
+            left: 33px;
             z-index: 10;
             opacity: 0;
             transform: translateY(50px);
@@ -65,11 +230,11 @@
 
         .btn-outlined {
         display: inline-flex;
-        align-items: center;
+        align-items: center;    
         padding: 17px 227px;
         background: transparent;
         border: 2px solid #E93B81;
-        border-radius: 50px;
+        border-radius: 22px;
         color: #E93B81;
         text-decoration: none;
         font-family: 'Mulish', sans-serif;
@@ -83,7 +248,6 @@
         background: #F5ABC9;
         color: white;
         border-color: #F5ABC9;
-        transform: translateX(5px);
     }
 
         .content-right {
@@ -153,7 +317,7 @@
             position: absolute;
             bottom: -280px;
             right: -35px;
-            width: 158%;
+            width: 163%;
             z-index: 1;
             pointer-events: none;
             opacity: 0;
@@ -306,7 +470,7 @@
     padding: 100px 0;
     background: white;
     min-height: 100vh;
-    overflow: hidden; 
+    overflow: hidden !important; 
     opacity: 0;
     transform: translateY(100px) scale(0.9); 
     transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -324,10 +488,11 @@
 }
 
 .container {
-    max-width: 100%;
+    max-width: 100vw;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    overflow-y: visible;
 }
 
 .testimoni-header {
@@ -382,10 +547,12 @@
 
 /* Container untuk overflow hidden */
 .testimoni-container {
-    overflow: hidden;
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
     width: 100%;
     cursor: grab;
-    user-select: none; /* Prevent text selection saat drag */
+    user-select: none;
     opacity: 0;
     transform: translateY(60px) rotateY(45deg);
     transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s;
@@ -407,19 +574,32 @@
     cursor: grabbing;
 }
 
+/* Hide scrollbar untuk semua browser */
+.testimoni-container::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.testimoni-container {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}
+
 .testimoni-grid {
     display: flex;
     gap: 20px;
     padding: 0;
     margin: 0;
-    width: fit-content; /* Penting untuk auto scroll */
-    justify-content: flex-start; /* Ubah dari center ke flex-start */
-    transition: transform 0.1s linear; /* Smooth transition */
-    will-change: transform; /* Optimasi performa */
+    width: fit-content;
+    justify-content: flex-start;
+    transition: transform 0.1s linear;
+    will-change: transform;
+    overflow: visible;
 }
 
 .testimoni-card {
-    flex: 0 0 300px;  /* ukuran kartu tetap */
+    flex: 0 0 300px;
     scroll-snap-align: start;
     background-color: rgba(140, 160, 200, 0.1);
     border-radius: 8px;
@@ -433,7 +613,7 @@
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    user-select: none; /* Prevent text selection */
+    user-select: none;
     opacity: 0;
     transform: translateX(100px) translateY(50px) rotateY(45deg) scale(0.8);
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -472,7 +652,6 @@
     border: 2px solid rgba(233, 59, 129, 0.2);
 }
 
-
 .testimoni-content {
     position: relative;
     flex: 1;
@@ -491,145 +670,143 @@
 }
 
 .testimoni-card.animate-in .stars {
-            opacity: 1;
-            transform: scale(1);
-            transition-delay: 0.2s;
-        }
-
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: 0.2s;
+}
 
 .testimoni-text {
-            font-size: 0.90rem;
-            color: #643843;
-            line-height: 1.6;
-            margin-bottom: 10px;
-            font-style: italic;
-            flex: 1;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease-out;
-        }
+    font-size: 0.90rem;
+    color: #643843;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    font-style: italic;
+    flex: 1;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease-out;
+}
 
 .testimoni-card.animate-in .testimoni-text {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.3s;
-        }
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.3s;
+}
 
-        .testimoni-author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: auto;
-            opacity: 0;
-            transform: translateX(-20px);
-            transition: all 0.5s ease-out;
-        }
+.testimoni-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease-out;
+}
 
-        .testimoni-card.animate-in .testimoni-author {
-            opacity: 1;
-            transform: translateX(0);
-            transition-delay: 0.4s;
-        }
+.testimoni-card.animate-in .testimoni-author {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.4s;
+}
 
-        .author-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #E93B81, #ff6ba8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            flex-shrink: 0;
-            transform: scale(0);
-            transition: transform 0.3s ease-out;
-        }
+.author-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E93B81, #ff6ba8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    transform: scale(0);
+    transition: transform 0.3s ease-out;
+}
 
-        .testimoni-card.animate-in .author-icon {
-            transform: scale(1);
-            transition-delay: 0.5s;
-        }
+.testimoni-card.animate-in .author-icon {
+    transform: scale(1);
+    transition-delay: 0.5s;
+}
 
-        .author-info h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #643843;
-            margin: 0 0 3px 0;
-        }
+.author-info h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #643843;
+    margin: 0 0 3px 0;
+}
 
-        .author-info p {
-            font-size: 0.85rem;
-            color: #643843;
-            margin: 0;
-        }
+.author-info p {
+    font-size: 0.85rem;
+    color: #643843;
+    margin: 0;
+}
 
-        .section-testimoni.pulse {
-            animation: sectionPulse 2s ease-in-out;
-        }
+.section-testimoni.pulse {
+    animation: sectionPulse 2s ease-in-out;
+}
 
-        @keyframes sectionPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.005); }
-        }
+@keyframes sectionPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.005); }
+}
 
-        .testimoni-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #E93B81, #ff6ba8, #ff9bcb, #E93B81);
-            border-radius: 10px;
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-            background-size: 300% 300%;
-            animation: gradientShift 3s linear infinite;
-        }
+.testimoni-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #E93B81, #ff6ba8, #ff9bcb, #E93B81);
+    border-radius: 10px;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+    background-size: 300% 300%;
+    animation: gradientShift 3s linear infinite;
+}
 
-        .testimoni-card:hover::before {
-            opacity: 0.6;
-        }
+.testimoni-card:hover::before {
+    opacity: 0.6;
+}
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
-        /* Card bounce animation untuk re-trigger */
-        @keyframes cardBounce {
-            0% { transform: translateY(0) scale(1); }
-            30% { transform: translateY(-8px) scale(1.02); }
-            60% { transform: translateY(-4px) scale(1.01); }
-            100% { transform: translateY(0) scale(1); }
-        }
+@keyframes cardBounce {
+    0% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-8px) scale(1.02); }
+    60% { transform: translateY(-4px) scale(1.01); }
+    100% { transform: translateY(0) scale(1); }
+}
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 2.2rem;
-            }
-            
-            .section-subtitle {
-                font-size: 1rem;
-            }
-            
-            .testimoni-card {
-                flex: 0 0 280px;
-                padding: 20px;
-                min-height: auto;
-            }
-            
-            .testimoni-text {
-                font-size: 0.9rem;
-            }
-        }
+/* Responsive */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2.2rem;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+    }
+    
+    .testimoni-card {
+        flex: 0 0 280px;
+        padding: 20px;
+        min-height: auto;
+    }
+    
+    .testimoni-text {
+        font-size: 0.9rem;
+    }
+}
 
 
         .section-tentang {
@@ -1905,6 +2082,25 @@
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+<nav class="navbar" id="navbar">
+    <div class="logo-container">
+        <img src="images/logo.png" alt="Koztly Logo" class="logo">
+    </div>
+
+    <ul class="nav-menu">
+        <li><a href="#beranda">Beranda</a></li>
+        <li><a href="#tentang">Tentang</a></li>
+        <li><a href="#testimoni">Testimoni</a></li>
+        <li><a href="#kontak">Kontak</a></li>
+    </ul>
+
+    <div class="auth-buttons">
+        <a href="/login" class="btn btn-glass">Masuk</a>
+        <a href="/register" class="btn btn-glass">Daftar</a>
+    </div>
+</nav>
+
         <!-- Section Beranda -->
         <section id="beranda" class="hero-container">
             <main class="main-content">
@@ -1926,83 +2122,19 @@
 
             <!-- Button di posisi bawah kiri -->
             <div class="bottom-left-button">
-                <a href="#" class="btn-outlined">
-                    <span>Lihat Kos</span>
+                <a href="#kos" class="btn-outlined">
+                    <span>Cari Kos</span>
                 </a>
             </div>
         </section>
     
-    <section class="section-kos">
+    <section id="kos" class="section-kos">
         <div class="container-kos">
             <!-- Header Text -->
             <div class="header-text">
                 <h1>Temukan Kos Impianmu</h1>
                 <p>Cari kos nyaman sesuai kebutuhan dan budget kamu</p>
             </div>
-
-            <!-- Search Box -->
-            <div class="search-box">
-                <div class="search-field">
-                    <label>Lokasi</label>
-                    <div class="input-wrapper">
-                        <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="currentColor"/>
-                        </svg>
-                        <select class="search-input" id="locationInput">
-                            <option value="">Pilih kota...</option>
-                            <option value="jakarta">Jakarta</option>
-                            <option value="bandung">Bandung</option>
-                            <option value="surabaya">Surabaya</option>
-                            <option value="yogyakarta">Yogyakarta</option>
-                            <option value="semarang">Semarang</option>
-                            <option value="malang">Malang</option>
-                            <option value="solo">Solo</option>
-                            <option value="medan">Medan</option>
-                            <option value="makassar">Makassar</option>
-                            <option value="bali">Bali</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="search-field">
-                    <label>Harga</label>
-                    <div class="input-wrapper">
-                        <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13.41 16.09V17.67C13.41 18.03 13.12 18.32 12.76 18.32H11.36C11 18.32 10.71 18.03 10.71 17.67V16.07C9.37 15.87 8.23 15.14 7.95 13.83C7.88 13.5 8.13 13.19 8.47 13.19H9.73C9.99 13.19 10.22 13.37 10.3 13.62C10.47 14.15 11.06 14.57 12.04 14.57C13.39 14.57 13.81 13.97 13.81 13.46C13.81 12.83 13.39 12.4 11.75 12.04C9.77 11.6 8.5 10.84 8.5 9.2C8.5 7.79 9.59 6.77 10.71 6.44V4.83C10.71 4.47 11 4.18 11.36 4.18H12.76C13.12 4.18 13.41 4.47 13.41 4.83V6.42C14.45 6.65 15.37 7.35 15.61 8.54C15.67 8.87 15.42 9.17 15.08 9.17H13.88C13.63 9.17 13.41 9.01 13.32 8.78C13.13 8.29 12.6 7.93 11.81 7.93C10.54 7.93 10.31 8.55 10.31 9.01C10.31 9.58 10.54 9.93 12.35 10.36C14.16 10.79 15.62 11.43 15.62 13.43C15.61 14.73 14.69 15.82 13.41 16.09Z" fill="currentColor"/>
-                        </svg>
-                        <select class="search-input" id="priceInput">
-                            <option value="">Pilih range harga</option>
-                            <option value="0-1000000">< Rp 1.000.000</option>
-                            <option value="1000000-2000000">Rp 1.000.000 - 2.000.000</option>
-                            <option value="2000000-3000000">Rp 2.000.000 - 3.000.000</option>
-                            <option value="3000000-5000000">Rp 3.000.000 - 5.000.000</option>
-                            <option value="5000000-99999999">> Rp 5.000.000</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="search-field">
-                    <label>Nama Kos (Opsional)</label>
-                    <div class="input-wrapper">
-                        <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
-                        </svg>
-                        <input 
-                            type="text" 
-                            class="search-input" 
-                            placeholder="Cari nama kos..."
-                            id="nameInput"
-                        >
-                    </div>
-                </div>
-                <button class="search-btn" onclick="searchKos()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 21L15.5 15.5M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Cari
-                </button>
-            </div>
-                <div class="recommendation-title">
-                    <h2><strong>Rekomendasi</strong> kos untuk kamu</h2>
-                </div>
         </div>
     </section>
 
@@ -2177,7 +2309,7 @@
                 <p>Kami siap membantu menjawab pertanyaan Anda seputar Koztly. Silakan hubungi kami melalui informasi di bawah ini.</p>
             </div>
             <div class="hero-image animate-on-scroll">
-                <img src="https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800" alt="Modern Kitchen">
+                <img src="images/gambar.jpg" alt="Modern Kitchen">
             </div>
         </div>
 
@@ -2192,7 +2324,7 @@
                         <div class="card-icon">
                             <i class="fas fa-phone"></i>
                         </div>
-                        <h3>(+456) 5464 55</h3>
+                        <h3>(+62) 5464 55</h3>
                         <p>Layanan pelanggan</p>
                     </div>
                     <div class="card animate-on-scroll">
@@ -2299,7 +2431,7 @@
                 <div class="footer-column">
                     <h4>Navigasi</h4>
                     <ul>
-                        <li><a href="#home">Home</a></li>
+                        <li><a href="#beranda">Home</a></li>
                         <li><a href="#tentang">Tentang</a></li>
                         <li><a href="#kontak">Kontak</a></li>
                     </ul>
@@ -2310,8 +2442,8 @@
                     <h4>Link Cepat</h4>
                     <ul>
                         <li><a href="#kontak">Hubungi Kami</a></li>
-                        <li><a href="#faq">Kos</a></li>
-                        <li><a href="#blog">Testimoni</a></li>
+                        <li><a href="#kos">Kos</a></li>
+                        <li><a href="#testimoni">Testimoni</a></li>
                     </ul>
                 </div>
 
@@ -2334,6 +2466,91 @@
     </footer>
 
     <script>
+class NavbarController {
+    constructor() {
+        this.navbar = document.getElementById('navbar');
+        this.heroSection = this.findHeroSection();
+
+        this.init();
+    }
+
+    // Cari hero section (misal 'beranda') atau section pertama
+    findHeroSection() {
+        let heroSection = document.getElementById('beranda');
+        if (!heroSection) {
+            const sections = document.querySelectorAll('section');
+            if (sections.length > 0) heroSection = sections[0];
+        }
+        return heroSection;
+    }
+
+    init() {
+        window.addEventListener('scroll', this.handleScroll.bind(this));
+        this.addSmoothScrolling();
+        this.handleScroll(); // cek posisi awal
+    }
+
+    handleScroll() {
+        if (!this.heroSection) {
+            this.showNavbar(false); // beri background kalau hero tidak ada
+            return;
+        }
+
+        const scrollY = window.scrollY;
+
+        // begitu scroll lebih dari 0 → langsung beri background
+        if (scrollY > 0) {
+            this.showNavbar(false); // beri background
+        } else {
+            this.showNavbar(true); // transparan
+        }
+    }
+
+    hideNavbar() {
+        this.navbar.classList.add('navbar-hidden');
+    }
+
+    showNavbar(isTransparent = false) {
+        this.navbar.classList.remove('navbar-hidden');
+        if (isTransparent) {
+            this.navbar.classList.add('navbar-transparent');
+            this.navbar.classList.remove('navbar-colored');
+        } else {
+            this.navbar.classList.remove('navbar-transparent');
+            this.navbar.classList.add('navbar-colored');
+        }
+    }
+
+    addSmoothScrolling() {
+        // Semua link di nav + tombol "Cari Kos"
+        document.querySelectorAll('.nav-menu a, .btn-outlined, .footer-column a').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                const targetId = anchor.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // kasih background navbar biar konsisten
+                        this.showNavbar(false);
+
+                        const yOffset = -this.navbar.offsetHeight;
+                        const y = targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    }
+}
+
+// Inisialisasi setelah DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    new NavbarController();
+});
+
+        
+        // ini cobaaa lagi
          document.addEventListener('DOMContentLoaded', function() {
             // Intersection Observer untuk animasi scroll
             const observerOptions = {
@@ -2637,8 +2854,8 @@
         });
 
 
-        // ini cobaaaaa
-        document.addEventListener('DOMContentLoaded', function() {
+        // ini cobaaaaa testimoni
+document.addEventListener('DOMContentLoaded', function() {
             const testimoniSection = document.querySelector('.section-testimoni');
             const testimoniGrid = document.querySelector('.testimoni-grid');
             const testimoniContainer = document.querySelector('.testimoni-container');
@@ -2648,12 +2865,6 @@
             
             if (!testimoniGrid || testimoniCards.length === 0) return;
             
-            // Clone cards untuk infinite scroll
-            testimoniCards.forEach(card => {
-                const clone = card.cloneNode(true);
-                testimoniGrid.appendChild(clone);
-            });
-            
             let scrollPosition = 0;
             const cardWidth = 320;
             const totalWidth = cardWidth * testimoniCards.length;
@@ -2662,6 +2873,22 @@
             let animationTriggered = false;
             let autoScrollStarted = false;
             let isAnimatingOut = false;
+            let cardsCloned = false;
+            
+            // Sembunyikan scrollbar sepenuhnya
+            testimoniContainer.style.overflowX = 'hidden';
+            
+            // Function untuk clone cards (dipanggil setelah animasi masuk selesai)
+            function cloneCardsForInfiniteScroll() {
+                if (cardsCloned) return;
+                
+                testimoniCards.forEach(card => {
+                    const clone = card.cloneNode(true);
+                    testimoniGrid.appendChild(clone);
+                });
+                
+                cardsCloned = true;
+            }
             
             // Intersection Observer untuk trigger animasi
             const observerOptions = {
@@ -2740,6 +2967,12 @@
                     }, 800 + (index * 150));
                 });
                 
+                // Clone cards setelah animasi card terakhir selesai
+                const lastCardDelay = 800 + (testimoniCards.length * 150) + 500;
+                setTimeout(() => {
+                    cloneCardsForInfiniteScroll();
+                }, lastCardDelay);
+                
                 // Pulse effect
                 setTimeout(() => {
                     testimoniSection.classList.add('pulse');
@@ -2809,6 +3042,18 @@
             // Cleanup setelah animate out selesai
             function cleanupAfterAnimateOut() {
                 resetToInitialState();
+                
+                // Hapus cloned cards saat keluar
+                if (cardsCloned) {
+                    const allCards = document.querySelectorAll('.testimoni-card');
+                    // Hapus card ke-2 dan seterusnya (yang merupakan clones)
+                    for (let i = testimoniCards.length; i < allCards.length; i++) {
+                        allCards[i].remove();
+                    }
+                    cardsCloned = false;
+                    scrollPosition = 0;
+                    testimoniGrid.style.transform = 'translateX(0)';
+                }
             }
             
             // Auto scroll function

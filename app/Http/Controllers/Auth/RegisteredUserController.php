@@ -27,28 +27,39 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'username' => 'required|string|max:255|unique:users',
-        'email' => 'required|string|email|max:255|unique:users',
-        'gender' => 'required|in:wanita,pria',
-        'phone_number' => 'nullable|string|max:255',
-        'password' => 'required|string|confirmed|min:8',
-    ]);
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'gender' => 'required|in:wanita,pria',
+            'phone_number' => 'nullable|string|max:255',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[A-Za-z])(?=.*\d).+$/'
+            ],
+        ], [
+            // Custom error messages
+            'password.min' => 'Password harus minimal 8 karakter.',
+            'password.regex' => 'Password harus mengandung kombinasi huruf dan angka.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
 
-    $user = User::create([
-        'name' => $request->name,
-        'username' => $request->username,
-        'email' => $request->email,
-        'gender' => $request->gender,
-        'phone_number' => $request->phone_number,
-        'role' => 'user', // default
-        'password' => Hash::make($request->password),
-    ]);
+        $user = User::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+            'gender' => $request->gender,
+            'phone_number' => $request->phone_number,
+            'role' => 'user', // default
+            'password' => Hash::make($request->password),
+        ]);
 
-    Auth::login($user);
-
-    return redirect()->route('dashboard');
+        // REDIRECT KE REGISTER DENGAN SESSION FLASH UNTUK SWEET ALERT
+        return redirect()->route('register')->with('registered', 'Akun berhasil dibuat!');
     }
 }
