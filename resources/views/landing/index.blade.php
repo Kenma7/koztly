@@ -2282,16 +2282,14 @@
             <h1>Temukan Kos Impianmu</h1>
             <p>Cari kos nyaman sesuai kebutuhan dan budget kamu</p>
         </div>
-
         <!-- Tombol Lihat Lainnya -->
         <div class="text-right-container">
-            <a href="{{ route('kosan.index') }}" class="link-lihat-lainnya">Lihat Lainnya</a>
+            <a href="javascript:void(0)" class="link-lihat-lainnya" onclick="checkLoginLainnya(event)">Lihat Lainnya</a>
         </div>
-
         <!-- Grid Kosan -->
         <div class="kos-grid">
             @foreach ($kosan as $kos)
-            <a href="{{ route('kosan.show', $kos->id_kos ) }}" class="kos-card">
+            <a href="javascript:void(0)" class="kos-card" onclick="checkLoginCard(event, '{{ $kos->id_kos }}')">
                 <!-- Gambar dengan Badge -->
                 <div class="kos-image-wrapper">
                     <img src="{{ $kos->gambar_kos 
@@ -2312,29 +2310,24 @@
                         </span>
                         <span class="badge-type">Kost</span>
                     </div>
-
                     <!-- Icon Love -->
-                    <button class="btn-favorite" onclick="event.preventDefault();">
+                    <button class="btn-favorite" onclick="event.preventDefault(); event.stopPropagation();">
                         <i class="fas fa-heart"></i>
                     </button>
                 </div>
-
                 <div class="kos-content">
                     <!-- Harga -->
                     <div class="kos-price">
                         <span class="price-amount">Rp {{ number_format($kos->harga, 0, ',', '.') }}</span>
                         <span class="price-period">/bulan</span>
                     </div>
-
                     <!-- Nama Kos -->
                     <h3 class="kos-title">{{ Str::limit($kos->nama_kos, 35) }}</h3>
-
                     <!-- Lokasi -->
                     <p class="kos-location">
                         <i class="fas fa-map-marker-alt"></i>
                         <span>{{ Str::limit($kos->lokasi_kos, 40) }}</span>
                     </p>
-
                     <!-- Info Kamar -->
                     <div class="kos-info">
                         <div class="info-item">
@@ -2342,10 +2335,8 @@
                             <span>{{ $kos->sisaKamar() }} Kamar Tersisa</span>
                         </div>
                     </div>
-
                     <!-- Divider -->
                     <div class="kos-divider"></div>
-
                     <!-- Footer: Fasilitas -->
                     <div class="kos-footer">
                         <div class="kos-facilities">
@@ -2688,6 +2679,9 @@
             <p>&copy 2025 Koztly Indonesia - Hak Cipta Dilindungi</p>
         </div>
     </footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
 class NavbarController {
@@ -3405,7 +3399,56 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // ini coba
-        
+// Flag login dari Laravel
+    const IS_LOGGED_IN = @json(auth()->check());
+
+    function isUserLoggedIn() {
+        return IS_LOGGED_IN;
+    }
+
+    function checkLoginLainnya(event) {
+        event.preventDefault();
+        if (!isUserLoggedIn()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Login Diperlukan',
+                text: 'Silakan login terlebih dahulu untuk melihat daftar kosan lengkap',
+                confirmButtonText: 'Login Sekarang',
+                confirmButtonColor: '#E93B81',
+                showCancelButton: true,
+                cancelButtonText: 'Batal',
+                cancelButtonColor: '#6b7280'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('login') }}";
+                }
+            });
+        } else {
+            window.location.href = "{{ route('kosan.index') }}";
+        }
+    }
+
+    function checkLoginCard(event, kosId) {
+        event.preventDefault();
+        if (!isUserLoggedIn()) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Login Diperlukan',
+                text: 'Silakan login terlebih dahulu untuk melihat detail kosan',
+                confirmButtonText: 'Login Sekarang',
+                confirmButtonColor: '#E93B81',
+                showCancelButton: true,
+                cancelButtonText: 'Batal',
+                cancelButtonColor: '#6b7280'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('login') }}?redirect=" + encodeURIComponent(window.location.pathname);
+                }
+            });
+        } else {
+            window.location.href = "{{ url('kosan') }}/" + kosId;
+        }
+    }
 
     </script>
 </body>
