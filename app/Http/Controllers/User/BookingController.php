@@ -41,7 +41,10 @@ class BookingController extends Controller
             }
         }
 
-        $bookings = $query->paginate(9);
+        $bookings = Booking::with(['kamar.kosan'])
+                 ->where('id_user', $userId)
+                 ->get();
+
 
         // Statistik berdasarkan status_sewa
         $totalBookings = Booking::where('id_user', $userId)->count();
@@ -143,7 +146,7 @@ class BookingController extends Controller
 
     public function cancel($id)
     {
-        $userId = 1; // Hardcode untuk testing
+        $userId = Auth::id();
         
         $booking = Booking::where('id_booking', $id)
             ->where('id_user', $userId)
@@ -159,7 +162,7 @@ class BookingController extends Controller
 
     public function destroy($id)
     {
-        $userId = 1; // Hardcode untuk testing
+        $userId = Auth::id();
         
         $booking = Booking::where('id_booking', $id)
             ->where('id_user', $userId)
@@ -182,50 +185,23 @@ class BookingController extends Controller
 
     public function uploadBukti(Request $request, $id)
     {
-        $userId = 1; // Hardcode untuk testing
-        
-        $booking = Booking::where('id_booking', $id)
-            ->where('id_user', $userId)
-            ->where('status_pembayaran', 'belum dibayar')
-            ->where('status_sewa', 'menunggu')
-            ->firstOrFail();
-
         $request->validate([
-            'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-        ], [
-            'bukti_tf.required' => 'File bukti transfer harus diupload',
-            'bukti_tf.image' => 'File harus berupa gambar',
-            'bukti_tf.mimes' => 'Format file harus jpeg, png, atau jpg',
-            'bukti_tf.max' => 'Ukuran file maksimal 2MB'
+            'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Hapus bukti lama jika ada
-        if ($booking->bukti_tf) {
-            $oldFilePath = public_path('uploads/' . $booking->bukti_tf);
-            if (file_exists($oldFilePath)) {
-                unlink($oldFilePath);
-            }
+        $booking = Booking::findOrFail($id);
+
+        if ($request->hasFile('bukti_tf')) {
+            $file = $request->file('bukti_tf');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $filename);
+
+            $booking->bukti_tf = $filename;
+            $booking->status_pembayaran = 'sudah dibayar'; // ✅ otomatis update status
+            $booking->save();
         }
 
-        // Upload file baru
-        $file = $request->file('bukti_tf');
-        $filename = 'bukti_tf_' . $booking->id_booking . '_' . time() . '.' . $file->getClientOriginalExtension();
-        
-        // Pastikan folder uploads ada
-        $uploadPath = public_path('uploads');
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-        
-        // Pindahkan file
-        $file->move($uploadPath, $filename);
-
-        // Update database - ubah status pembayaran menjadi sudah dibayar
-        $booking->bukti_tf = $filename;
-        $booking->status_pembayaran = 'sudah dibayar';
-        $booking->save();
-
-        return redirect()->route('user.booking.show', $id)
-            ->with('success', 'Bukti transfer berhasil diupload. Menunggu konfirmasi admin untuk aktivasi sewa.');
+        // balik lagi ke halaman sebelumnya (detail booking)
+        return redirect()->back()->with('success', 'Bukti transfer berhasil diupload!');
     }
 }

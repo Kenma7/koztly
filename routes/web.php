@@ -58,7 +58,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::post('/kosan/{id}/booking/confirm', [BookingController::class, 'confirm'])->name('booking.confirm');
 Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
-Route::get('/bookings', [BookingController::class, 'index'])->name('booking.index');
+Route::get('/bookings/{id}', [BookingController::class, 'index'])->name('booking.index');
 Route::post('/booking/{id}/upload-bukti', [BookingController::class, 'uploadBukti'])->name('upload-bukti');
 Route::put('/booking/{id}/cancel', [BookingController::class, 'cancel'])->name('cancel');
 });

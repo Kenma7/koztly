@@ -64,7 +64,12 @@
                                         <span class="px-4 py-2 bg-gray-100 text-gray-800 text-sm font-semibold rounded-full inline-flex items-center gap-2">
                                             <i class="fas fa-flag-checkered"></i> Selesai
                                         </span>
+                                        @elseif($booking->status_sewa == 'batal')
+                                        <span class="px-4 py-2 bg-red-100 text-red-800 text-sm font-semibold rounded-full inline-flex items-center gap-2">
+                                            <i class="fas fa-times-circle"></i> Dibatalkan Admin
+                                        </span>
                                     @endif
+
                                 @endif
                             </div>
                         </div>
@@ -397,45 +402,46 @@
                         </div>
                         @endif
 
+                        {{-- Upload Bukti Transfer (hanya muncul kalau belum bayar) --}}
                         @if($booking->status_pembayaran == 'belum dibayar' && $booking->status_sewa == 'menunggu')
-                        <div class="mt-5 border-2 border-dashed border-[#f5acca] rounded-lg p-5 bg-[#ffe6e2] bg-opacity-40">
-                            <h3 class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
-                                <i class="fas fa-upload text-[#ea3882]"></i>
-                                Upload Bukti Transfer
-                            </h3>
-                            <form action="{{ route('user.booking.upload-bukti', $booking->id_booking) }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <input type="file" name="bukti_tf" accept="image/*" required
-                                           class="block w-full text-xs text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#ea3882] file:text-white hover:file:bg-[#d12670] file:cursor-pointer cursor-pointer border border-gray-300 rounded-lg">
-                                </div>
-                                <button type="submit" class="w-full bg-gradient-to-r from-[#ea3882] to-[#d12670] hover:from-[#d12670] hover:to-[#b81e5a] text-white font-bold py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    Upload Bukti
-                                </button>
-                            </form>
-                        </div>
-                        @endif
-
-                        @if($booking->bukti_tf)
-                        <div class="mt-5">
-                            <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                                <i class="fas fa-image text-green-600"></i>
-                                Bukti Transfer
-                            </h3>
-                            <div class="rounded-lg overflow-hidden border-2 border-green-300">
-                                <img src="{{ asset('/uploads/' . $booking->bukti_tf) }}" 
-                                     alt="Bukti Transfer" 
-                                     class="w-full">
+                            <div class="mt-5 border-2 border-dashed border-[#f5acca] rounded-lg p-5 bg-[#ffe6e2] bg-opacity-40">
+                                <h3 class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+                                    <i class="fas fa-upload text-[#ea3882]"></i>
+                                    Upload Bukti Transfer
+                                </h3>
+                                <form action="{{ route('user.booking.upload-bukti', $booking->id_booking) }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <input type="file" name="bukti_tf" accept="image/*" required
+                                            class="block w-full text-xs text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#ea3882] file:text-white hover:file:bg-[#d12670] file:cursor-pointer cursor-pointer border border-gray-300 rounded-lg">
+                                    </div>
+                                    <button type="submit" class="w-full bg-gradient-to-r from-[#ea3882] to-[#d12670] hover:from-[#d12670] hover:to-[#b81e5a] text-white font-bold py-2 px-4 rounded-lg text-sm flex items-center justify-center gap-2">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        Upload Bukti
+                                    </button>
+                                </form>
                             </div>
-                        </div>
                         @endif
 
-                        <div class="mt-5 space-y-2">
+                        {{-- Bukti Transfer (hanya tampil kalau sudah ada bukti) --}}
+                        @if($booking->bukti_tf)
+                            <div class="mt-5">
+                                <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
+                                    <i class="fas fa-image text-green-600"></i>
+                                    Bukti Transfer
+                                </h3>
+                                <div class="rounded-lg overflow-hidden border-2 border-green-300">
+                                    <img src="{{ asset('/uploads/' . $booking->bukti_tf) }}" 
+                                        alt="Bukti Transfer" 
+                                        class="w-full">
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- Tombol Edit & Batalkan (hanya muncul kalau belum bayar) --}}
                         @if($booking->status_pembayaran == 'belum dibayar' && $booking->status_sewa == 'menunggu')
-                            
                             <a href="{{ route('user.booking.edit', $booking->id_booking) }}" 
-                            class="block w-full bg-[#b8caef] hover:bg-[#9ab5e8] text-white font-bold py-2 px-4 rounded-lg text-center text-sm">
+                            class="block w-full mt-3 mb-3 bg-[#b8caef] hover:bg-[#9ab5e8] text-white font-bold py-2 px-4 rounded-lg text-center text-sm">
                                 <i class="fas fa-edit mr-1"></i>
                                 Edit Booking
                             </a>
@@ -453,6 +459,7 @@
                             </form>
                         @endif
 
+
                         @if($booking->status_sewa == 'batal')
                             <form id="delete-form-{{ $booking->id_booking }}" 
                                 action="{{ route('user.booking.destroy', $booking->id_booking) }}" method="POST">
@@ -469,7 +476,7 @@
                     </div>
 
                     </div>
-                </div>
+
                 {{-- Informasi Penting --}}
                 @if($booking->status_pembayaran == 'belum dibayar')
                     <div class="bg-yellow-50 rounded-lg p-3 border-2 border-yellow-200 shadow">
@@ -522,6 +529,7 @@
                         </div>
                     </div>
                 @endif
+                </div>
 
             </div>
         </div>
