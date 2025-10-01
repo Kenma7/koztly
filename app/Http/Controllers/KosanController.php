@@ -9,6 +9,16 @@ use App\Models\Kamar;
 
 class KosanController extends Controller
 {
+    // Tambahan di KosanController
+    public function landing(Request $request)
+    {
+        $perPage = $request->get('per_page', 3); // tampil 6 kosan misalnya
+        $kosan = Kosan::where('status', 'aktif')->paginate($perPage);
+
+        // arahkan ke view landing.index
+        return view('landing.index', compact('kosan'));
+    }
+
     //Daftar Kosan
     public function index(Request $request)
     {

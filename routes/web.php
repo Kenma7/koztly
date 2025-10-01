@@ -21,6 +21,10 @@ Route::get('/landing', function () {
     return view('landing.index'); // resources/views/landing/index.blade.php
 })->name('landing');
 
+
+// Landing page ambil data kosan dari controller
+Route::get('/landing', [KosanController::class, 'landing'])->name('landing');
+
 //------------------
 //Route kosan public
 //------------------

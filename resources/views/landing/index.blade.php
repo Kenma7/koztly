@@ -1178,292 +1178,439 @@
             }
         }
 
-        .section-kos {
-            background-color: white;
-            padding: 60px 20px;
-        }
+/* Section Kos */
+.section-kos {
+    background-color: white;
+    padding: 60px 20px;
+}
 
-        .container-kos {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.container-kos {
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-        .header-text {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+/* Header Text - Tetap Center */
+.header-text {
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        .header-text h1 {
-            font-size: 2.5rem;
-            color: #E93B81;
-            margin-bottom: 10px;
-        }
+.header-text h1 {
+    font-size: 2.5rem;
+    color: #E93B81;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
 
-        .header-text p {
-            font-size: 1.1rem;
-            color: #643843;
-        }
+.header-text p {
+    font-size: 1.1rem;
+    color: #643843;
+}
 
-        .search-box {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 8px;
-            padding: 8px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            display: flex;
-            gap: 0;
-            max-width: 1000px;
-            margin: 0 auto 50px;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+/* Link Lihat Lainnya - Text Only di Kanan */
+.text-right-container {
+    text-align: right;
+    margin-bottom: 30px;
+}
 
-        .search-field {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            flex: 1;
-            padding: 8px 20px;
-            border-right: 0.3px solid #e0e0e0;
-        }
+.link-lihat-lainnya {
+    color: #E93B81;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
 
-        .search-field:last-of-type {
-            border-right: none;
-        }
+.link-lihat-lainnya:hover {
+    color: #d63370;
+    text-decoration: underline;
+}
 
-        .search-field label {
-            font-size: 0.75rem;
-            color: #643843;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
+/* Grid Kosan - Ukuran Card Sama */
+.kos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 20px;
+}
 
-        .input-wrapper {
-            font-family: 'Mulish', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.kos-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 
-        .field-icon {
-            width: 20px;
-            height: 20px;
-            color: #E93B81;
-            flex-shrink: 0;
-        }
+.kos-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+}
 
-        .search-input {
-            font-family: 'Mulish', sans-serif;
-            border: none;
-            padding: 4px 0;
-            font-size: 0.95rem;
-            outline: none;
-            background: transparent;
-            width: 100%;
-            color: #643843;
-        }
+/* Image Section - Fixed Height */
+.kos-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
 
-        .search-input:focus {
-            outline: none;
-        }
+.kos-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
 
-        .search-input::placeholder {
-            color: #643843;
-            opacity: 50%;
-            font-size: 0.95rem;
-        }
+.kos-card:hover .kos-image {
+    transform: scale(1.05);
+}
 
-        select.search-input {
-            cursor: pointer;
-        }
+/* Content Section - Flex untuk ukuran sama */
+.kos-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
 
-        .search-btn {
-            background: #E93B81;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            white-space: nowrap;
-            margin-right: 10px;
-        }
+/* Price */
+.kos-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 12px;
+}
 
-        .search-btn:hover {
-            transform: scale(1.05);
-        }
+.price-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3b82f6;
+}
 
-        .search-btn svg {
-            width: 20px;
-            height: 20px;
-        }
+.price-period {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
 
-        .recommendation-title {
-            text-align: left;
-            margin-top: 80px;
-            margin-left: -50px;
-        }
+/* Title - Fixed Height */
+.kos-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    min-height: 3em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
 
-        .recommendation-title h2 {
-            font-size: 1.3rem;
-            color: #643843;
-            font-weight: 400;
-            font-style: italic;
-        }
+/* Location - Fixed Height */
+.kos-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 16px;
+    min-height: 2.5em;
+}
 
-        .recommendation-title h2 strong {
-            font-weight: 900;
-            color: #E93B81;
-            font-size: 1.5rem;
-            font-style: normal;
-        }
+.kos-location i {
+    color: #E93B81;
+    font-size: 0.875rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
 
+.kos-location span {
+    line-height: 1.4;
+}
 
-        @media (max-width: 768px) {
-            .header-text h1 {
-                font-size: 2rem;
-            }
+/* Info Items */
+.kos-info {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
 
-            .search-box {
-                flex-direction: column;
-                border-radius: 15px;
-                padding: 20px;
-            }
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
 
-            .search-field {
-                border-right: none;
-                border-bottom: 1px solid #e0e0e0;
-                padding: 12px 0;
-            }
+.info-item i {
+    color: #3b82f6;
+    font-size: 1rem;
+}
 
-            .search-field:last-of-type {
-                border-bottom: none;
-            }
+/* Divider */
+.kos-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 16px 0;
+    margin-top: auto;
+}
 
-            .search-btn {
-                width: 100%;
-                justify-content: center;
-                margin-left: 0;
-                margin-top: 10px;
-            }
-        }
+/* Footer - Hanya Fasilitas */
+.kos-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 
-        
-        /* Animasi Keyframes */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.kos-facilities {
+    display: flex;
+    gap: 12px;
+}
 
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+.kos-facilities i {
+    color: #6b7280;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+}
 
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
+.kos-facilities i:hover {
+    color: #E93B81;
+}
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+/* Badges */
+.kos-badges {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    gap: 8px;
+}
 
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
+.badge-kategori,
+.badge-type {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
 
-        @keyframes slideUpFade {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.badge-pria {
+    background: #3b82f6;
+    color: white;
+}
 
-        /* Base styles untuk elemen yang akan dianimasi */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: opacity, transform;
-        }
+.badge-wanita {
+    background: #E93B81;
+    color: white;
+}
 
-        .animate-on-scroll.animated {
-            opacity: 1;
-            transform: translateY(0);
-        }
+.badge-campur {
+    background: #f97316;
+    color: white;
+}
 
-        /* Animasi keluar khusus untuk left/right */
-        .animate-on-scroll.fade-in-left.animated {
-            transform: translateX(0);
-        }
+.badge-type {
+    background: #10b981;
+    color: white;
+}
 
-        .animate-on-scroll.fade-in-left:not(.animated) {
-            transform: translateX(-50px);
-        }
+/* Favorite Button */
+.btn-favorite {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+}
 
-        .animate-on-scroll.fade-in-right.animated {
-            transform: translateX(0);
-        }
+.btn-favorite:hover {
+    background: white;
+    transform: scale(1.1);
+}
 
-        .animate-on-scroll.fade-in-right:not(.animated) {
-            transform: translateX(50px);
-        }
+.btn-favorite i {
+    color: #E93B81;
+    font-size: 1rem;
+}
 
-        /* Animasi keluar untuk scale */
-        .animate-on-scroll.scale-in.animated {
-            transform: scale(1) translateY(0);
-        }
+.recommendation-title {
+    text-align: left;
+    margin-top: 80px;
+    margin-left: -50px;
+}
 
-        .animate-on-scroll.scale-in:not(.animated) {
-            transform: scale(0.8) translateY(20px);
-        }
+.recommendation-title h2 {
+    font-size: 1.3rem;
+    color: #643843;
+    font-weight: 400;
+    font-style: italic;
+}
 
+.recommendation-title h2 strong {
+    font-weight: 900;
+    color: #E93B81;
+    font-size: 1.5rem;
+    font-style: normal;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .kos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-text h1 {
+        font-size: 2rem;
+    }
+
+    .kos-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .kos-image-wrapper {
+        height: 200px;
+    }
+
+    .price-amount {
+        font-size: 1.25rem;
+    }
+
+    .kos-title {
+        font-size: 1rem;
+    }
+
+    .text-right-container {
+        text-align: center;
+    }
+}
+
+/* Animasi Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Base styles untuk elemen yang akan dianimasi */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate-on-scroll.fade-in-left.animated {
+    transform: translateX(0);
+}
+
+.animate-on-scroll.fade-in-left:not(.animated) {
+    transform: translateX(-50px);
+}
+
+.animate-on-scroll.fade-in-right.animated {
+    transform: translateX(0);
+}
+
+.animate-on-scroll.fade-in-right:not(.animated) {
+    transform: translateX(50px);
+}
+
+.animate-on-scroll.scale-in.animated {
+    transform: scale(1) translateY(0);
+}
+
+.animate-on-scroll.scale-in:not(.animated) {
+    transform: scale(0.8) translateY(20px);
+}
 
         .section-kontak {
             margin: 0 auto;
@@ -2128,15 +2275,92 @@
             </div>
         </section>
     
-    <section id="kos" class="section-kos">
-        <div class="container-kos">
-            <!-- Header Text -->
-            <div class="header-text">
-                <h1>Temukan Kos Impianmu</h1>
-                <p>Cari kos nyaman sesuai kebutuhan dan budget kamu</p>
-            </div>
+<section id="kos" class="section-kos">
+    <div class="container-kos">
+        <!-- Header Text -->
+        <div class="header-text">
+            <h1>Temukan Kos Impianmu</h1>
+            <p>Cari kos nyaman sesuai kebutuhan dan budget kamu</p>
         </div>
-    </section>
+
+        <!-- Tombol Lihat Lainnya -->
+        <div class="text-right-container">
+            <a href="{{ route('kosan.index') }}" class="link-lihat-lainnya">Lihat Lainnya</a>
+        </div>
+
+        <!-- Grid Kosan -->
+        <div class="kos-grid">
+            @foreach ($kosan as $kos)
+            <a href="{{ route('kosan.show', $kos->id_kos ) }}" class="kos-card">
+                <!-- Gambar dengan Badge -->
+                <div class="kos-image-wrapper">
+                    <img src="{{ $kos->gambar_kos 
+                      ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
+                            ? $kos->gambar_kos 
+                            : asset('storage/'.$kos->gambar_kos)) 
+                      : 'https://via.placeholder.com/800x400' }}"  
+                        class="kos-image" 
+                        alt="{{ $kos->nama_kos }}">
+                    
+                    <!-- Badge Kategori & Status -->
+                    <div class="kos-badges">
+                        <span class="badge-kategori 
+                            @if(strtoupper($kos->kategori) == 'PRIA') badge-pria
+                            @elseif(strtoupper($kos->kategori) == 'WANITA') badge-wanita 
+                            @else badge-campur @endif">
+                            {{ $kos->kategori }}
+                        </span>
+                        <span class="badge-type">Kost</span>
+                    </div>
+
+                    <!-- Icon Love -->
+                    <button class="btn-favorite" onclick="event.preventDefault();">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+
+                <div class="kos-content">
+                    <!-- Harga -->
+                    <div class="kos-price">
+                        <span class="price-amount">Rp {{ number_format($kos->harga, 0, ',', '.') }}</span>
+                        <span class="price-period">/bulan</span>
+                    </div>
+
+                    <!-- Nama Kos -->
+                    <h3 class="kos-title">{{ Str::limit($kos->nama_kos, 35) }}</h3>
+
+                    <!-- Lokasi -->
+                    <p class="kos-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ Str::limit($kos->lokasi_kos, 40) }}</span>
+                    </p>
+
+                    <!-- Info Kamar -->
+                    <div class="kos-info">
+                        <div class="info-item">
+                            <i class="fas fa-bed"></i>
+                            <span>{{ $kos->sisaKamar() }} Kamar Tersisa</span>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="kos-divider"></div>
+
+                    <!-- Footer: Fasilitas -->
+                    <div class="kos-footer">
+                        <div class="kos-facilities">
+                            <i class="fas fa-wifi" title="WiFi"></i>
+                            <i class="fas fa-snowflake" title="AC"></i>
+                            <i class="fas fa-motorcycle" title="Parkir Motor"></i>
+                            <i class="fas fa-utensils" title="Dapur"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
+</section>
 
    <section id="tentang" class="section-tentang">
         <div class="tentang-container">
