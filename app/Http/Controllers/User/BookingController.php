@@ -12,9 +12,8 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        // UNTUK TESTING: Hardcode user_id = 1
-        // Nanti ganti jadi: Auth::id() kalau sudah ada login
-        $userId = 1; 
+        // Ambil ID user yang sedang login
+        $userId = Auth::id();
         
         $query = Booking::with(['kamar.kosan', 'user'])
             ->where('id_user', $userId)
@@ -67,7 +66,8 @@ class BookingController extends Controller
 
     public function show($id)
     {
-        $userId = 1; // Hardcode untuk testing
+        // Ambil ID user yang sedang login
+        $userId = Auth::id();
         
         $booking = Booking::with(['kamar.kosan', 'user'])
             ->where('id_booking', $id)
@@ -79,7 +79,8 @@ class BookingController extends Controller
 
     public function edit($id)
     {
-        $userId = 1; // Hardcode untuk testing
+        // Ambil ID user yang sedang login
+        $userId = Auth::id();
         
         $booking = Booking::with(['kamar.kosan', 'user'])
             ->where('id_booking', $id)
@@ -99,7 +100,8 @@ class BookingController extends Controller
 
     public function update(Request $request, $id)
     {
-        $userId = 1; // Hardcode untuk testing
+        // Ambil ID user yang sedang login
+        $userId = Auth::id();
         
         $booking = Booking::where('id_booking', $id)
             ->where('id_user', $userId)

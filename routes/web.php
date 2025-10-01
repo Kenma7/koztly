@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 //Route booking
-Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
+// Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::post('/kosan/{id}/booking/confirm', [BookingController::class, 'confirm'])->name('booking.confirm');
 Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
