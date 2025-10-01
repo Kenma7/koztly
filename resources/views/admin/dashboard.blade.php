@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Koztly</title>
+    <title>Beranda Admin - Koztly</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .sidebar-bg {
             background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3Cpattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"%3E%3Ccircle cx="10" cy="10" r="1.5" fill="rgba(233, 59, 129, 0.1)"/%3E%3C/pattern%3E%3C/defs%3E%3Crect width="100" height="100" fill="url(%23pattern)"/%3E%3C/svg%3E');
@@ -30,6 +32,47 @@
             opacity: 0;
             display: none;
         }
+        /* Custom SweetAlert Theme Koztly */
+        .swal2-popup {
+            border-radius: 20px;
+            padding: 1.5rem;
+            width: 350px !important; /* Lebih kecil dari default */
+            font-size: 0.9rem;
+        }
+        .swal2-title {
+            color: #E93B81;
+            font-weight: bold;
+            font-size: 1.3rem !important; /* Lebih kecil */
+            margin-bottom: 0.5rem;
+        }
+        .swal2-html-container {
+            font-size: 0.85rem !important; /* Text lebih kecil */
+        }
+        .swal2-icon {
+            width: 60px !important; /* Icon lebih kecil */
+            height: 60px !important;
+            margin: 1rem auto;
+        }
+        .swal2-icon.swal2-success .swal2-success-ring {
+            border-color: rgba(233, 59, 129, 0.3);
+        }
+        .swal2-icon.swal2-success [class^='swal2-success-line'] {
+            background-color: #E93B81;
+        }
+        .swal2-confirm {
+            background-color: #E93B81 !important;
+            border-radius: 10px;
+            padding: 8px 25px !important; /* Tombol lebih kecil */
+            font-size: 0.85rem !important;
+        }
+        .swal2-confirm:hover {
+            background-color: #d12c6d !important;
+        }
+        .swal2-cancel {
+            border-radius: 10px;
+            padding: 8px 25px !important;
+            font-size: 0.85rem !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -48,7 +91,7 @@
                 <li>
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center p-3 text-white bg-pink-500 rounded-lg hover:bg-pink-600 transition" title="Dashboard">
                         <i class="fas fa-th-large w-5 text-center"></i>
-                        <span class="ml-3 menu-text">Dashboard</span>
+                        <span class="ml-3 menu-text">Beranda</span>
                     </a>
                 </li>
                 <li>
@@ -73,13 +116,10 @@
 
             <!-- Logout Button at Bottom -->
             <div class="absolute bottom-4 left-3 right-3">
-                <form action="{{ route('admin.logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50 transition" title="Logout">
-                        <i class="fas fa-sign-out-alt w-5 text-center"></i>
-                        <span class="ml-3 menu-text">Logout</span>
-                    </button>
-                </form>
+                <button onclick="confirmLogout(event)" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50 transition" title="Logout">
+                    <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                    <span class="ml-3 menu-text">Keluar</span>
+                </button>
             </div>
         </div>
     </aside>
@@ -97,7 +137,7 @@
                     <button id="toggleSidebar" class="text-white hover:bg-pink-500 p-2 rounded-lg transition">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <h2 class="text-xl font-semibold text-white">Dashboard Admin</h2>
+                    <h2 class="text-xl font-semibold text-white">Beranda Admin</h2>
                     <div class="flex items-center gap-3">
                         <span class="text-sm text-white">Admin</span>
                         <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-600 font-bold">
@@ -119,7 +159,7 @@
 
             <!-- Header Dashboard -->
             <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-300 mb-6">
-                <h1 class="text-2xl font-bold mb-2">Selamat Datang di Dashboard</h1>
+                <h1 class="text-2xl font-bold mb-2">Selamat Datang di Beranda</h1>
                 <p class="text-sm text-gray-600">
                     Kelola semua data <span class="font-bold text-[#E93B81]">Koztly</span> dengan mudah dalam satu tempat.
                 </p>
@@ -394,7 +434,6 @@
             sidebarOpen = !sidebarOpen;
             
             if (sidebarOpen) {
-                // Full sidebar
                 sidebar.classList.remove('sidebar-mini');
                 sidebar.classList.add('sidebar-full');
                 mainContent.classList.remove('ml-20');
@@ -404,7 +443,6 @@
                 logoFull.classList.remove('hidden');
                 logoMini.classList.add('hidden');
             } else {
-                // Mini sidebar (icon only)
                 sidebar.classList.remove('sidebar-full');
                 sidebar.classList.add('sidebar-mini');
                 mainContent.classList.remove('ml-64');
@@ -416,16 +454,99 @@
             }
         });
 
-        // Auto hide alert
-        setTimeout(() => {
-            const success = document.getElementById('alert-success');
-            if (success) {
-                success.classList.add('opacity-0');
-                setTimeout(() => success.remove(), 500);
-            }
-        }, 3000);
+        // Konfirmasi Logout dengan SweetAlert
+        function confirmLogout(event) {
+            event.preventDefault();
+            
+            Swal.fire({
+                title: 'Yakin Keluar?',
+                text: 'Kamu akan keluar dari beranda',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Keluar!',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#E93B81',
+                cancelButtonColor: '#6B7280',
+                reverseButtons: true,
+                width: '350px' // Ukuran popup lebih kecil
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan loading kecil
+                    Swal.fire({
+                        title: 'Mengeluarkan...',
+                        text: 'Sampai jumpa!',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1200,
+                        width: '300px'
+                    }).then(() => {
+                        // Submit form logout
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '{{ route("admin.logout") }}';
+                        
+                        const csrfToken = document.createElement('input');
+                        csrfToken.type = 'hidden';
+                        csrfToken.name = '_token';
+                        csrfToken.value = '{{ csrf_token() }}';
+                        
+                        form.appendChild(csrfToken);
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
+                }
+            });
+        }
 
-        // Responsive: Full sidebar on desktop, mini on mobile initially
+        // Notifikasi Success - LEBIH KECIL
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session("success") }}',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#E93B81',
+                timer: 2500,
+                timerProgressBar: true,
+                width: '350px'
+            });
+        @endif
+
+        // Notifikasi Error - LEBIH KECIL
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session("error") }}',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#E93B81',
+                width: '350px'
+            });
+        @endif
+
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session("success") }}',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#E93B81',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session("error") }}',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#E93B81'
+            });
+        @endif
+
         function checkScreenSize() {
             if (window.innerWidth < 768) {
                 if (sidebarOpen) {

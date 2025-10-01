@@ -85,12 +85,22 @@ class DashboardController extends Controller
         ));
     }
 
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    // public function logout(Request $request)
+    // {
+    //     Auth::logout();
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
         
-        return redirect('/login')->with('success', 'Berhasil logout dari sistem admin');
-    }
+    //     // return redirect('/login')->with('success', 'Berhasil logout dari sistem admin');
+    // }
+
+    public function logout(Request $request)
+{
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    
+    // Redirect ke halaman login dengan pesan
+    return redirect('/login')->with('success', 'Berhasil logout! Sampai jumpa lagi di Koztly');
+}
 }
