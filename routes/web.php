@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 // ----------------------
 // Landing / Loading
 // ----------------------
-Route::get('/', function () {
+Route::get('', function () {
      return view('loading.loading'); // resources/views/loading/loading.blade.php
 })->name('home');
 

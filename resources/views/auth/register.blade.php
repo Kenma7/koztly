@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    <!-- Sweet Alert 2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.5/sweetalert2.min.css">
     <title>Register</title>
     <style>
         * {
@@ -65,6 +68,7 @@
             border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            min-height: 620px;
         }
 
         /* background blur */
@@ -241,23 +245,6 @@
             font-size: 14px;
         }
 
-        .login-link-section {
-            text-align: center;
-            margin-top: 16px;
-        }
-
-        .login-link {
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
-            font-weight: 550;
-        }
-
-        .login-link:hover {
-            color: #FFE5E2;
-        }
-
         .submit-btn {
             font-family: 'Mulish', sans-serif;
             margin-top: 20px;
@@ -311,6 +298,33 @@
             height: 28px;
             stroke: #E93B81;
         }
+
+        /* Custom Sweet Alert Styling */
+        .swal2-popup {
+            font-family: 'Mulish', sans-serif !important;
+            border-radius: 16px !important;
+        }
+
+        .swal2-title {
+            font-weight: 700 !important;
+            color: #643843 !important;
+        }
+
+        .swal2-html-container {
+            font-size: 16px !important;
+            color: #643843 !important;
+        }
+
+        .swal2-confirm {
+            background: #E93B81 !important;
+            border-radius: 8px !important;
+            padding: 10px 24px !important;
+            font-weight: 600 !important;
+        }
+
+        .swal2-confirm:focus {
+            box-shadow: 0 0 0 3px rgba(233, 59, 129, 0.3) !important;
+        }
     </style>
 </head>
 <body>
@@ -344,25 +358,25 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                         </svg>
-                        Login
+                        Masuk
                     </a>
                     <button class="tab tab-active">
                         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                         </svg>
-                        Register
+                        Daftar
                     </button>
                 </div>
 
                 <!-- Welcome Text -->
                 <div class="welcome-section">
-                    <h1 class="welcome-title">Create Account</h1>
-                    <p class="welcome-subtitle">Sign up to get started</p>
+                    <h1 class="welcome-title">Buat Akun</h1>
+                    <p class="welcome-subtitle">Daftar Untuk Memulai</p>
                 </div>
 
                 <!-- Register Form -->
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('register') }}" id="registerForm">
                     @csrf
 
                     <!-- Name -->
@@ -380,12 +394,9 @@
                                    value="{{ old('name') }}"
                                    required
                                    autofocus
-                                   placeholder="Full Name"
+                                   placeholder="Nama Lengkap"
                                    class="form-input"/>
                         </div>
-                        @error('name')
-                        <p class="error-message">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <!-- Username -->
@@ -395,168 +406,143 @@
                                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <input id="username"
-                               type="text"
-                               name="username"
-                               value="{{ old('username') }}"
-                               required
-                               placeholder="Username"
-                               class="form-input"/>
-                    </div>
-                    @error('username')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <div class="input-icon">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <input id="email"
-                               type="email"
-                               name="email"
-                               value="{{ old('email') }}"
-                               required
-                               placeholder="Email Address"
-                               class="form-input"/>
-                    </div>
-                    @error('email')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Gender & Phone Row -->
-                <div class="form-row">
-                    <!-- Gender -->
-                    <div class="form-group">
-                        <div class="input-wrapper">
-                            <div class="input-icon">
-                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                                 </svg>
                             </div>
-                            <select id="gender"
-                                    name="gender"
-                                    required
-                                    class="form-select">
-                                <option value="">Gender</option>
-                                <option value="wanita" {{ old('gender') == 'wanita' ? 'selected' : '' }}>Wanita</option>
-                                <option value="pria" {{ old('gender') == 'pria' ? 'selected' : '' }}>Pria</option>
-                            </select>
+                            <input id="username"
+                                   type="text"
+                                   name="username"
+                                   value="{{ old('username') }}"
+                                   required
+                                   placeholder="Nama Pengguna"
+                                   class="form-input"/>
                         </div>
-                        @error('gender')
-                        <p class="error-message">{{ $message }}</p>
-                        @enderror
                     </div>
 
-                    <!-- Phone Number -->
+                    <!-- Email -->
                     <div class="form-group">
                         <div class="input-wrapper">
                             <div class="input-icon">
                                 <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                            </svg>
+                                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <input id="email"
+                                   type="email"
+                                   name="email"
+                                   value="{{ old('email') }}"
+                                   required
+                                   placeholder="Alamat Email"
+                                   class="form-input"/>
                         </div>
-                        <input id="phone_number"
-                               type="text"
-                               name="phone_number"
-                               value="{{ old('phone_number') }}"
-                               placeholder="Phone (Optional)"
-                               class="form-input"/>
                     </div>
-                    @error('phone_number')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
 
-            <!-- Password & Confirm Password Row -->
-            <div class="form-row">
-                <!-- Password -->
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <div class="input-icon">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                            </svg>
+                    <!-- Gender & Phone Row -->
+                    <div class="form-row">
+                        <!-- Gender -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                    </svg>
+                                </div>
+                                <select id="gender"
+                                        name="gender"
+                                        required
+                                        class="form-select">
+                                    <option value="">Jenis Kelamin</option>
+                                    <option value="wanita" {{ old('gender') == 'wanita' ? 'selected' : '' }}>Wanita</option>
+                                    <option value="pria" {{ old('gender') == 'pria' ? 'selected' : '' }}>Pria</option>
+                                </select>
+                            </div>
                         </div>
-                        <input id="password"
-                               type="password"
-                               name="password"
-                               required
-                               autocomplete="new-password"
-                               placeholder="Password"
-                               class="form-input"/>
-                        <button type="button"
-                                onclick="togglePassword('password', 'eye-icon-1')"
-                                class="password-toggle">
-                            <svg id="eye-icon-1" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    @error('password')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                <!-- Confirm Password -->
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <div class="input-icon">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                            </svg>
+                        <!-- Phone Number -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                </div>
+                                <input id="phone_number"
+                                       type="text"
+                                       name="phone_number"
+                                       value="{{ old('phone_number') }}"
+                                       placeholder="No.Telp (Opsional)"
+                                       class="form-input"/>
+                            </div>
                         </div>
-                        <input id="password_confirmation"
-                               type="password"
-                               name="password_confirmation"
-                               required
-                               autocomplete="new-password"
-                               placeholder="Confirm Password"
-                               class="form-input"/>
-                        <button type="button"
-                                onclick="togglePassword('password_confirmation', 'eye-icon-2')"
-                                class="password-toggle">
-                            <svg id="eye-icon-2" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                            </svg>
-                        </button>
                     </div>
-                    @error('password_confirmation')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
+
+                    <!-- Password & Confirm Password Row -->
+                    <div class="form-row">
+                        <!-- Password -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                    </svg>
+                                </div>
+                                <input id="password"
+                                       type="password"
+                                       name="password"
+                                       required
+                                       autocomplete="new-password"
+                                       placeholder="Kata Sandi"
+                                       class="form-input"/>
+                                <button type="button"
+                                        onclick="togglePassword('password', 'eye-icon-1')"
+                                        class="password-toggle">
+                                    <svg id="eye-icon-1" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                    </svg>
+                                </div>
+                                <input id="password_confirmation"
+                                       type="password"
+                                       name="password_confirmation"
+                                       required
+                                       autocomplete="new-password"
+                                       placeholder="Konfir Kata Sandi"
+                                       class="form-input"/>
+                                <button type="button"
+                                        onclick="togglePassword('password_confirmation', 'eye-icon-2')"
+                                        class="password-toggle">
+                                    <svg id="eye-icon-2" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Register Button -->
                     <button type="submit" class="submit-btn">
-                        Create Account
+                        Daftar
                     </button>
-
-                    <!-- Login Link -->
-                    <div class="login-link-section">
-                        <a href="{{ route('login') }}" class="login-link">
-                            Already registered? Sign in
-                        </a>
-                    </div>
                 </form>
             </div>
         </div>
@@ -575,6 +561,112 @@
                 eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
             }
         }
+
+        // Validasi client-side untuk password
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('password_confirmation').value;
+
+            // Validasi panjang password
+            if (password.length < 8) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Password Terlalu Pendek',
+                    html: '<p style="font-size: 15px; color: #643843;">Password harus minimal <strong>8 karakter</strong>.</p>',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#E93B81'
+                });
+                return;
+            }
+
+            // Validasi kombinasi huruf dan angka
+            const hasLetter = /[a-zA-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+
+            if (!hasLetter || !hasNumber) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Password Tidak Valid',
+                    html: '<p style="font-size: 15px; color: #643843;">Password harus mengandung kombinasi <strong>huruf</strong> dan <strong>angka</strong>.</p><p style="font-size: 14px; color: #E93B81; margin-top: 8px;">Contoh: Password123</p>',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#E93B81'
+                });
+                return;
+            }
+
+            // Validasi password match
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Password Tidak Cocok',
+                    text: 'Password dan konfirmasi password harus sama. Silakan periksa kembali.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#E93B81'
+                });
+                return;
+            }
+        });
+
+        // Tampilkan Sweet Alert untuk error dan success
+        document.addEventListener('DOMContentLoaded', function() {
+            // Error handling
+            @if ($errors->any())
+                @if ($errors->has('email'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Email Sudah Terdaftar',
+                        text: 'Email yang Anda masukkan sudah digunakan. Silakan gunakan email lain atau login dengan email tersebut.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#E93B81'
+                    });
+                @elseif ($errors->has('username'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Username Sudah Digunakan',
+                        text: 'Username yang Anda pilih sudah digunakan. Silakan pilih username lain.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#E93B81'
+                    });
+                @elseif ($errors->has('password'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Tidak Valid',
+                        text: '{{ $errors->first('password') }}',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#E93B81'
+                    });
+                @else
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi Kesalahan',
+                        text: 'Silakan periksa kembali data yang Anda masukkan.',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#E93B81'
+                    });
+                @endif
+            @endif
+
+            // Success notification - REDIRECT KE LOGIN
+            @if (session('registered'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registrasi Berhasil!',
+                    html: '<p style="margin-bottom: 10px; font-size: 15px; color: #643843;">Akun Anda berhasil didaftarkan.</p><p style="font-weight: 600; font-size: 15px; color: #E93B81;">Silakan masuk menggunakan akun yang sudah Anda daftarkan.</p>',
+                    confirmButtonText: 'Masuk',
+                    confirmButtonColor: '#E93B81',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect ke halaman login
+                        window.location.href = "{{ route('login') }}";
+                    }
+                });
+            @endif
+        });
     </script>
 </body>
 </html>

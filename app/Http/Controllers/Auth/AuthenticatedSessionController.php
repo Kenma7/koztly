@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         // User biasa
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route('kosan.index'));
     }
 
     /**
