@@ -11,7 +11,7 @@
 <div class="px-4 rounded-lg">
     <div class="container mx-auto px-4" style="max-width: 1400px;">
         
-        <a href="{{ route('user.booking.index') }}" 
+        <a href="{{ route('user.bookings.index') }}" 
            class="inline-flex items-center gap-2 text-[#ea3882] hover:text-[#d12670] font-semibold mb-6">
             <i class="fas fa-arrow-left"></i>
             <span>Kembali ke Daftar Booking</span>

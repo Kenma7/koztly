@@ -105,7 +105,7 @@ class BookingController extends Controller
             ->where('id_user', $userId)
             ->firstOrFail();
 
-        return view('user.booking.show', compact('booking'));
+        return view('booking.show', compact('booking'));
     }
 
      public function store(Request $request, $id)

@@ -222,7 +222,7 @@
 
                 <!-- Back to List -->
                 <div class="mt-4 pt-4 border-t">
-                    <a href="{{ route('booking.index') }}" class="text-blue-600 hover:text-blue-800 text-sm">
+                    <a href="{{ route('user.bookings.index') }}" class="text-blue-600 hover:text-blue-800 text-sm">
                         ← Kembali ke Daftar Booking
                     </a>
                 </div>
