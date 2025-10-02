@@ -366,7 +366,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('user.booking.index') }}"
+                    <a href="{{ route('user.bookings.index') }}"
                         class="flex items-center p-3 text-white bg-pink-500 rounded-lg hover:bg-pink-600">
                         <i class="fas fa-home w-5"></i>
                         <span class="ml-3">Riwayat Booking</span>
@@ -613,7 +613,7 @@
                 <div class="booking-grid">
                     @foreach ($bookings as $booking)
                         <div class="booking-card"
-                            onclick="window.location.href='{{ route('user.booking.show', $booking->id_booking) }}'">
+                            onclick="window.location.href='{{ route('user.booking.detail', $booking->id_booking) }}'">
 
                             <!-- Image Section -->
                             <div style="position: relative;">

@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\KosanController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\BookingController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KosanController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // ----------------------
@@ -19,7 +19,7 @@ Route::get('/landing', function () {
 })->name('landing');
 
 // ----------------------
-// Route kosan public
+// Kosan Public Routes (HAPUS DUPLICATE!)
 // ----------------------
 Route::get('/kosan', [KosanController::class, 'index'])->name('kosan.index');
 Route::get('/kosan/{id}', [KosanController::class, 'show'])->name('kosan.show');
@@ -36,13 +36,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-    // Profile
+    // Profile (HAPUS DUPLICATE!)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // ----------------------
-    // BOOKING PROCESS (Fitur Kamu)
+    // BOOKING PROCESS (PUNYAMU - isalz)
     // ----------------------
     Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
     Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
@@ -51,18 +51,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/booking/{id}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
 
     // ----------------------
-    // BOOKING HISTORY (Fitur Teman Kamu)
+    // BOOKING HISTORY (PUNYANYA - pipahz)  
     // ----------------------
-    Route::prefix('bookings')->name('bookings.')->group(function () {
-        Route::get('/', [BookingController::class, 'index'])->name('index');           // bookings.index
-        Route::get('/{id}/edit', [BookingController::class, 'edit'])->name('edit');    // bookings.edit
-        Route::put('/{id}', [BookingController::class, 'update'])->name('update');     // bookings.update
-        Route::delete('/{id}', [BookingController::class, 'destroy'])->name('destroy'); // bookings.destroy
+    Route::prefix('user')->name('user.')->group(function () {
+        // History List
+        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        
+        // History Detail (NEW - ganti dari show)
+        Route::get('/bookings/{id}', [BookingController::class, 'showHistory'])->name('bookings.detail');
+        
+        // Edit & Delete History
+        Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+        Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+        Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+        
+        // Profile Custom
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     });
 });
 
 // ----------------------
-// Admin Routes
+// Admin Routes  
 // ----------------------
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'rolecheck:admin'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
@@ -81,7 +90,4 @@ Route::post('/sidebar/toggle', function (Request $request) {
     return response()->json(['success' => true]);
 })->name('sidebar.toggle');
 
-// ----------------------
-// Auth routes
-// ----------------------
 require __DIR__.'/auth.php';
