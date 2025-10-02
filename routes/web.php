@@ -19,38 +19,40 @@ Route::get('/landing', function () {
 })->name('landing');
 
 // ----------------------
-// Route kosan public
+// Route kosan public (HAPUS DUPLICATE!)
 // ----------------------
 Route::get('/kosan', [KosanController::class, 'index'])->name('kosan.index');
 Route::get('/kosan/{id}', [KosanController::class, 'show'])->name('kosan.show');
 
 // ----------------------
-// Dashboard user
+// Auth User Routes
 // ----------------------
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    // Logout user
+    // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-    // Profile user
+    // Profile (HAPUS DUPLICATE!)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route booking
+    // ----------------------
+    // BOOKING PROCESS (Kamu)
+    // ----------------------
     Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
     Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
-    // Route::post('/kosan/{id}/booking/confirm', [BookingController::class, 'confirm'])->name('booking.confirm'); // HAPUS JIKA TIDAK DIPAKAI
     Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
     Route::post('/booking/{id}/upload-bukti', [BookingController::class, 'uploadBukti'])->name('booking.upload-bukti');
     Route::put('/booking/{id}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
 });
 
 // ----------------------
-// Dashboard Admin
+// Admin Routes
 // ----------------------
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'rolecheck:admin'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');

@@ -37,7 +37,7 @@ class BookingController extends Controller
                 'email' => 'user@example.com',
             ];
 
-            return view('kosan.booking', compact('kos', 'bookingData', 'totalBiaya', 'user'));
+            return view('user.booking.create', compact('kos', 'bookingData', 'totalBiaya', 'user'));
             
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan sistem');
@@ -48,66 +48,83 @@ class BookingController extends Controller
      * Process final booking
      */
     public function store(Request $request, $id)
-    {
-        try {
-            $kosan = Kosan::find($id);
-            if (!$kosan) {
-                return redirect()->back()->with('error', 'Kosan tidak ditemukan!');
-            }
-
-            // Cek existing booking
-            $existingBooking = Booking::where('id_user', 1)
-                                    ->where('id_kos', $id)
-                                    ->whereIn('status_sewa', ['menunggu', 'aktif'])
-                                    ->first();
-            
-            if ($existingBooking) {
-                return redirect()->back()->with('sweet_warning', 'Anda sudah memiliki booking aktif untuk kosan ini!');
-            }
-
-            // Validasi
-            $request->validate([
-                'jumlah_penghuni' => 'required|integer|min:1|max:4',
-                'catatan' => 'nullable|string|max:500',
-                'lama_sewa' => 'required|integer|min:1',
-                'tanggal_mulai' => 'required|date',
-                'total_biaya' => 'required|integer'
-            ]);
-
-            // Cari kamar tersedia
-            $kamar = Kamar::where('id_kos', $id)
-                         ->where('status', 'tersedia')
-                         ->first();
-
-            if (!$kamar) {
-                return redirect()->back()->with('error', 'Maaf, tidak ada kamar tersedia untuk kosan ini.');
-            }
-
-            // Create booking
-            $booking = Booking::create([
-                'id_user' => 1,
-                'id_kos' => $id,
-                'id_kamar' => $kamar->id_kamar,
-                'harga' => $request->total_biaya,
-                'lama_sewa' => $request->lama_sewa,
-                'tanggal_masuk' => $request->tanggal_mulai,
-                'jumlah_penghuni' => $request->jumlah_penghuni,
-                'catatan' => $request->catatan,
-                'status_pembayaran' => 'belum dibayar',
-                'bukti_tf' => null,
-                'status_sewa' => 'menunggu',
-            ]);
-
-            // Update status kamar
-            $kamar->update(['status' => 'dibooking']);
-            
-            return redirect()->route('booking.show', $booking->id_booking)
-                ->with('sweet_success', 'Booking Berhasil! 🎉');
-
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan sistem. Silakan coba lagi.');
+{
+    logger('=== BOOKING STORE START ===');
+    logger('Kosan ID: ' . $id);
+    logger('Request Data: ', $request->all());
+    
+    try {
+        $kosan = Kosan::find($id);
+        if (!$kosan) {
+            logger('Kosan not found: ' . $id);
+            return redirect()->back()->with('error', 'Kosan tidak ditemukan!');
         }
+        logger('Kosan found: ' . $kosan->nama_kos);
+
+        // Cek existing booking
+        $existingBooking = Booking::where('id_user', 1)
+                                ->where('id_kos', $id)
+                                ->whereIn('status_sewa', ['menunggu', 'aktif'])
+                                ->first();
+        
+        if ($existingBooking) {
+            logger('Existing booking found: ' . $existingBooking->id_booking);
+            return redirect()->back()->with('sweet_warning', 'Anda sudah memiliki booking aktif untuk kosan ini!');
+        }
+
+        // Validasi
+        $request->validate([
+            'jumlah_penghuni' => 'required|integer|min:1|max:4',
+            'catatan' => 'nullable|string|max:500',
+            'lama_sewa' => 'required|integer|min:1',
+            'tanggal_mulai' => 'required|date',
+            'total_biaya' => 'required|integer'
+        ]);
+        logger('Validation passed');
+
+        // Cari kamar tersedia
+        $kamar = Kamar::where('id_kos', $id)
+                     ->where('status', 'tersedia')
+                     ->first();
+        
+        logger('Kamar search result: ' . ($kamar ? 'FOUND' : 'NOT FOUND'));
+
+        if (!$kamar) {
+            logger('No available kamar for kos: ' . $id);
+            return redirect()->back()->with('error', 'Maaf, tidak ada kamar tersedia untuk kosan ini.');
+        }
+
+        // Create booking
+        logger('Creating booking...');
+        $booking = Booking::create([
+            'id_user' => 1,
+            'id_kos' => $id,
+            'id_kamar' => $kamar->id_kamar,
+            'harga' => $request->total_biaya,
+            'lama_sewa' => $request->lama_sewa,
+            'tanggal_masuk' => $request->tanggal_mulai,
+            'jumlah_penghuni' => $request->jumlah_penghuni,
+            'catatan' => $request->catatan,
+            'status_pembayaran' => 'belum dibayar',
+            'bukti_tf' => null,
+            'status_sewa' => 'menunggu',
+        ]);
+        logger('Booking created: ' . $booking->id_booking);
+
+        // Update status kamar
+        $kamar->update(['status' => 'dibooking']);
+        logger('Kamar status updated');
+        
+        logger('=== BOOKING STORE SUCCESS ===');
+        return redirect()->route('booking.show', $booking->id_booking)
+            ->with('sweet_success', 'Booking Berhasil! 🎉');
+
+    } catch (\Exception $e) {
+        logger('Booking store ERROR: ' . $e->getMessage());
+        logger('Error in: ' . $e->getFile() . ':' . $e->getLine());
+        return redirect()->back()->with('error', 'Terjadi kesalahan sistem. Silakan coba lagi.');
     }
+}
 
     /**
      * Show booking details
@@ -115,7 +132,7 @@ class BookingController extends Controller
     public function show($id)
     {
         $booking = Booking::with(['kosan', 'kamar'])->findOrFail($id);
-        return view('booking.show', compact('booking'));
+        return view('user.booking.show', compact('booking'));
     }
 
     /**
