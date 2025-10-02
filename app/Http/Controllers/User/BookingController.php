@@ -69,30 +69,35 @@ class BookingController extends Controller
         ));
     }
 
-     public function create(Request $request, $id)
+    public function create(Request $request, $id)
     {
-        $kos = Kosan::findOrFail($id);
-        
-        $validated = $request->validate([
-            'tanggal_mulai' => 'required|date',
-            'lama_sewa' => 'required|integer|min:1',
-        ]);
+        try {
+            $kos = Kosan::findOrFail($id);
+            
+            $validated = $request->validate([
+                'tanggal_mulai' => 'required|date',
+                'lama_sewa' => 'required|integer|min:1',
+            ]);
 
-        $bookingData = [
-            'tanggal_mulai' => $validated['tanggal_mulai'],
-            'lama_sewa' => $validated['lama_sewa'],
-        ];
+            $bookingData = [
+                'tanggal_mulai' => $validated['tanggal_mulai'],
+                'lama_sewa' => $validated['lama_sewa'],
+            ];
 
-        $totalBiaya = $kos->harga * $bookingData['lama_sewa'];
+            $totalBiaya = $kos->harga * $bookingData['lama_sewa'];
 
-        $user = (object) [
-            'name' => 'User Testing', 
-            'phone_number' => '08123456789',
-            'gender' => 'Laki-laki',
-            'email' => 'user@example.com',
-        ];
+            $user = (object) [
+                'name' => 'User Testing',
+                'phone_number' => '08123456789',
+                'gender' => 'Laki-laki',
+                'email' => 'user@example.com',
+            ];
 
-        return view('user.booking.create', compact('kos', 'bookingData', 'totalBiaya', 'user'));
+            return view('user.booking.create', compact('kos', 'bookingData', 'totalBiaya', 'user'));
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem');
+        }
     }
 
     public function show($id)
@@ -109,15 +114,31 @@ class BookingController extends Controller
     }
 
      public function store(Request $request, $id)
-    {
-        logger('=== DEBUG BOOKING STORE ===');
-        logger('Kosan ID: ' . $id);
-
+{
+    logger('=== BOOKING STORE START ===');
+    logger('Kosan ID: ' . $id);
+    logger('Request Data: ', $request->all());
+    
+    try {
         $kosan = Kosan::find($id);
         if (!$kosan) {
-            return back()->with('error', 'Kosan tidak ditemukan!');
+            logger('Kosan not found: ' . $id);
+            return redirect()->back()->with('error', 'Kosan tidak ditemukan!');
+        }
+        logger('Kosan found: ' . $kosan->nama_kos);
+
+        // Cek existing booking
+        $existingBooking = Booking::where('id_user', 1)
+                                ->where('id_kos', $id)
+                                ->whereIn('status_sewa', ['menunggu', 'aktif'])
+                                ->first();
+        
+        if ($existingBooking) {
+            logger('Existing booking found: ' . $existingBooking->id_booking);
+            return redirect()->back()->with('sweet_warning', 'Anda sudah memiliki booking aktif untuk kosan ini!');
         }
 
+        // Validasi
         $request->validate([
             'jumlah_penghuni' => 'required|integer|min:1|max:4',
             'catatan' => 'nullable|string|max:500',
@@ -125,19 +146,24 @@ class BookingController extends Controller
             'tanggal_mulai' => 'required|date',
             'total_biaya' => 'required|integer'
         ]);
+        logger('Validation passed');
 
-        // Cari kamar yang tersedia
+        // Cari kamar tersedia
         $kamar = Kamar::where('id_kos', $id)
                      ->where('status', 'tersedia')
                      ->first();
+        
+        logger('Kamar search result: ' . ($kamar ? 'FOUND' : 'NOT FOUND'));
 
         if (!$kamar) {
-            return back()->with('error', 'Maaf, tidak ada kamar tersedia untuk kosan ini.');
+            logger('No available kamar for kos: ' . $id);
+            return redirect()->back()->with('error', 'Maaf, tidak ada kamar tersedia untuk kosan ini.');
         }
 
         // Create booking
+        logger('Creating booking...');
         $booking = Booking::create([
-            'id_user' => Auth::id(), // ✅ PAKE AUTH REAL
+            'id_user' => 1,
             'id_kos' => $id,
             'id_kamar' => $kamar->id_kamar,
             'harga' => $request->total_biaya,
@@ -149,13 +175,23 @@ class BookingController extends Controller
             'bukti_tf' => null,
             'status_sewa' => 'menunggu',
         ]);
+        logger('Booking created: ' . $booking->id_booking);
 
-           // Update status kamar
+        // Update status kamar
         $kamar->update(['status' => 'dibooking']);
-
+        logger('Kamar status updated');
+        
+        logger('=== BOOKING STORE SUCCESS ===');
         return redirect()->route('booking.show', $booking->id_booking)
-            ->with('success', 'Booking berhasil diajukan!');
+            ->with('sweet_success', 'Booking Berhasil! 🎉');
+
+    } catch (\Exception $e) {
+        logger('Booking store ERROR: ' . $e->getMessage());
+        logger('Error in: ' . $e->getFile() . ':' . $e->getLine());
+        return redirect()->back()->with('error', 'Terjadi kesalahan sistem. Silakan coba lagi.');
     }
+}
+
 
      public function showHistory($id)
     {
@@ -234,18 +270,34 @@ class BookingController extends Controller
 
     public function cancel($id)
     {
-        $userId = Auth::id();
-        
-        $booking = Booking::where('id_booking', $id)
-            ->where('id_user', $userId)
-            ->where('status_pembayaran', 'belum dibayar')
-            ->firstOrFail();
+        try {
+            $userId = Auth::id();
 
-        $booking->status_sewa = 'batal';
-        $booking->save();
+            $booking = Booking::where('id_booking', $id)
+                ->where('id_user', $userId)
+                ->firstOrFail();
+            
+            if ($booking->status_sewa == 'batal') {
+                return redirect()->route('booking.show', $id)->with('info', 'Booking sudah dibatalkan.');
+            }
+            
+            if ($booking->status_pembayaran == 'sudah dibayar') {
+                return redirect()->route('booking.show', $id)->with('sweet_warning', 'Tidak bisa batalkan booking yang sudah dibayar');
+            }
 
-        return redirect()->route('user.booking.index')
-            ->with('success', 'Booking berhasil dibatalkan.');
+            // Update status
+            $booking->update(['status_sewa' => 'batal']);
+            
+            // Kembalikan status kamar
+            if ($booking->kamar) {
+                $booking->kamar->update(['status' => 'tersedia']);
+            }
+
+            return redirect()->route('booking.show', $id)->with('info', 'Booking berhasil dibatalkan.');
+
+        } catch (\Exception $e) {
+            return redirect()->route('booking.show', $id)->with('error', 'Gagal membatalkan booking.');
+        }
     }
 
     public function destroy($id)
@@ -273,23 +325,61 @@ class BookingController extends Controller
 
     public function uploadBukti(Request $request, $id)
     {
-        $request->validate([
-            'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+        try {
+            $booking = Booking::findOrFail($id);
+            
+            // Cek status
+            if ($booking->status_sewa == 'batal') {
+                return redirect()->route('booking.show', $id)->with('error', 'Booking sudah dibatalkan.');
+            }
+            
+            if ($booking->status_pembayaran == 'sudah dibayar') {
+                return redirect()->route('booking.show', $id)->with('warning', 'Bukti transfer sudah diupload.');
+            }
 
-        $booking = Booking::findOrFail($id);
+            // Validasi file
+            $request->validate([
+                'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            ]);
 
-        if ($request->hasFile('bukti_tf')) {
-            $file = $request->file('bukti_tf');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename);
+            if ($request->hasFile('bukti_tf')) {
+                $file = $request->file('bukti_tf');
+                $imagePath = $file->store('bukti_tf', 'public');
 
-            $booking->bukti_tf = $filename;
-            $booking->status_pembayaran = 'sudah dibayar'; // ✅ otomatis update status
-            $booking->save();
+                // Update booking
+                $booking->bukti_tf = $imagePath;
+                $booking->status_pembayaran = 'sudah dibayar';
+                $booking->save();
+                
+                return redirect()->route('booking.show', $id)
+                    ->with('sweet_success', 'Pembayaran Berhasil! ✅');
+
+            } else {
+                return redirect()->route('booking.show', $id)->with('error', 'File tidak ditemukan.');
+            }
+            
+        } catch (\Exception $e) {
+            return redirect()->route('booking.show', $id)->with('error', 'Gagal upload bukti transfer.');
         }
-
-        // balik lagi ke halaman sebelumnya (detail booking)
-        return redirect()->back()->with('success', 'Bukti transfer berhasil diupload!');
     }
+
+         protected function customValidationMessages()
+    {
+        return [
+            'bukti_tf.required' => 'Harus memilih file bukti transfer',
+            'bukti_tf.image' => 'File harus berupa gambar (JPG, PNG)',
+            'bukti_tf.mimes' => 'Format file harus JPG, JPEG, atau PNG',
+            'bukti_tf.max' => 'Ukuran file maksimal 2MB',
+            'jumlah_penghuni.required' => 'Jumlah penghuni harus diisi',
+            'jumlah_penghuni.min' => 'Minimal 1 penghuni',
+            'jumlah_penghuni.max' => 'Maksimal 4 penghuni',
+            'lama_sewa.required' => 'Lama sewa harus diisi',
+            'lama_sewa.min' => 'Minimal sewa 1 bulan',
+            'tanggal_mulai.required' => 'Tanggal mulai harus diisi',
+            'tanggal_mulai.date' => 'Format tanggal tidak valid',
+        ];
+    }
+
+
 }
+

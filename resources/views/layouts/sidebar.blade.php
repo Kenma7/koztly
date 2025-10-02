@@ -3,7 +3,7 @@
     <!-- Navigation Menu -->
     <nav class="p-3 pt-5 space-y-1">
         <!-- Dashboard -->
-        <a href="{{ route('dashboard') }}"
+        <a href="{{ route('landing') }}"
            class="flex items-center py-2.5 px-3 rounded-lg transition-all duration-200 group border-l-4
            {{ request()->routeIs('dashboard') 
                 ? 'bg-blue-50 text-blue-600 border-blue-500' 

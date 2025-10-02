@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Kamar;
-use App\Models\Booking;
-
 
 class Kosan extends Model
 {
@@ -35,35 +32,37 @@ class Kosan extends Model
         return $this->hasMany(Kamar::class, 'id_kos', 'id_kos');
     }
 
-    //sisa kamar
+    // Method hitung sisa kamar tersedia
     public function sisaKamar()
     {
-    // hitung kamar total - kamar yang sudah dibooking
-    $total = $this->jumlah_kamar;
-   // $dipakai = $this->bookings()->count();
-
-    //return max($total - $dipakai, 0); // biar gak minus
+        // Hitung kamar dengan status 'tersedia'
+        return $this->kamar()
+                    ->where('status', 'tersedia')
+                    ->count();
     }
 
-
-    //Method hitung sisa kamar
-     public function getSisaKamarAttribute()
+    // Method untuk total kamar (dari database kamar)
+    public function totalKamar()
     {
-    // contoh: jumlah_kamar - booking aktif
-    //return $this->jumlah_kamar - $this->bookings()->count();
-    return $this->jumlah_kamar;
+        return $this->kamar()->count();
+    }
+
+    // Accessor untuk sisa kamar (alternatif)
+    public function getSisaKamarAttribute()
+    {
+        return $this->sisaKamar();
     }
 
     // Relasi opsional: satu kosan punya banyak booking lewat kamar
     public function bookings()
     {
         return $this->hasManyThrough(
-            Booking::class, // model tujuan
-            Kamar::class,   // model perantara
-            'id_kos',       // foreign key di tabel kamar
-            'id_kamar',     // foreign key di tabel booking
-            'id_kos',       // local key di tabel kosan
-            'id_kamar'      // local key di tabel kamar
+            Booking::class,
+            Kamar::class,
+            'id_kos',
+            'id_kamar', 
+            'id_kos',
+            'id_kamar'
         );
     }
 }

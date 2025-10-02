@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\BookingController;
-use App\Http\Controllers\KosanController;
+use App\Http\Controllers\User\KosanController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // ----------------------
@@ -19,7 +19,7 @@ Route::get('/landing', function () {
 })->name('landing');
 
 // ----------------------
-// Kosan Public Routes (HAPUS DUPLICATE!)
+// Route kosan public (HAPUS DUPLICATE!)
 // ----------------------
 Route::get('/kosan', [KosanController::class, 'index'])->name('kosan.index');
 Route::get('/kosan/{id}', [KosanController::class, 'show'])->name('kosan.show');

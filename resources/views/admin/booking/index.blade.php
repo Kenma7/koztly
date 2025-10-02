@@ -406,18 +406,32 @@
     </div>
 </div>
 
- <!-- Modal Bukti Transfer -->
-            @if($booking->bukti_tf)
-                <div id="bukti-modal-{{ $booking->id_booking }}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-                    <div class="bg-white rounded-xl shadow-lg w-11/12 md:w-1/2 p-6 relative">
-                        <h2 class="text-xl font-bold mb-4">Bukti Transfer #{{ $booking->id_booking }}</h2>
-                        <img src="{{ asset('storage/bukti_tf/' . $booking->bukti_tf) }}" alt="Bukti Transfer" class="w-full rounded-lg">
-                        <button onclick="closeBuktiModal({{ $booking->id_booking }})" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">
-                            <i class="fas fa-times fa-lg"></i>
-                        </button>
-                    </div>
-                </div>
-            @endif
+                <!-- Modal Bukti Transfer -->
+@if($booking->bukti_tf)
+    <div id="bukti-modal-{{ $booking->id_booking }}" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-xl shadow-lg w-11/12 md:w-1/2 p-6 relative">
+            <h2 class="text-xl font-bold mb-4">Bukti Transfer #{{ $booking->id_booking }}</h2>
+            
+            <!-- PAKAI asset() dengan path yang benar -->
+            <img src="{{ asset('storage/' . $booking->bukti_tf) }}" 
+                 alt="Bukti Transfer" 
+                 class="w-full rounded-lg max-h-96 object-contain">
+            
+            <!-- TOMBOL DOWNLOAD -->
+            <div class="mt-4 text-center">
+                <a href="{{ asset('storage/' . $booking->bukti_tf) }}" 
+                   download 
+                   class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                   <i class="fas fa-download mr-2"></i>Download Bukti
+                </a>
+            </div>
+            
+            <button onclick="closeBuktiModal({{ $booking->id_booking }})" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+        </div>
+    </div>
+@endif
         @endforeach
 
      <!-- Modal Konfirmasi Batal -->
