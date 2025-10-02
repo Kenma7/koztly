@@ -29,6 +29,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validasi input dari form register
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
@@ -47,8 +48,10 @@ class RegisteredUserController extends Controller
             'password.min' => 'Password harus minimal 8 karakter.',
             'password.regex' => 'Password harus mengandung kombinasi huruf dan angka.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            
         ]);
 
+        // Buat user baru di database
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
@@ -59,7 +62,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // REDIRECT KE REGISTER DENGAN SESSION FLASH UNTUK SWEET ALERT
+        // Redirect ke register dengan session flash untuk sweet alert
         return redirect()->route('register')->with('registered', 'Akun berhasil dibuat!');
     }
 }
