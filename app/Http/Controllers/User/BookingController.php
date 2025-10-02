@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Kosan;
+use App\Models\Kamar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -67,6 +69,32 @@ class BookingController extends Controller
         ));
     }
 
+     public function create(Request $request, $id)
+    {
+        $kos = Kosan::findOrFail($id);
+        
+        $validated = $request->validate([
+            'tanggal_mulai' => 'required|date',
+            'lama_sewa' => 'required|integer|min:1',
+        ]);
+
+        $bookingData = [
+            'tanggal_mulai' => $validated['tanggal_mulai'],
+            'lama_sewa' => $validated['lama_sewa'],
+        ];
+
+        $totalBiaya = $kos->harga * $bookingData['lama_sewa'];
+
+        $user = (object) [
+            'name' => 'User Testing', 
+            'phone_number' => '08123456789',
+            'gender' => 'Laki-laki',
+            'email' => 'user@example.com',
+        ];
+
+        return view('user.booking.create', compact('kos', 'bookingData', 'totalBiaya', 'user'));
+    }
+
     public function show($id)
     {
         // Ambil ID user yang sedang login
@@ -78,6 +106,66 @@ class BookingController extends Controller
             ->firstOrFail();
 
         return view('user.booking.show', compact('booking'));
+    }
+
+     public function store(Request $request, $id)
+    {
+        logger('=== DEBUG BOOKING STORE ===');
+        logger('Kosan ID: ' . $id);
+
+        $kosan = Kosan::find($id);
+        if (!$kosan) {
+            return back()->with('error', 'Kosan tidak ditemukan!');
+        }
+
+        $request->validate([
+            'jumlah_penghuni' => 'required|integer|min:1|max:4',
+            'catatan' => 'nullable|string|max:500',
+            'lama_sewa' => 'required|integer|min:1',
+            'tanggal_mulai' => 'required|date',
+            'total_biaya' => 'required|integer'
+        ]);
+
+        // Cari kamar yang tersedia
+        $kamar = Kamar::where('id_kos', $id)
+                     ->where('status', 'tersedia')
+                     ->first();
+
+        if (!$kamar) {
+            return back()->with('error', 'Maaf, tidak ada kamar tersedia untuk kosan ini.');
+        }
+
+        // Create booking
+        $booking = Booking::create([
+            'id_user' => Auth::id(), // ✅ PAKE AUTH REAL
+            'id_kos' => $id,
+            'id_kamar' => $kamar->id_kamar,
+            'harga' => $request->total_biaya,
+            'lama_sewa' => $request->lama_sewa,
+            'tanggal_masuk' => $request->tanggal_mulai,
+            'jumlah_penghuni' => $request->jumlah_penghuni,
+            'catatan' => $request->catatan,
+            'status_pembayaran' => 'belum dibayar',
+            'bukti_tf' => null,
+            'status_sewa' => 'menunggu',
+        ]);
+
+           // Update status kamar
+        $kamar->update(['status' => 'dibooking']);
+
+        return redirect()->route('booking.show', $booking->id_booking)
+            ->with('success', 'Booking berhasil diajukan!');
+    }
+
+     public function showHistory($id)
+    {
+        $userId = Auth::id();
+        $booking = Booking::with(['kamar.kosan', 'user'])
+            ->where('id_booking', $id)
+            ->where('id_user', $userId)
+            ->firstOrFail();
+
+        return view('user.booking.history-detail', compact('booking'));
     }
 
     public function edit($id)

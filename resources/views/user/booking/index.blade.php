@@ -375,7 +375,7 @@
             </ul>
 
             <!-- Logout -->
-            <form action="{{ route('user.logout') }}" method="POST" class="mt-4">
+            <form action="{{ route('logout') }}" method="POST" class="mt-4">
                 @csrf
                 <button type="submit" class="flex items-center p-3 w-full text-red-600 rounded-lg hover:bg-red-50">
                     <i class="fas fa-sign-out-alt w-5"></i>
@@ -537,7 +537,7 @@
                 <div class="flex flex-col md:flex-row md:items-center gap-2">
 
                     <!-- Search Box -->
-                    <form method="GET" action="{{ route('user.booking.index') }}" class="flex items-center flex-1">
+                    <form method="GET" action="{{ route('user.bookings.index') }}" class="flex items-center flex-1">
                         <input type="text" name="search" value="{{ request('search') }}"
                             placeholder="Cari kos atau lokasi..."
                             class="w-full border border-gray-300 rounded-l-lg px-4 py-2
@@ -580,23 +580,23 @@
                             x-transition:leave-end="opacity-0 translate-y-2"
                             class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
 
-                            <a href="{{ route('user.booking.index') }}"
+                            <a href="{{ route('user.bookings.index') }}"
                                 class="block px-4 py-2 text-sm hover:bg-gray-100 {{ !request('status') ? 'font-semibold text-pink-500' : '' }}">
                                 <i class="fas fa-list"></i> Semua
                             </a>
-                            <a href="{{ route('user.booking.index', ['status' => 'menunggu']) }}"
+                            <a href="{{ route('user.bookings.index', ['status' => 'menunggu']) }}"
                                 class="block px-4 py-2 text-sm hover:bg-gray-100 {{ request('status') == 'menunggu' ? 'font-semibold text-pink-500' : '' }}">
                                 <i class="fas fa-clock"></i> Menunggu
                             </a>
-                            <a href="{{ route('user.booking.index', ['status' => 'aktif']) }}"
+                            <a href="{{ route('user.bookings.index', ['status' => 'aktif']) }}"
                                 class="block px-4 py-2 text-sm hover:bg-gray-100 {{ request('status') == 'aktif' ? 'font-semibold text-pink-500' : '' }}">
                                 <i class="fas fa-play"></i> Aktif
                             </a>
-                            <a href="{{ route('user.booking.index', ['status' => 'selesai']) }}"
+                            <a href="{{ route('user.bookings.index', ['status' => 'selesai']) }}"
                                 class="block px-4 py-2 text-sm hover:bg-gray-100 {{ request('status') == 'selesai' ? 'font-semibold text-pink-500' : '' }}">
                                 <i class="fas fa-check-circle"></i> Selesai
                             </a>
-                            <a href="{{ route('user.booking.index', ['status' => 'batal']) }}"
+                            <a href="{{ route('user.bookings.index', ['status' => 'batal']) }}"
                                 class="block px-4 py-2 text-sm hover:bg-gray-100 {{ request('status') == 'batal' ? 'font-semibold text-pink-500' : '' }}">
                                 <i class="fas fa-times-circle"></i> Batal
                             </a>
@@ -613,7 +613,7 @@
                 <div class="booking-grid">
                     @foreach ($bookings as $booking)
                         <div class="booking-card"
-                            onclick="window.location.href='{{ route('user.booking.detail', $booking->id_booking) }}'">
+                            onclick="window.location.href='{{ route('user.bookings.detail', $booking->id_booking) }}'">
 
                             <!-- Image Section -->
                             <div style="position: relative;">
