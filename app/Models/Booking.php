@@ -25,7 +25,6 @@ class Booking extends Model
         'status_pembayaran', 
         'bukti_tf', 
         'status_sewa'
-
     ];
 
     protected $attributes = [

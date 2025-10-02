@@ -55,13 +55,24 @@
                     <!-- Lokasi -->
                     <p class="text-sm text-gray-600">{{ $kos->lokasi_kos }}</p>
 
-                    <!-- Harga & Sisa Kamar -->
-                    <p class="text-gray-800 font-semibold">Rp {{ number_format($kos->harga, 0, ',', '.') }}/bulan</p>
-                    <p class="text-sm
-                        @if($kos->sisaKamar() == 0) text-red-600
-                        @else text-green-600 @endif">
-                        sisa {{ $kos->sisaKamar() }} kamar
-                    </p>
+                   <!-- Harga & Sisa Kamar -->
+<div class="flex justify-between items-center mt-2">
+    <p class="text-gray-800 font-semibold">Rp {{ number_format($kos->harga, 0, ',', '.') }}/bulan</p>
+    
+    <div class="text-right">
+        <p class="text-sm font-medium 
+            @if($kos->sisa_kamar_count == 0) text-red-600
+            @elseif($kos->sisa_kamar_count <= 2) text-orange-600
+            @else text-green-600 @endif">
+            @if($kos->sisa_kamar_count == 0)
+                ❌ Penuh
+            @else
+                ✅ {{ $kos->sisa_kamar_count }} kamar tersedia
+            @endif
+        </p>
+        <p class="text-xs text-gray-500">{{ $kos->total_kamar_count }} kamar total</p>
+    </div>
+</div>
 
                     <!-- Nama Kos -->
                     <h3 class="mt-2 font-bold">{{ $kos->nama_kos }}</h3>
