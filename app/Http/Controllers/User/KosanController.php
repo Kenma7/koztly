@@ -10,7 +10,6 @@ use App\Models\Kamar;
 
 class KosanController extends Controller
 {
-<<<<<<< HEAD:app/Http/Controllers/KosanController.php
     // Tambahan di KosanController
     public function landing(Request $request)
     {
@@ -21,10 +20,7 @@ class KosanController extends Controller
         return view('landing.index', compact('kosan'));
     }
 
-    //Daftar Kosan
-=======
     // Daftar Kosan
->>>>>>> pipahz-fix:app/Http/Controllers/User/KosanController.php
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 9);

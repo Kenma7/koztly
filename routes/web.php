@@ -18,19 +18,17 @@ Route::get('/landing', function () {
     return view('landing.index');
 })->name('landing');
 
-<<<<<<< HEAD
 
 // Landing page ambil data kosan dari controller
 Route::get('/landing', [KosanController::class, 'landing'])->name('landing');
 
-//------------------
-//Route kosan public
-//------------------
-=======
+
+// Landing page ambil data kosan dari controller
+Route::get('/landing', [KosanController::class, 'landing'])->name('landing');
+
 // ----------------------
 // Route kosan public (HAPUS DUPLICATE!)
 // ----------------------
->>>>>>> pipahz-fix
 Route::get('/kosan', [KosanController::class, 'index'])->name('kosan.index');
 Route::get('/kosan/{id}', [KosanController::class, 'show'])->name('kosan.show');
 
