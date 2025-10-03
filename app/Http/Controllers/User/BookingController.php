@@ -357,11 +357,11 @@ class BookingController extends Controller
                 ->with('sweet_success', 'Pembayaran Berhasil! ✅');
 
         } else {
-            return redirect()->route('user.booking.show', $id)->with('error', 'File tidak ditemukan.');
+            return redirect()->route('user.bookings.show', $id)->with('error', 'File tidak ditemukan.');
         }
         
     } catch (\Exception $e) {
-        return redirect()->route('user.booking.show', $id)->with('error', 'Gagal upload bukti transfer.');
+        return redirect()->route('user.bookings.index', $id)->with('error', 'Gagal upload bukti transfer.');
     }
 }
          protected function customValidationMessages()
