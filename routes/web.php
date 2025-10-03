@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Profile (HAPUS DUPLICATE!)
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.edit');
+    Route::match(['put', 'patch'], '/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
