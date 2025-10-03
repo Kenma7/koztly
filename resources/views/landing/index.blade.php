@@ -201,7 +201,7 @@
     /* Gambar Vector */
     .vector-image {
         position: absolute;
-        bottom: -280px;
+        bottom: -330px;
         right: -35px;
         width: 163%;
         z-index: 1;
@@ -255,7 +255,7 @@
     /* Tombol "Cari Kos" di Pojok Kiri Bawah */
     .bottom-left-button {
         position: absolute;
-        bottom: 18px;
+        bottom: 30px;
         left: 33px;
         z-index: 10;
         opacity: 0;
@@ -266,7 +266,7 @@
     .btn-outlined {
         display: inline-flex;
         align-items: center;
-        padding: 17px 227px;
+        padding: 17px 215px;
         background: transparent;
         border: 2px solid #E93B81;
         border-radius: 22px;
