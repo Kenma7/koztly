@@ -15,13 +15,14 @@ class Kamar extends Model
     protected $fillable = [
         'id_kos',
         'nomor_kamar',
+        'harga',
         'status',
         
     ];
 
     // Relasi ke Kost (satu kamar milik satu kos)
     public function kosan(){
-        return $this->belongsTo(Kosan::class, 'id_kos');
+        return $this->belongsTo(Kosan::class, 'id_kos', 'id_kos');
     }
 
 

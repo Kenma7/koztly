@@ -4,15 +4,40 @@
 <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Bagian Kiri: Detail Kos -->
     <div class="lg:col-span-2">
-        <!-- Foto utama -->
+        <!-- Foto utama dengan Fallback Logic -->
         <div class="rounded-lg overflow-hidden shadow">
-            <img src="{{ $kos->gambar_kos 
-                  ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
-                        ? $kos->gambar_kos 
-                        : asset('storage/'.$kos->gambar_kos)) 
-                  : 'https://via.placeholder.com/800x400' }}" 
-                     alt="{{ $kos->nama_kos }}" 
-                     class="w-full h-72 object-cover">
+            @php
+                // Cek tipe gambar
+                if ($kos->gambar_kos) {
+                    if (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL)) {
+                        // URL external
+                        $imageSrc = $kos->gambar_kos;
+                    } else {
+                        // Local file - cek multiple paths
+                        $paths = [
+                            'storage/' . $kos->gambar_kos,
+                            'uploads/kosan/' . $kos->gambar_kos,
+                            'storage/uploads/kosan/' . $kos->gambar_kos
+                        ];
+                        
+                        $imageSrc = 'https://via.placeholder.com/800x400'; // default fallback
+                        
+                        foreach ($paths as $path) {
+                            if (file_exists(public_path($path))) {
+                                $imageSrc = asset($path);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    $imageSrc = 'https://via.placeholder.com/800x400';
+                }
+            @endphp
+
+            <img src="{{ $imageSrc }}" 
+                 alt="{{ $kos->nama_kos }}" 
+                 class="w-full h-72 object-cover"
+                 onerror="this.src='https://via.placeholder.com/800x400?text=Image+Error'">
         </div>
 
         <!-- Nama Kos -->

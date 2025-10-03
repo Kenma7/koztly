@@ -113,7 +113,7 @@ class BookingController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'status_sewa' => 'required|in:menunggu,aktif,selesai,batal',
+            'status_sewa' => 'required|in:menunggu,disetujui,aktif,selesai,batal',
         ]);
 
         $booking = Booking::findOrFail($id);

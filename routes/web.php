@@ -1,26 +1,24 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KosanController;
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\User\BookingController as UserBookingController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\KosanController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use Illuminate\Support\Facades\Auth;
 
 // ----------------------
 // Landing / Loading
 // ----------------------
 Route::get('', function () {
-     return view('loading.loading'); // resources/views/loading/loading.blade.php
+     return view('loading.loading');
 })->name('home');
 
 Route::get('/landing', function () {
-    return view('landing.index'); // resources/views/landing/index.blade.php
+    return view('landing.index');
 })->name('landing');
 
+<<<<<<< HEAD
 
 // Landing page ambil data kosan dari controller
 Route::get('/landing', [KosanController::class, 'landing'])->name('landing');
@@ -28,46 +26,63 @@ Route::get('/landing', [KosanController::class, 'landing'])->name('landing');
 //------------------
 //Route kosan public
 //------------------
+=======
+// ----------------------
+// Route kosan public (HAPUS DUPLICATE!)
+// ----------------------
+>>>>>>> pipahz-fix
 Route::get('/kosan', [KosanController::class, 'index'])->name('kosan.index');
 Route::get('/kosan/{id}', [KosanController::class, 'show'])->name('kosan.show');
-//Route::get('/kosan/{id}/booking', [KosanController::class, 'bookingForm'])->name('kosan.booking.form');
-//Route::post('/kosan/{id}/booking', [KosanController::class, 'bookingSubmit'])->name('kosan.booking.submit');
-
 
 // ----------------------
-// Dashboard user
+// Auth User Routes
 // ----------------------
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard
     Route::get('/dashboard', function () {
-        return view('dashboard'); // user dashboard
+        return redirect()->route('kosan.index');
     })->name('dashboard');
 
-    // Logout user
+    // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-// Profile user
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Profile (HAPUS DUPLICATE!)
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // ----------------------
+    // BOOKING PROCESS (PUNYAMU - isalz)
+    // ----------------------
+    Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
+    Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
+    Route::post('/booking/{id}/upload-bukti', [BookingController::class, 'uploadBukti'])->name('booking.upload-bukti');
+    Route::put('/booking/{id}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
 
-//Route booking
-Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
-Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
-Route::post('/kosan/{id}/booking/confirm', [BookingController::class, 'confirm'])->name('booking.confirm');
-Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
-Route::get('/bookings', [BookingController::class, 'index'])->name('booking.index');
-Route::post('/booking/{id}/upload-bukti', [BookingController::class, 'uploadBukti'])->name('upload-bukti');
-Route::put('/booking/{id}/cancel', [BookingController::class, 'cancel'])->name('cancel');
+    // ----------------------
+    // BOOKING HISTORY (PUNYANYA - pipahz)  
+    // ----------------------
+    Route::prefix('user')->name('user.')->group(function () {
+        // History List
+        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        
+        // History Detail (NEW - ganti dari show)
+        Route::get('/bookings/{id}', [BookingController::class, 'showHistory'])->name('bookings.detail');
+        
+        // Edit & Delete History
+        Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
+        Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+        Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
+        
+    });
 });
 
 // ----------------------
-// Dashboard Admin
+// Admin Routes  
 // ----------------------
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'rolecheck:admin'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-
-    // Logout admin → gunakan controller AuthenticatedSessionController
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::resource('kosan', App\Http\Controllers\Admin\KostController::class);
@@ -83,7 +98,4 @@ Route::post('/sidebar/toggle', function (Request $request) {
     return response()->json(['success' => true]);
 })->name('sidebar.toggle');
 
-// ----------------------
-// Auth routes
-// ----------------------
 require __DIR__.'/auth.php';

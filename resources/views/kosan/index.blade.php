@@ -29,62 +29,98 @@
 
     <!-- Grid Kosan -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-        @foreach ($kosan as $kos)
-        <a href="{{ route('kosan.show', $kos->id_kos ) }}"
-            class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-                <!-- Gambar -->
-                <!--<img src="{{ asset('storage/'.$kos->gambar_kos) }}" alt="{{ $kos->nama_kos }}"
-                     class="w-full h-40 object-cover"> -->
-                 <img src="{{ $kos->gambar_kos 
-              ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
-                    ? $kos->gambar_kos 
-                    : asset('storage/'.$kos->gambar_kos)) 
-              : 'https://via.placeholder.com/800x400' }}"  
-                    class="w-full h-48 object-cover" 
-                    alt="{{ $kos->nama_kos }}">
+    @foreach ($kosan as $kos)
+    <a href="{{ route('kosan.show', $kos->id_kos ) }}"
+        class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
+        
+        <!-- Gambar dengan Fallback Logic -->
+        @php
+            // Cek tipe gambar
+            if ($kos->gambar_kos) {
+                if (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL)) {
+                    // URL external
+                    $imageSrc = $kos->gambar_kos;
+                } else {
+                    // Local file - cek multiple paths
+                    $paths = [
+                        'storage/' . $kos->gambar_kos,
+                        'uploads/kosan/' . $kos->gambar_kos,
+                        'storage/uploads/kosan/' . $kos->gambar_kos
+                    ];
+                    
+                    $imageSrc = 'https://via.placeholder.com/800x400'; // default fallback
+                    
+                    foreach ($paths as $path) {
+                        if (file_exists(public_path($path))) {
+                            $imageSrc = asset($path);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $imageSrc = 'https://via.placeholder.com/800x400';
+            }
+        @endphp
 
-                <div class="p-4">
-                    <!-- Kategori -->
-                    <span class="text-xs font-bold uppercase 
-                        @if(strtoupper($kos->kategori) == 'PRIA') text-[#B6C9F0]
-                        @elseif(strtoupper($kos->kategori) == 'WANITA') text-[#E93B81] 
-                        @else text-orange-600 @endif">
-                        {{ $kos->kategori }}
-                    </span>
+        <img src="{{ $imageSrc }}" 
+             class="w-full h-48 object-cover" 
+             alt="{{ $kos->nama_kos }}"
+             onerror="this.src='https://via.placeholder.com/800x400?text=Image+Error'">
 
-                    <!-- Lokasi -->
-                    <p class="text-sm text-gray-600">{{ $kos->lokasi_kos }}</p>
+        <div class="p-4">
+            <!-- Kategori -->
+            <span class="text-xs font-bold uppercase 
+                @if(strtoupper($kos->kategori) == 'PRIA') text-[#B6C9F0]
+                @elseif(strtoupper($kos->kategori) == 'WANITA') text-[#E93B81] 
+                @else text-orange-600 @endif">
+                {{ $kos->kategori }}
+            </span>
 
-                    <!-- Harga & Sisa Kamar -->
-                    <p class="text-gray-800 font-semibold">Rp {{ number_format($kos->harga, 0, ',', '.') }}/bulan</p>
-                    <p class="text-sm
-                        @if($kos->sisaKamar() == 0) text-red-600
+            <!-- Nama Kos -->
+            <h3 class="mt-2 font-bold">{{ $kos->nama_kos }}</h3>
+
+            <!-- Lokasi -->
+            <p class="text-sm text-gray-600">{{ $kos->lokasi_kos }}</p>
+
+            <!-- Harga & Sisa Kamar -->
+            <div class="flex justify-between items-center mt-2">
+                <p class="text-gray-800 font-semibold">Rp {{ number_format($kos->harga, 0, ',', '.') }}/bulan</p>
+                
+                <div class="text-right">
+                    <p class="text-sm font-medium 
+                        @if($kos->sisa_kamar_count == 0) text-red-600
+                        @elseif($kos->sisa_kamar_count <= 2) text-orange-600
                         @else text-green-600 @endif">
-                        sisa {{ $kos->sisaKamar() }} kamar
+                        @if($kos->sisa_kamar_count == 0)
+                            ❌ Penuh
+                        @else
+                            ✅ {{ $kos->sisa_kamar_count }} kamar tersedia
+                        @endif
                     </p>
-
-                    <!-- Nama Kos -->
-                    <h3 class="mt-2 font-bold">{{ $kos->nama_kos }}</h3>
-
-                    <!-- Statistik -->
-                    <div class="flex items-center mt-2 text-sm text-gray-500 space-x-4">
-                        <span class="flex items-center"><i class="fas fa-eye mr-1 text-green-600"></i> 311</span>
-                        <span class="flex items-center"><i class="fas fa-heart mr-1 text-red-500"></i> 120</span>
-                    </div>
-
-                    <!-- Ikon Fasilitas -->
-                    <div class="flex space-x-2 mt-3 text-gray-500">
-                        <i class="fas fa-wifi"></i>
-                        <i class="fas fa-snowflake"></i>
-                        <i class="fas fa-motorcycle"></i>
-                        <i class="fas fa-car"></i>
-                        <i class="fas fa-tv"></i>
-                    </div>
+                    <p class="text-xs text-gray-500">{{ $kos->total_kamar_count }} kamar total</p>
                 </div>
-            </a>
-        @endforeach
-        {{ $kosan->links() }}
-    </div>
+            </div>
+
+            <!-- Statistik -->
+            <div class="flex items-center mt-2 text-sm text-gray-500 space-x-4">
+                <span class="flex items-center"><i class="fas fa-eye mr-1 text-green-600"></i> 311</span>
+                <span class="flex items-center"><i class="fas fa-heart mr-1 text-red-500"></i> 120</span>
+            </div>
+
+            <!-- Ikon Fasilitas -->
+            <div class="flex space-x-2 mt-3 text-gray-500">
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-snowflake"></i>
+                <i class="fas fa-motorcycle"></i>
+                <i class="fas fa-car"></i>
+                <i class="fas fa-tv"></i>
+            </div>
+        </div>
+    </a>
+    @endforeach
+</div>
+
+{{ $kosan->links() }}
 
 
   <!-- pagination -->

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kosan;
+use App\Models\Kamar; // JANGAN LUPA IMPORT MODEL KAMAR
 use Illuminate\Support\Str; 
-
 
 class KostController extends Controller
 {
@@ -15,37 +15,35 @@ class KostController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $query = Kosan::query();
 
-       $query = Kosan::query();
+        // Filter pencarian nama atau lokasi
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('nama_kos', 'like', "%$search%")
+                  ->orWhere('lokasi_kos', 'like', "%$search%");
+            });
+        }
 
-    // Filter pencarian nama atau lokasi
-    if ($request->filled('search')) {
-        $search = $request->input('search');
-        $query->where(function($q) use ($search) {
-            $q->where('nama_kos', 'like', "%$search%")
-              ->orWhere('lokasi_kos', 'like', "%$search%");
-        });
-    }
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
 
-    // Filter status
-    if ($request->filled('status')) {
-        $query->where('status', $request->status);
-    }
+        // Filter kategori
+        if ($request->filled('kategori')) {
+            $query->where('kategori', $request->kategori);
+        }
 
-    // Filter kategori
-    if ($request->filled('kategori')) {
-        $query->where('kategori', $request->kategori);
-    }
+        $kosan = $query->get();
 
-    $kosan = $query->get();
+        // Statistik sederhana
+        $totalKosan = Kosan::count();
+        $kosanWanita = Kosan::where('kategori', 'wanita')->count();
+        $kosanPria = Kosan::where('kategori', 'pria')->count();
 
-    // Statistik sederhana
-    $totalKosan = Kosan::count();
-    $kosanWanita = Kosan::where('kategori', 'wanita')->count();
-    $kosanPria = Kosan::where('kategori', 'pria')->count();
-
-    return view('admin.kosan.index', compact('kosan', 'totalKosan', 'kosanWanita', 'kosanPria'));
+        return view('admin.kosan.index', compact('kosan', 'totalKosan', 'kosanWanita', 'kosanPria'));
     }
 
     /**
@@ -61,12 +59,11 @@ class KostController extends Controller
      */
     public function store(Request $request)
     {
-        //
         // Validasi input
         $request->validate([
             'nama_kos' => 'required|string|max:255',
             'lokasi_kos' => 'required|string|max:255',
-            'jumlah_kamar' => 'required|integer|min:1',
+            'jumlah_kamar' => 'required|integer|min:1|max:200',
             'fasilitas' => 'nullable|string',
             'kategori' => 'required|in:wanita,pria,bebas',
             'harga' => 'required|integer|min:0',
@@ -74,29 +71,54 @@ class KostController extends Controller
             'no_rek' => 'required|string|max:50',
         ]);
 
-        // Upload gambar
-        if ($request->hasFile('gambar_kos')) {
-            $file = $request->file('gambar_kos');
-            $filename = time().'_'.Str::slug($request->nama_kos).'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/kosan'), $filename);
-        } else {
-            $filename = null;
+        try {
+            // Upload gambar
+            if ($request->hasFile('gambar_kos')) {
+                $file = $request->file('gambar_kos');
+                $filename = time().'_'.Str::slug($request->nama_kos).'.'.$file->getClientOriginalExtension();
+                
+                // Pastikan folder uploads/kosan exists
+                $path = public_path('uploads/kosan');
+                if (!file_exists($path)) {
+                    mkdir($path, 0755, true);
+                }
+                
+                $file->move($path, $filename);
+            } else {
+                return back()->with('error', 'Gambar kosan wajib diupload!');
+            }
+
+            // Create kosan
+            $kosan = Kosan::create([
+                'nama_kos' => $request->nama_kos,
+                'lokasi_kos' => $request->lokasi_kos,
+                'jumlah_kamar' => $request->jumlah_kamar,
+                'fasilitas' => $request->fasilitas,
+                'kategori' => $request->kategori,
+                'harga' => $request->harga,
+                'gambar_kos' => $filename,
+                'no_rek' => $request->no_rek,
+                'status' => 'aktif',
+            ]);
+
+            // AUTO-GENERATE KAMAR
+            for ($i = 1; $i <= $request->jumlah_kamar; $i++) {
+                Kamar::create([
+                    'id_kos' => $kosan->id_kos,
+                    'no_kamar' => $i,
+                    'status' => 'tersedia',
+                    // Tambah field lain sesuai struktur table kamar
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            return redirect()->route('admin.kosan.index')->with('success', 
+                'Kosan berhasil ditambahkan dengan ' . $request->jumlah_kamar . ' kamar!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal membuat kosan: ' . $e->getMessage());
         }
-
-        // Simpan data
-        Kosan::create([
-            'nama_kos' => $request->nama_kos,
-            'lokasi_kos' => $request->lokasi_kos,
-            'jumlah_kamar' => $request->jumlah_kamar,
-            'fasilitas' => $request->fasilitas,
-            'kategori' => $request->kategori,
-            'harga' => $request->harga,
-            'gambar_kos' => $filename,
-            'no_rek' => $request->no_rek,
-            'status' => 'aktif', // default
-        ]);
-
-        return redirect()->route('admin.kosan.index')->with('success', 'Kosan berhasil ditambahkan!');
     }
 
     /**
@@ -120,7 +142,10 @@ class KostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-       $kosan = Kosan::findOrFail($id);
+        $kosan = Kosan::findOrFail($id);
+
+        // Simpan jumlah kamar lama untuk comparison
+        $jumlahKamarLama = $kosan->jumlah_kamar;
 
         // Validasi input
         $request->validate([
@@ -134,31 +159,68 @@ class KostController extends Controller
             'gambar_kos' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
-        // Update data biasa
-        $kosan->nama_kos = $request->nama_kos;
-        $kosan->lokasi_kos = $request->lokasi_kos;
-        $kosan->jumlah_kamar = $request->jumlah_kamar;
-        $kosan->kategori = $request->kategori;
-        $kosan->harga = $request->harga;
-        $kosan->status = $request->status;
-        $kosan->no_rek = $request->no_rek;
+        try {
+            // Update data biasa
+            $kosan->nama_kos = $request->nama_kos;
+            $kosan->lokasi_kos = $request->lokasi_kos;
+            $kosan->kategori = $request->kategori;
+            $kosan->harga = $request->harga;
+            $kosan->status = $request->status;
+            $kosan->no_rek = $request->no_rek;
 
-        // Upload gambar baru jika ada
-        if ($request->hasFile('gambar_kos')) {
-            // Hapus gambar lama jika ada
-            if ($kosan->gambar_kos && file_exists(public_path('uploads/kosan/'.$kosan->gambar_kos))) {
-                unlink(public_path('uploads/kosan/'.$kosan->gambar_kos));
+            // Handle perubahan jumlah kamar
+            $jumlahKamarBaru = $request->jumlah_kamar;
+            
+            if ($jumlahKamarBaru != $jumlahKamarLama) {
+                // Update jumlah kamar di kosan
+                $kosan->jumlah_kamar = $jumlahKamarBaru;
+                
+                if ($jumlahKamarBaru > $jumlahKamarLama) {
+                    // Tambah kamar baru
+                    for ($i = $jumlahKamarLama + 1; $i <= $jumlahKamarBaru; $i++) {
+                        Kamar::create([
+                            'id_kos' => $kosan->id_kos,
+                            'no_kamar' => $i,
+                            'status' => 'tersedia',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                } elseif ($jumlahKamarBaru < $jumlahKamarLama) {
+                    // Hapus kamar terakhir (yang belum dibooking)
+                    // Cari kamar dengan nomor tertinggi yang masih tersedia
+                    $kamarToDelete = Kamar::where('id_kos', $kosan->id_kos)
+                                         ->where('no_kamar', '>', $jumlahKamarBaru)
+                                         ->where('status', 'tersedia')
+                                         ->orderBy('no_kamar', 'desc')
+                                         ->get();
+                    
+                    foreach ($kamarToDelete as $kamar) {
+                        $kamar->delete();
+                    }
+                }
             }
 
-            $file = $request->file('gambar_kos');
-            $filename = time().'_'.Str::slug($request->nama_kos).'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/kosan'), $filename);
-            $kosan->gambar_kos = $filename;
+            // Upload gambar baru jika ada
+            if ($request->hasFile('gambar_kos')) {
+                // Hapus gambar lama jika ada
+                if ($kosan->gambar_kos && file_exists(public_path('uploads/kosan/'.$kosan->gambar_kos))) {
+                    unlink(public_path('uploads/kosan/'.$kosan->gambar_kos));
+                }
+
+                $file = $request->file('gambar_kos');
+                $filename = time().'_'.Str::slug($request->nama_kos).'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('uploads/kosan'), $filename);
+                $kosan->gambar_kos = $filename;
+            }
+
+            $kosan->save();
+
+            return redirect()->route('admin.kosan.index')->with('success', 'Data kosan berhasil diperbarui!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal update kosan: ' . $e->getMessage());
         }
-
-        $kosan->save();
-
-        return redirect()->route('admin.kosan.index')->with('success', 'Data kosan berhasil diperbarui!');
     }
 
     /**
@@ -166,11 +228,23 @@ class KostController extends Controller
      */
     public function destroy(string $id)
     {
-        
-        //
-        $kosan = Kosan::findOrFail($id);
-        $kosan->delete();
+        try {
+            $kosan = Kosan::findOrFail($id);
+            
+            // Hapus semua kamar terkait
+            Kamar::where('id_kos', $kosan->id_kos)->delete();
+            
+            // Hapus gambar jika ada
+            if ($kosan->gambar_kos && file_exists(public_path('uploads/kosan/'.$kosan->gambar_kos))) {
+                unlink(public_path('uploads/kosan/'.$kosan->gambar_kos));
+            }
+            
+            $kosan->delete();
 
-        return redirect()->route('admin.kosan.index')->with('success', 'Kosan berhasil dihapus!');
+            return redirect()->route('admin.kosan.index')->with('success', 'Kosan dan semua kamarnya berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus kosan: ' . $e->getMessage());
+        }
     }
 }
