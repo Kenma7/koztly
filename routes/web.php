@@ -30,15 +30,15 @@ Route::get('/kosan/{id}', [KosanController::class, 'show'])->name('kosan.show');
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return redirect()->route('kosan.index');
     })->name('dashboard');
 
     // Logout
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     // Profile (HAPUS DUPLICATE!)
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // ----------------------
@@ -61,12 +61,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/bookings/{id}', [BookingController::class, 'showHistory'])->name('bookings.detail');
         
         // Edit & Delete History
-        Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+        Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
         Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
-        Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+        Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
         
-        // Profile Custom
-        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     });
 });
 

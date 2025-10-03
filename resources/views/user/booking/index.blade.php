@@ -425,7 +425,7 @@
                             </div>
 
                             <!-- Menu Items -->
-                            <a href="{{ route('user.profile') }}" 
+                            <a href="{{ route('profile.edit') }}" 
                             class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-[#cbd5e0] transition">
                                 <i class="fas fa-user text-[#ea3882] w-4"></i>
                                 <span>Profile Saya</span>
@@ -622,7 +622,7 @@
                                         alt="{{ $booking->kamar->kosan->nama_kos }}"
                                         class="w-full h-48 object-cover rounded-t-xl">
                                 @else
-                                    <img src="https://via.placeholder.com/400x200?text=Kos+Image" alt="Kos"
+                                    <img src="https://via.placeholder.com/800x400" alt="Kos"
                                         class="w-full h-48 object-cover rounded-t-xl">
                                 @endif
 

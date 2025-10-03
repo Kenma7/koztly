@@ -150,6 +150,55 @@
         });
     </script>
 
+<script>
+// DEBUG PROFILE DROPDOWN
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== DEBUG PROFILE DROPDOWN ===');
+    
+    const profileBtn = document.getElementById('profile-menu-button');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    
+    console.log('Profile button:', profileBtn);
+    console.log('Profile dropdown:', profileDropdown);
+    console.log('Auth check:', {{ Auth::check() ? 'true' : 'false' }});
+    
+    if (profileBtn && profileDropdown) {
+        console.log('✅ Elements found, adding event listener...');
+        
+        profileBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🎯 Profile button clicked!');
+            console.log('Before toggle - hidden:', profileDropdown.classList.contains('hidden'));
+            
+            profileDropdown.classList.toggle('hidden');
+            
+            console.log('After toggle - hidden:', profileDropdown.classList.contains('hidden'));
+        });
+        
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
+                console.log('👋 Close dropdown (click outside)');
+            }
+        });
+    } else {
+        console.log('❌ Elements not found!');
+        console.log('Profile button exists:', !!profileBtn);
+        console.log('Profile dropdown exists:', !!profileDropdown);
+    }
+    
+    // Test manual toggle
+    window.debugProfile = function() {
+        if (profileDropdown) {
+            profileDropdown.classList.toggle('hidden');
+            console.log('Manual toggle - hidden:', profileDropdown.classList.contains('hidden'));
+        }
+    }
+});
+</script>
+
 </body>
 </html>
 

@@ -86,12 +86,7 @@ class BookingController extends Controller
 
             $totalBiaya = $kos->harga * $bookingData['lama_sewa'];
 
-            $user = (object) [
-                'name' => 'User Testing',
-                'phone_number' => '08123456789',
-                'gender' => 'Laki-laki',
-                'email' => 'user@example.com',
-            ];
+            $user = Auth::user();
 
             return view('user.booking.create', compact('kos', 'bookingData', 'totalBiaya', 'user'));
             
@@ -110,7 +105,7 @@ class BookingController extends Controller
             ->where('id_user', $userId)
             ->firstOrFail();
 
-        return view('booking.show', compact('booking'));
+        return view('user.booking.show', compact('booking'));
     }
 
      public function store(Request $request, $id)
@@ -128,7 +123,7 @@ class BookingController extends Controller
         logger('Kosan found: ' . $kosan->nama_kos);
 
         // Cek existing booking
-        $existingBooking = Booking::where('id_user', 1)
+        $existingBooking = Booking::where('id_user', Auth::id())
                                 ->where('id_kos', $id)
                                 ->whereIn('status_sewa', ['menunggu', 'aktif'])
                                 ->first();
@@ -163,7 +158,7 @@ class BookingController extends Controller
         // Create booking
         logger('Creating booking...');
         $booking = Booking::create([
-            'id_user' => 1,
+            'id_user' => Auth::id(),
             'id_kos' => $id,
             'id_kamar' => $kamar->id_kamar,
             'harga' => $request->total_biaya,
@@ -182,7 +177,7 @@ class BookingController extends Controller
         logger('Kamar status updated');
         
         logger('=== BOOKING STORE SUCCESS ===');
-        return redirect()->route('booking.show', $booking->id_booking)
+        return redirect()->route('user.booking.show', $booking->id_booking)
             ->with('sweet_success', 'Booking Berhasil! 🎉');
 
     } catch (\Exception $e) {
@@ -278,11 +273,11 @@ class BookingController extends Controller
                 ->firstOrFail();
             
             if ($booking->status_sewa == 'batal') {
-                return redirect()->route('booking.show', $id)->with('info', 'Booking sudah dibatalkan.');
+                return redirect()->route('user.booking.show', $id)->with('info', 'Booking sudah dibatalkan.');
             }
             
             if ($booking->status_pembayaran == 'sudah dibayar') {
-                return redirect()->route('booking.show', $id)->with('sweet_warning', 'Tidak bisa batalkan booking yang sudah dibayar');
+                return redirect()->route('user.booking.show', $id)->with('sweet_warning', 'Tidak bisa batalkan booking yang sudah dibayar');
             }
 
             // Update status
@@ -293,10 +288,10 @@ class BookingController extends Controller
                 $booking->kamar->update(['status' => 'tersedia']);
             }
 
-            return redirect()->route('booking.show', $id)->with('info', 'Booking berhasil dibatalkan.');
+            return redirect()->route('user.booking.show', $id)->with('info', 'Booking berhasil dibatalkan.');
 
         } catch (\Exception $e) {
-            return redirect()->route('booking.show', $id)->with('error', 'Gagal membatalkan booking.');
+            return redirect()->route('user.booking.show', $id)->with('error', 'Gagal membatalkan booking.');
         }
     }
 
@@ -324,45 +319,51 @@ class BookingController extends Controller
     }
 
     public function uploadBukti(Request $request, $id)
-    {
-        try {
-            $booking = Booking::findOrFail($id);
-            
-            // Cek status
-            if ($booking->status_sewa == 'batal') {
-                return redirect()->route('booking.show', $id)->with('error', 'Booking sudah dibatalkan.');
-            }
-            
-            if ($booking->status_pembayaran == 'sudah dibayar') {
-                return redirect()->route('booking.show', $id)->with('warning', 'Bukti transfer sudah diupload.');
-            }
-
-            // Validasi file
-            $request->validate([
-                'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048'
-            ]);
-
-            if ($request->hasFile('bukti_tf')) {
-                $file = $request->file('bukti_tf');
-                $imagePath = $file->store('bukti_tf', 'public');
-
-                // Update booking
-                $booking->bukti_tf = $imagePath;
-                $booking->status_pembayaran = 'sudah dibayar';
-                $booking->save();
-                
-                return redirect()->route('booking.show', $id)
-                    ->with('sweet_success', 'Pembayaran Berhasil! ✅');
-
-            } else {
-                return redirect()->route('booking.show', $id)->with('error', 'File tidak ditemukan.');
-            }
-            
-        } catch (\Exception $e) {
-            return redirect()->route('booking.show', $id)->with('error', 'Gagal upload bukti transfer.');
+{
+    try {
+        $booking = Booking::findOrFail($id);
+        
+        // Cek status
+        if ($booking->status_sewa == 'batal') {
+            return redirect()->route('user.booking.show', $id)->with('error', 'Booking sudah dibatalkan.');
         }
-    }
+        
+        if ($booking->status_pembayaran == 'sudah dibayar') {
+            return redirect()->route('user.booking.show', $id)->with('warning', 'Bukti transfer sudah diupload.');
+        }
 
+        // Validasi file
+        $request->validate([
+            'bukti_tf' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        if ($request->hasFile('bukti_tf')) {
+            $file = $request->file('bukti_tf');
+            
+            // Hapus bukti lama jika ada
+            if ($booking->bukti_tf && Storage::exists('public/' . $booking->bukti_tf)) {
+                Storage::delete('public/' . $booking->bukti_tf);
+            }
+            
+            // Simpan file - method store() sudah otomatis tambah folder
+            $imagePath = $file->store('bukti_tf', 'public');
+
+            // Update booking
+            $booking->bukti_tf = $imagePath;
+            $booking->status_pembayaran = 'sudah dibayar';
+            $booking->save();
+            
+            return redirect()->route('user.booking.show', $id)
+                ->with('sweet_success', 'Pembayaran Berhasil! ✅');
+
+        } else {
+            return redirect()->route('user.booking.show', $id)->with('error', 'File tidak ditemukan.');
+        }
+        
+    } catch (\Exception $e) {
+        return redirect()->route('user.booking.show', $id)->with('error', 'Gagal upload bukti transfer.');
+    }
+}
          protected function customValidationMessages()
     {
         return [

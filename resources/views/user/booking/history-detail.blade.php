@@ -413,7 +413,7 @@
                                     <i class="fas fa-upload text-[#ea3882]"></i>
                                     Upload Bukti Transfer
                                 </h3>
-                                <form action="{{ route('user.booking.upload-bukti', $booking->id_booking) }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('booking.upload-bukti', $booking->id_booking) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-3">
                                         <input type="file" name="bukti_tf" accept="image/*" required
@@ -428,19 +428,22 @@
                         @endif
 
                         {{-- Bukti Transfer (hanya tampil kalau sudah ada bukti) --}}
-                        @if($booking->bukti_tf)
-                            <div class="mt-5">
-                                <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                                    <i class="fas fa-image text-green-600"></i>
-                                    Bukti Transfer
-                                </h3>
-                                <div class="rounded-lg overflow-hidden border-2 border-green-300">
-                                    <img src="{{ asset('/uploads/' . $booking->bukti_tf) }}" 
-                                        alt="Bukti Transfer" 
-                                        class="w-full">
-                                </div>
-                            </div>
-                        @endif
+                                        {{-- Bukti Transfer --}}
+@if($booking->bukti_tf)
+    <div class="mt-5">
+        <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
+            <i class="fas fa-image text-green-600"></i>
+            Bukti Transfer
+        </h3>
+        
+        <div class="rounded-lg overflow-hidden border-2 border-green-300">
+            {{-- Gunakan Storage::url() --}}
+            <img src="{{ Storage::url($booking->bukti_tf) }}" 
+                alt="Bukti Transfer" 
+                class="w-full">
+        </div>
+    </div>
+@endif
 
                         {{-- Tombol Edit & Batalkan (hanya muncul kalau belum bayar) --}}
                         @if($booking->status_pembayaran == 'belum dibayar' && $booking->status_sewa == 'menunggu')
@@ -451,7 +454,7 @@
                             </a>
 
                             <form id="cancel-form-{{ $booking->id_booking }}" 
-                                action="{{ route('user.booking.cancel', $booking->id_booking) }}" method="POST">
+                                action="{{ route('booking.cancel', $booking->id_booking) }}" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <button type="button" 

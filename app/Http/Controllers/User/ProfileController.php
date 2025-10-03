@@ -2,25 +2,22 @@
 
 namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User; 
 use Illuminate\Support\Facades\Auth; // <-- ini wajib ditambah
 
 class ProfileController extends Controller
 {
     public function index()
 {
-    // login dummy pakai user id 1
-    Auth::loginUsingId(3);
-
     $user = Auth::user(); // ini Eloquent, created_at pasti Carbon
 
     return view('user.profile.index', compact('user'));
 }
 
-public function update(Request $request, $id)
+public function update(Request $request)
 {
-    $user = User::find($id);
+    $user = Auth::user();
 
 
     $request->validate([
@@ -31,14 +28,14 @@ public function update(Request $request, $id)
         'phone_number' => 'nullable|string|max:20',
     ]);
 
-    $user->update([
-        'name' => $request->name,
-        'username' => $request->username,
-        'gender' => $request->gender,
-        'email' => $request->email,
-        'phone_number' => $request->phone_number,
-    ]);
+      $user->name = $request->name;
+        $user->username = $request->username;
+        $user->gender = $request->gender;
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+        $user->save();
 
-    return redirect()->route('user.profile')->with('success', 'Profil berhasil diperbarui.');
+
+    return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
 }
 }

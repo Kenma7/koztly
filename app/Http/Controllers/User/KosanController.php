@@ -24,7 +24,7 @@ class KosanController extends Controller
             ])
             ->paginate($perPage);
             
-        return view('user.kosan.index', compact('kosan'));
+        return view('kosan.index', compact('kosan'));
     }
 
     // Detail Kosan
@@ -38,7 +38,7 @@ class KosanController extends Controller
             ])
             ->findOrFail($id);
             
-        return view('user.kosan.show', compact('kos'));
+        return view('kosan.show', compact('kos'));
     }
 
     // Form booking kosan
@@ -48,7 +48,7 @@ class KosanController extends Controller
             $query->where('status','tersedia');
         }])->findOrFail($id);
         
-        return view('user.kosan.booking', compact('kos'));
+        return view('kosan.booking', compact('kos'));
     }
 
     // Proses booking (test pake dummy)
@@ -82,6 +82,6 @@ class KosanController extends Controller
         // Update status kamar jadi dipesan
         $kamar->update(['status' => 'dipesan']);
 
-        return redirect()->route('user.kosan.show', $id)->with('success','Booking berhasil! Nama :' . $request->nama .'');
+        return redirect()->route('kosan.show', $id)->with('success','Booking berhasil! Nama :' . $request->nama .'');
     }
 }

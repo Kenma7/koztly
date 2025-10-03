@@ -41,8 +41,9 @@
                 </div>
 
                 <!-- Form -->
-                <form method="POST" action="{{ route('user.profile.update') }}" class="p-6">
+                <form method="POST" action="{{ route('profile.update') }}" class="p-6">
                     @csrf
+                    @method('PATCH')
 
                     <div class="space-y-5">
                         <!-- Name -->
