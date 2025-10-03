@@ -58,68 +58,55 @@ class KostController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'nama_kos' => 'required|string|max:255',
-            'lokasi_kos' => 'required|string|max:255',
-            'jumlah_kamar' => 'required|integer|min:1|max:200',
-            'fasilitas' => 'nullable|string',
-            'kategori' => 'required|in:wanita,pria,bebas',
-            'harga' => 'required|integer|min:0',
-            'gambar_kos' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'no_rek' => 'required|string|max:50',
+{
+    // Validasi input
+    $request->validate([
+        'nama_kos' => 'required|string|max:255',
+        'lokasi_kos' => 'required|string|max:255',
+        'jumlah_kamar' => 'required|integer|min:1|max:200',
+        'fasilitas' => 'nullable|string',
+        'kategori' => 'required|in:wanita,pria,bebas',
+        'harga' => 'required|integer|min:0',
+        'gambar_kos' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'no_rek' => 'required|string|max:50',
+    ]);
+
+    try {
+        // Upload gambar
+        if ($request->hasFile('gambar_kos')) {
+            $file = $request->file('gambar_kos');
+            $filename = time().'_'.Str::slug($request->nama_kos).'.'.$file->getClientOriginalExtension();
+            
+            $path = public_path('uploads/kosan');
+            if (!file_exists($path)) {
+                mkdir($path, 0755, true);
+            }
+            
+            $file->move($path, $filename);
+        } else {
+            return back()->with('error', 'Gambar kosan wajib diupload!');
+        }
+
+        // Simpan data kosan saja (tanpa auto generate kamar)
+        Kosan::create([
+            'nama_kos' => $request->nama_kos,
+            'lokasi_kos' => $request->lokasi_kos,
+            'jumlah_kamar' => $request->jumlah_kamar,
+            'fasilitas' => $request->fasilitas,
+            'kategori' => $request->kategori,
+            'harga' => $request->harga,
+            'gambar_kos' => $filename,
+            'no_rek' => $request->no_rek,
+            'status' => 'aktif',
         ]);
 
-        try {
-            // Upload gambar
-            if ($request->hasFile('gambar_kos')) {
-                $file = $request->file('gambar_kos');
-                $filename = time().'_'.Str::slug($request->nama_kos).'.'.$file->getClientOriginalExtension();
-                
-                // Pastikan folder uploads/kosan exists
-                $path = public_path('uploads/kosan');
-                if (!file_exists($path)) {
-                    mkdir($path, 0755, true);
-                }
-                
-                $file->move($path, $filename);
-            } else {
-                return back()->with('error', 'Gambar kosan wajib diupload!');
-            }
+        return redirect()->route('admin.kosan.index')->with('success', 'Kosan berhasil ditambahkan!');
 
-            // Create kosan
-            $kosan = Kosan::create([
-                'nama_kos' => $request->nama_kos,
-                'lokasi_kos' => $request->lokasi_kos,
-                'jumlah_kamar' => $request->jumlah_kamar,
-                'fasilitas' => $request->fasilitas,
-                'kategori' => $request->kategori,
-                'harga' => $request->harga,
-                'gambar_kos' => $filename,
-                'no_rek' => $request->no_rek,
-                'status' => 'aktif',
-            ]);
-
-            // AUTO-GENERATE KAMAR
-            for ($i = 1; $i <= $request->jumlah_kamar; $i++) {
-                Kamar::create([
-                    'id_kos' => $kosan->id_kos,
-                    'no_kamar' => $i,
-                    'status' => 'tersedia',
-                    // Tambah field lain sesuai struktur table kamar
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-
-            return redirect()->route('admin.kosan.index')->with('success', 
-                'Kosan berhasil ditambahkan dengan ' . $request->jumlah_kamar . ' kamar!');
-
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal membuat kosan: ' . $e->getMessage());
-        }
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal membuat kosan: ' . $e->getMessage());
     }
+}
+
 
     /**
      * Display the specified resource.

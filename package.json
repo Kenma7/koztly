@@ -19,6 +19,7 @@
         "vite": "^7.0.4"
     },
     "dependencies": {
+        "build": "^0.1.4",
         "sweetalert2": "^11.23.0"
     }
 }
