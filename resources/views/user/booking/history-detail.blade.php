@@ -377,25 +377,32 @@
                         </div>
 
                         <div class="space-y-3">
-                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span class="text-sm text-gray-600">Harga/Bulan</span>
-                                <span class="font-bold text-gray-800">Rp {{ number_format($booking->harga, 0, ',', '.') }}</span>
-                            </div>
-
-                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span class="text-sm text-gray-600">Durasi</span>
-                                <span class="font-bold text-gray-800">{{ $booking->lama_sewa }} Bulan</span>
-                            </div>
-
-                            <div class="bg-[#ffe6e2] p-4 rounded-lg border-2 border-[#f5acca] mt-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-black font-bold">Total</span>
-                                    <span class="font-bold text-black text-xl">
-                                        Rp {{ number_format($booking->harga * $booking->lama_sewa, 0, ',', '.') }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                            booking detail 
+                            <div class="flex justify-between items-center text-sm">
+                                        <span class="text-gray-600">
+                                            <i class="far fa-calendar text-gray-400 mr-1"></i> Booking Date
+                                        </span>
+                                        <span class="font-semibold text-gray-800">
+                                            {{ $booking->created_at ? $booking->created_at->format('d M Y') : '-' }}
+                                        </span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-gray-600">
+                                            <i class="far fa-clock text-gray-400 mr-1"></i> Duration
+                                        </span>
+                                        <span class="font-semibold text-gray-800">
+                                            {{ $booking->lama_sewa ?? 0 }} Months
+                                        </span>
+                                    </div>
+                                    <div class="flex justify-between items-center text-sm">
+                                        <span class="text-gray-600">
+                                            <i class="fas fa-money-bill-wave text-gray-400 mr-1"></i> Total Payment
+                                        </span>
+                                        <span class="font-semibold text-blue-600">
+                                            Rp
+                                            {{ number_format(($booking->harga ?? 0), 0, ',', '.') }}
+                                        </span>
+                                    </div>
 
                         @if($booking->kost && $booking->kost->no_rek)
                         <div class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200">

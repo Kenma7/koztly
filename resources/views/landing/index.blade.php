@@ -201,7 +201,7 @@
     /* Gambar Vector */
     .vector-image {
         position: absolute;
-        bottom: -280px;
+        bottom: -330px;
         right: -35px;
         width: 163%;
         z-index: 1;
@@ -255,7 +255,7 @@
     /* Tombol "Cari Kos" di Pojok Kiri Bawah */
     .bottom-left-button {
         position: absolute;
-        bottom: 18px;
+        bottom: 30px;
         left: 33px;
         z-index: 10;
         opacity: 0;
@@ -266,7 +266,7 @@
     .btn-outlined {
         display: inline-flex;
         align-items: center;
-        padding: 17px 227px;
+        padding: 17px 215px;
         background: transparent;
         border: 2px solid #E93B81;
         border-radius: 22px;
@@ -376,7 +376,7 @@
 
     .kos-image {
         width: 100%;
-        height: 100%;
+        height: auto;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
@@ -1835,12 +1835,13 @@
                 <div class="kos-image-wrapper">
                     <!-- Gambar Utama -->
                     <img src="{{ $kos->gambar_kos 
-                          ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
+                            ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
                                 ? $kos->gambar_kos 
-                                : asset('storage/'.$kos->gambar_kos)) 
-                          : 'https://via.placeholder.com/800x400' }}"  
-                        class="kos-image" 
-                        alt="{{ $kos->nama_kos }}">
+                                : asset('storage/uploads/kosan/'.$kos->gambar_kos)) 
+                            : 'https://via.placeholder.com/800x400' }}"  
+                    class="kos-image" 
+                    alt="{{ $kos->nama_kos }}">
+
                     
                     <!-- Badge Kategori (Pria/Wanita/Campur) & Type -->
                     <div class="kos-badges">

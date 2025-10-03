@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Profile (HAPUS DUPLICATE!)
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.edit');
+    Route::match(['put', 'patch'], '/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -54,7 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ----------------------
     Route::get('/kosan/{id}/booking', [BookingController::class, 'create'])->name('booking.create');
     Route::post('/kosan/{id}/booking', [BookingController::class, 'store'])->name('booking.store');
-    Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
+   Route::get('/booking/{id}', [BookingController::class, 'show'])->name('user.booking.show');
     Route::post('/booking/{id}/upload-bukti', [BookingController::class, 'uploadBukti'])->name('booking.upload-bukti');
     Route::put('/booking/{id}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
 
