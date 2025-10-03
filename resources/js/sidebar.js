@@ -19,32 +19,31 @@ function toggleSidebar() {
     const isMinimized = sidebar.classList.contains('minimized');
     console.log('Is minimized:', isMinimized);
     
-    // Add loading state - HANYA INI YANG DIPERLUKAN
+    // Add loading state
     sidebar.style.pointerEvents = 'none';
     
-    // Toggle sidebar width dengan animasi
-   if (isMinimized) {
-    // Expand
-    sidebar.classList.remove('minimized'); // teks muncul dulu
-    setTimeout(() => {
-        sidebar.classList.remove('w-16');
-        sidebar.classList.add('w-64');
-        mainContent.classList.remove('ml-16');
-        mainContent.classList.add('ml-64');
-    }, 50); // kasih delay kecil biar animasi fade in sinkron
-    console.log('✅ Expanded sidebar');
-} else {
-    // Minimize
-    sidebar.classList.add('minimized'); // teks hilang dulu
-    setTimeout(() => {
-        sidebar.classList.remove('w-64');
-        sidebar.classList.add('w-16');
-        mainContent.classList.remove('ml-64');
-        mainContent.classList.add('ml-16');
-    }, 200); // kasih delay biar animasi fade out selesai dulu
-    console.log('✅ Minimized sidebar');
-}
-
+    // 🔄 FIX LOGIC YANG TERBALIK
+    if (isMinimized) {
+        // MINIMIZE → EXPAND
+        sidebar.classList.remove('minimized');
+        setTimeout(() => {
+            sidebar.classList.remove('w-16');
+            sidebar.classList.add('w-64');
+            mainContent.classList.remove('ml-16');
+            mainContent.classList.add('ml-64');
+        }, 50);
+        console.log('✅ EXPANDED sidebar');
+    } else {
+        // EXPAND → MINIMIZE  
+        sidebar.classList.add('minimized');
+        setTimeout(() => {
+            sidebar.classList.remove('w-64');
+            sidebar.classList.add('w-16');
+            mainContent.classList.remove('ml-64');
+            mainContent.classList.add('ml-16');
+        }, 200);
+        console.log('✅ MINIMIZED sidebar');
+    }
     
     // Remove loading state setelah animasi selesai
     setTimeout(() => {

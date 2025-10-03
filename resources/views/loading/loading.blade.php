@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koztly - Loading</title>
+    <title>Koztly - Memuat</title>
     <style>
         * {
             margin: 0;
@@ -12,247 +12,230 @@
             box-sizing: border-box;
         }
 
+        /* Styling untuk body halaman */
         body {
-            overflow: hidden;
-            background: #FFE5E2;
+            overflow: hidden; /* Sembunyikan scrollbar */
+            background: #FFE5E2; /* Warna background pink muda */
         }
 
-        .loading-container {
-            width: 100vw;
-            height: 100vh;
+        /* Kontainer utama untuk animasi loading */
+        .wadah-memuat {
+            width: 100vw; /* Lebar penuh viewport */
+            height: 100vh; /* Tinggi penuh viewport */
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: center; /* Posisikan konten di tengah vertikal */
+            justify-content: center; /* Posisikan konten di tengah horizontal */
             position: relative;
             overflow: hidden;
         }
 
-        .logo-wrapper {
+        /* Wrapper untuk kedua logo */
+        .pembungkus-logo {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            cursor: pointer; /* Ubah kursor jadi pointer saat hover */
+            transition: transform 0.3s ease; /* Animasi smooth saat hover */
         }
 
-        .logo-wrapper:hover {
-            transform: scale(1.05);
+        /* Efek zoom saat hover pada logo */
+        .pembungkus-logo:hover {
+            transform: scale(1.05); /* Perbesar 5% */
         }
 
-        .k-logo {
+        /* Logo K yang muncul pertama kali */
+        .logo-k {
             width: 160px;
             height: 160px;
-            opacity: 0;
-            transform: translateY(100px);
-            animation: slideUpFromShadow 1s ease-out 0.5s forwards,
-                slideToLeft 0.8s ease-out 2s forwards;
-            z-index: 2;
+            opacity: 0; /* Mulai tidak terlihat */
+            transform: translateY(100px); /* Mulai dari bawah */
+            /* Animasi 1: Muncul dari bawah, Animasi 2: Geser ke kiri */
+            animation: munculDariBawah 1s ease-out 0.5s forwards,
+                geserKeKiri 0.8s ease-out 2s forwards;
+            z-index: 2; /* Layer di atas logo koztly */
         }
 
-        .koztly-logo {
+        /* Logo Koztly lengkap yang muncul setelah logo K */
+        .logo-koztly {
             width: 170px;
             height: 170px;
             position: absolute;
-            opacity: 0;
-            transform: translateX(-30px);
-            /* Start from K position after it moves left */
-            animation: slideOutFromK 1s ease-out 3s forwards;
-            z-index: 1;
+            opacity: 0; /* Mulai tidak terlihat */
+            transform: translateX(-30px); /* Mulai dari posisi K setelah bergeser */
+            /* Animasi: Muncul dari posisi K */
+            animation: munculDariK 1s ease-out 3s forwards;
+            z-index: 1; /* Layer di bawah logo K */
         }
 
-        .expand-circle {
+        /* Lingkaran putih yang membesar untuk transisi ke halaman landing */
+        .lingkaran-membesar {
             position: absolute;
             top: 50%;
             left: 50%;
             width: 0;
             height: 0;
-            background: white;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            animation: expandCircle 1.5s ease-out 5s forwards;
+            background: white; /* Warna putih */
+            border-radius: 50%; /* Bentuk lingkaran */
+            transform: translate(-50%, -50%); /* Posisikan di tengah */
+            z-index: 10; /* Layer paling atas */
+            animation: membesarkanLingkaran 1.5s ease-out 5s forwards;
         }
 
-        @keyframes slideUpFromShadow {
+        /* Animasi: Logo K muncul dari bawah dengan fade in */
+        @keyframes munculDariBawah {
             0% {
                 opacity: 0;
-                transform: translateY(100px);
+                transform: translateY(100px); /* Mulai 100px di bawah */
             }
-
             100% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0); /* Posisi normal */
             }
         }
 
-        @keyframes slideToLeft {
+        /* Animasi: Logo K bergeser ke kiri */
+        @keyframes geserKeKiri {
             0% {
                 transform: translateY(0) translateX(0);
             }
-
             100% {
-                transform: translateY(0) translateX(-70px);
+                transform: translateY(0) translateX(-70px); /* Geser 70px ke kiri */
             }
         }
 
-        @keyframes slideOutFromK {
+        /* Animasi: Logo Koztly muncul dari posisi K dengan slide */
+        @keyframes munculDariK {
             0% {
                 opacity: 0;
                 transform: translateX(-50px);
             }
-
             100% {
                 opacity: 1;
-                transform: translateX(70px);
+                transform: translateX(70px); /* Geser 70px ke kanan */
             }
         }
 
-        @keyframes expandCircle {
+        /* Animasi: Lingkaran putih membesar untuk transisi */
+        @keyframes membesarkanLingkaran {
             0% {
                 width: 0;
                 height: 0;
                 opacity: 1;
             }
-
             50% {
                 opacity: 1;
             }
-
             100% {
-                width: 300vw;
-                height: 300vw;
+                width: 300vw; /* 3x lebar viewport */
+                height: 300vw; /* 3x lebar viewport */
                 opacity: 1;
             }
         }
 
-        @keyframes showLandingPage {
+        /* Animasi untuk menampilkan halaman landing */
+        @keyframes tampilkanHalamanLanding {
             to {
                 opacity: 1;
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .k-logo {
-                width: 60px;
-                height: 60px;
-            }
-
-            .koztly-logo {
-                width: 150px;
-                height: 45px;
-                transform: translateX(-30px);
-                /* Adjust for mobile */
-            }
-
-            @keyframes slideOutFromK {
-                0% {
-                    opacity: 0;
-                    transform: translateX(-15px);
-                }
-
-                100% {
-                    opacity: 1;
-                    transform: translateX(50px);
-                }
-            }
-
-            .landing-content h1 {
-                font-size: 2rem;
-            }
-
-            .landing-content p {
-                font-size: 1rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="loading-container">
-        <!-- Logo Wrapper for interaction -->
-        <div class="logo-wrapper" onclick="skipToLandingPage()">
-            <!-- K Logo -->
-            <div class="k-logo">
-                <img src="images/k.png" alt="K Logo" style="width: 100%; height: 100%; object-fit: contain;">
+    <!-- Kontainer utama untuk animasi loading -->
+    <div class="wadah-memuat">
+        <!-- Pembungkus logo yang bisa diklik untuk skip animasi -->
+        <div class="pembungkus-logo" onclick="lonkatKeHalamanLanding()">
+            <!-- Logo K -->
+            <div class="logo-k">
+                <img src="images/k.png" alt="Logo K" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
 
-            <!-- Koztly Logo - positioned absolutely to slide out from K -->
-            <div class="koztly-logo">
-                <img src="images/koztly.png" alt="Koztly Logo" style="width: 100%; height: 100%; object-fit: contain;">
+            <!-- Logo Koztly lengkap -->
+            <div class="logo-koztly">
+                <img src="images/koztly.png" alt="Logo Koztly" style="width: 100%; height: 100%; object-fit: contain;">
             </div>
         </div>
 
-        <!-- Expanding circle -->
-        <div class="expand-circle"></div>
+        <!-- Lingkaran putih untuk efek transisi -->
+        <div class="lingkaran-membesar"></div>
     </div>
 
     <script>
-        // Prevent scrolling during loading
+        // Mencegah scroll pada halaman
         document.body.style.overflow = 'hidden';
 
-        let animationCompleted = false;
+        // Variabel untuk cek apakah animasi sudah selesai
+        let animasiSelesai = false;
 
-        // Function to skip to landing page
-        function skipToLandingPage() {
-            if (!animationCompleted && document.querySelector('.koztly-logo').style.opacity !== '0') {
-                // Redirect to landing.blade.php
+        // Fungsi untuk loncat ke halaman landing
+        function lonkatKeHalamanLanding() {
+            // Cek apakah logo koztly sudah muncul sebelum allow skip
+            if (!animasiSelesai && document.querySelector('.logo-koztly').style.opacity !== '0') {
                 window.location.href = 'landing';
             }
         }
 
-        // Auto redirect after animation completes
+        // Redirect otomatis ke halaman landing setelah 5.5 detik
         setTimeout(() => {
-            if (!animationCompleted) {
+            if (!animasiSelesai) {
                 window.location.href = 'landing';
             }
-        }, 6500);
+        }, 5500);
 
-        // Add click handler for CTA button
-        document.querySelector('.cta-button').addEventListener('click', function () {
-            window.location.href = 'landing';
-        });
+        // Event listener untuk tombol CTA (jika ada)
+        const tombolCta = document.querySelector('.tombol-cta');
+        if (tombolCta) {
+            tombolCta.addEventListener('click', function () {
+                window.location.href = 'landing';
+            });
+        }
 
-        // Optional: Add some interactive particles or additional effects
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
+        // Fungsi untuk membuat partikel animasi
+        function buatPartikel() {
+            const partikel = document.createElement('div');
+            // Styling untuk partikel
+            partikel.style.cssText = `
                 position: absolute;
                 width: 4px;
                 height: 4px;
-                background: rgba(255,255,255,0.6);
-                border-radius: 50%;
-                pointer-events: none;
-                animation: float 3s linear infinite;
+                background: rgba(255,255,255,0.6); /* Putih semi-transparan */
+                border-radius: 50%; /* Bentuk bulat */
+                pointer-events: none; /* Tidak menghalangi klik */
+                animation: melayang 3s linear infinite;
             `;
 
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = window.innerHeight + 'px';
+            // Posisi random horizontal
+            partikel.style.left = Math.random() * window.innerWidth + 'px';
+            // Mulai dari bawah layar
+            partikel.style.top = window.innerHeight + 'px';
 
-            document.body.appendChild(particle);
+            document.body.appendChild(partikel);
 
+            // Hapus partikel setelah 1 detik untuk performa
             setTimeout(() => {
-                particle.remove();
+                partikel.remove();
             }, 1000);
         }
 
-        // Create floating particles after landing page appears
+        // Mulai buat partikel setelah 1 detik
         setTimeout(() => {
-            setInterval(createParticle, 500);
+            setInterval(buatPartikel, 500); // Buat partikel setiap 0.5 detik
         }, 1000);
 
-        // Add floating animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes float {
+        // Tambahkan animasi melayang untuk partikel secara dinamis
+        const gaya = document.createElement('style');
+        gaya.textContent = `
+            @keyframes melayang {
                 to {
+                    /* Partikel naik ke atas sambil berputar */
                     transform: translateY(-${window.innerHeight + 50}px) rotate(360deg);
-                    opacity: 0;
+                    opacity: 0; /* Fade out */
                 }
             }
         `;
-        document.head.appendChild(style);
+        document.head.appendChild(gaya);
     </script>
 </body>
 
