@@ -590,7 +590,7 @@
                                         </span>
                                         <span class="font-semibold text-blue-600">
                                             Rp
-                                            {{ number_format(($booking->harga ?? 0) * ($booking->lama_sewa ?? 1), 0, ',', '.') }}
+                                            {{ number_format(($booking->harga ?? 0), 0, ',', '.') }}
                                         </span>
                                     </div>
                                 </div>
