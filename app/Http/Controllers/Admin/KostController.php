@@ -88,7 +88,7 @@ class KostController extends Controller
         }
 
         // Simpan data kosan saja (tanpa auto generate kamar)
-        Kosan::create([
+        $kosan = Kosan::create([
             'nama_kos' => $request->nama_kos,
             'lokasi_kos' => $request->lokasi_kos,
             'jumlah_kamar' => $request->jumlah_kamar,
@@ -100,7 +100,18 @@ class KostController extends Controller
             'status' => 'aktif',
         ]);
 
-        return redirect()->route('admin.kosan.index')->with('success', 'Kosan berhasil ditambahkan!');
+         // auto buat kamar ketika buat kos
+        for ($i = 1; $i <= $request->jumlah_kamar; $i++) {
+            Kamar::create([
+                'id_kos' => $kosan->id_kos, 
+                'nomor_kamar' => $i,
+                'status' => 'tersedia',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        return redirect()->route('admin.kosan.index')->with('success', 'Kosan dan kamar berhasil ditambahkan!');
 
     } catch (\Exception $e) {
         return back()->with('error', 'Gagal membuat kosan: ' . $e->getMessage());
