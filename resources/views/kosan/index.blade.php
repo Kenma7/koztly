@@ -62,7 +62,7 @@
             {{-- Tombol Cari --}}
             <div class="px-3"> {{-- kasih jarak kanan --}}
                 <button type="submit" 
-                        class="bg-pink-600 hover:bg-pink-700 transition-all text-white font-semibold px-8 py-3 text-sm rounded-none">
+                        class="bg-pink-600 hover:bg-pink-700 transition-all text-white font-semibold px-8 py-3 text-sm rounded-full">
                     <i class="fas fa-search mr-2"></i> Cari
                 </button>
             </div>

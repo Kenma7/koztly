@@ -490,7 +490,7 @@
                                 class="block px-4 py-2 text-sm hover:bg-gray-100 {{ request('status') == 'menunggu' ? 'font-semibold text-pink-500' : '' }}">
                                 <i class="fas fa-clock"></i> Menunggu
                             </a>
-                            <a href="{{ route('user.bookings.index', ['status' => 'aktif']) }}"
+                            <a href="{{ route('user.bookings.index', ['status' => 'aktif', 'search' => request('search')]) }}"
                                 class="block px-4 py-2 text-sm hover:bg-gray-100 {{ request('status') == 'aktif' ? 'font-semibold text-pink-500' : '' }}">
                                 <i class="fas fa-play"></i> Aktif
                             </a>
