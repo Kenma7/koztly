@@ -24,8 +24,21 @@ class KosanController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->get('per_page', 9);
-        
+        $search = $request->get('search');
+        $lokasi = $request->get('lokasi');
+        $harga = $request->get('harga');
+
         $kosan = Kosan::where('status', 'aktif')
+            ->when($search, function ($query, $search) {
+                $query->where('nama_kos', 'like', "%{$search}%");
+            })
+            ->when($lokasi, function ($query, $lokasi) {
+                $query->where('lokasi_kos', 'like', "%{$lokasi}%");
+            })
+            ->when($harga, function ($query, $harga) {
+                [$min, $max] = explode('-', $harga);
+                $query->whereBetween('harga', [(int)$min, (int)$max]);
+            })
             ->withCount([
                 'kamar as total_kamar_count',
                 'kamar as sisa_kamar_count' => function($query) {

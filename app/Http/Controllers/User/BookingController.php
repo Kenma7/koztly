@@ -32,20 +32,11 @@ class BookingController extends Controller
 
         // Filter berdasarkan status_sewa
         if ($request->has('status') && $request->status !== null) {
-            if ($request->status === 'menunggu') {
-                $query->where('status_sewa', 'menunggu');
-            } elseif ($request->status === 'aktif') {
-                $query->where('status_sewa', 'aktif');
-            } elseif ($request->status === 'selesai') {
-                $query->where('status_sewa', 'selesai');
-            } elseif ($request->status === 'batal') {
-                $query->where('status_sewa', 'batal');
-            }
-        }
+        $query->where('status_sewa', $request->status);
+    }
 
-        $bookings = Booking::with(['kamar.kosan'])
-                 ->where('id_user', $userId)
-                 ->get();
+        // pakai hasil query yang sudah difilter
+        $bookings = $query->get();
 
 
         // Statistik berdasarkan status_sewa
