@@ -71,7 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Edit & Delete History
         Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
-        Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+        Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('booking.update');
         Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
         
     });

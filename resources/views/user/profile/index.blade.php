@@ -15,7 +15,8 @@
                 <h1 class="text-3xl font-bold text-gray-800 mb-1">Profile Saya</h1>
                 <p class="text-gray-600">Kelola informasi profil Anda</p>
             </div>
-
+            
+            {{-- 
             <!-- Success Alert -->
             @if (session('success'))
                 <div class="bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-lg mb-6">
@@ -25,6 +26,7 @@
                     </div>
                 </div>
             @endif
+            --}}
 
             <!-- Main Card -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200">

@@ -28,13 +28,13 @@
     <nav class="p-3 space-y-1">
         <!-- Dashboard -->
         <a href="{{ route('landing') }}"
-           class="flex items-center py-2.5 px-3 rounded-lg transition-all duration-200 group border-l-4
+           class="flex items-center py-2.5 px-2.5 rounded-lg transition-all duration-200 group border-l-4
            {{ request()->routeIs('dashboard') 
                 ? 'bg-blue-50 text-blue-600 border-blue-500' 
                 : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 border-transparent hover:border-blue-500' }}">
             <i class="fas fa-home w-5 
                 {{ request()->routeIs('dashboard') ? 'text-blue-500' : 'text-gray-400 group-hover:text-blue-500' }} transition-colors"></i>
-            <span class="ml-3 sidebar-text font-medium">Dashboard</span>
+            <span class="ml-3.5 sidebar-text font-medium">Dashboard</span>
         </a>
 
         <!-- Daftar Kost -->
@@ -60,7 +60,7 @@
                 {{ request()->routeIs('user.bookings.*') || request()->routeIs('kosan.booking.*')
                     ? 'text-blue-500'
                     : 'text-gray-400 group-hover:text-blue-500' }} transition-colors"></i>
-            <span class="ml-3 sidebar-text font-medium">Bookings</span>
+            <span class="ml-3 sidebar-text font-medium">Riwayat Booking</span>
         </a>
 
         <!-- Chat -->
