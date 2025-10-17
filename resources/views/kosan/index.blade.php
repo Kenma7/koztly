@@ -12,20 +12,70 @@
 <div class="container mx-auto px-4 py-8">
 
     <!-- Search Bar -->
-    <div class="flex justify-center mb-6">
-        <div class="flex items-center w-full md:w-2/3 bg-white rounded-full shadow px-4 py-2">
-            <input type="text" placeholder="Cari nama properti / alamat / daerah / kota"
-                class="flex-grow px-2 py-1 text-sm focus:outline-none">
-            <button class="flex items-center bg-blue-300 text-black font-semibold px-4 py-2 rounded-full hover:bg-[#B6C9F0]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-                </svg>
-                Cari
-            </button>
+
+    {{-- Search Form --}}
+    <div class="text-center mt-6">
+    <h2 class="text-3xl font-extrabold text-pink-600">Temukan Kos Impianmu</h2>
+    <p class="text-gray-500 mt-2 text-sm">Cari kos nyaman sesuai kebutuhan dan budget kamu</p>
+
+    {{-- Search Form --}}
+    <form action="{{ route('kosan.index') }}" method="GET" 
+          class="mt-6 flex items-center justify-center">
+        <div class="bg-white shadow-sm flex items-center w-[900px] max-w-[95%] overflow-hidden border border-gray-200">
+
+            {{-- Lokasi --}}
+            <div class="flex items-center gap-2 px-4 py-3 flex-1">
+                <i class="fas fa-map-marker-alt text-pink-500"></i>
+                <select name="lokasi" 
+                        class="w-full text-sm text-gray-700 focus:outline-none bg-transparent border-none appearance-none">
+                    <option value="">Pilih Lokasi</option>
+                    <option value="Yogyakarta" {{ request('lokasi') == 'Yogyakarta' ? 'selected' : '' }}>Yogyakarta</option>
+                    <option value="Jakarta" {{ request('lokasi') == 'Jakarta' ? 'selected' : '' }}>Jakarta</option>
+                    <option value="Bandung" {{ request('lokasi') == 'Bandung' ? 'selected' : '' }}>Bandung</option>
+                    <option value="Surabaya" {{ request('lokasi') == 'Surabaya' ? 'selected' : '' }}>Surabaya</option>
+                </select>
+            </div>
+
+            {{-- Harga --}}
+            <div class="flex items-center gap-2 px-4 py-3 flex-1 border-l border-gray-100">
+                <i class="fas fa-dollar-sign text-pink-500"></i>
+                <select name="harga" 
+                        class="w-full text-sm text-gray-700 focus:outline-none bg-transparent border-none appearance-none">
+                    <option value="">Pilih Rentang Harga</option>
+                    <option value="0-1000000" {{ request('harga') == '0-1000000' ? 'selected' : '' }}>Rp 0 - 1.000.000</option>
+                    <option value="1000000-2000000" {{ request('harga') == '1000000-2000000' ? 'selected' : '' }}>Rp 1.000.000 - 2.000.000</option>
+                    <option value="2000000-3000000" {{ request('harga') == '2000000-3000000' ? 'selected' : '' }}>Rp 2.000.000 - 3.000.000</option>
+                    <option value="3000000-999999999" {{ request('harga') == '3000000-999999999' ? 'selected' : '' }}>Rp 3.000.000+</option>
+                </select>
+            </div>
+
+            {{-- Nama Kos --}}
+            <div class="flex items-center gap-2 px-4 py-3 flex-1 border-l border-gray-100">
+                <i class="fas fa-home text-pink-500"></i>
+                <input type="text" 
+                       name="search" 
+                       placeholder="Cari nama kos..."
+                       value="{{ request('search') }}"
+                       class="w-full text-sm text-gray-700 focus:outline-none bg-transparent border-none placeholder-gray-400">
+            </div>
+
+            {{-- Tombol Cari --}}
+            <div class="px-3"> {{-- kasih jarak kanan --}}
+                <button type="submit" 
+                        class="bg-pink-600 hover:bg-pink-700 transition-all text-white font-semibold px-8 py-3 text-sm rounded-none">
+                    <i class="fas fa-search mr-2"></i> Cari
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
+</div>
+
+{{-- jarak bawah sebelum grid --}}
+<div class="mt-8"></div>
+
+
+
+
 
     <!-- Grid Kosan -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">

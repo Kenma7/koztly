@@ -50,7 +50,7 @@
                 {{ $kos->kategori }}
             </span>
             <span><i class="fas fa-map-marker-alt mr-1"></i> {{ $kos->lokasi_kos }}</span>
-            <span class="text-red-500 font-medium">Tersisa {{ $kos->jumlah_kamar }} kamar</span>
+            <span class="text-red-500 font-medium">Tersisa {{ $kos->sisa_kamar_count }} dari {{ $kos->total_kamar_count }} kamar</span>
         </div>
 
         <!-- Deskripsi -->
