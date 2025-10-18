@@ -75,8 +75,9 @@
                     <!-- Harga per Bulan (Read Only) -->
 
                     @php
-                        $hargaPerBulan = $booking->harga / $booking->lama_sewa;
+                        $hargaPerBulan = $booking->kamar->kosan->harga;
                     @endphp
+
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">

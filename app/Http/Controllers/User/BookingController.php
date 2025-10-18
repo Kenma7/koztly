@@ -212,52 +212,53 @@ class BookingController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $userId = Auth::id();
-        
-        $booking = Booking::where('id_booking', $id)
-            ->where('id_user', $userId)
-            ->firstOrFail();
+{
+    $userId = Auth::id();
 
-        // Hanya boleh edit kalau masih menunggu
-        if ($booking->status_sewa !== 'menunggu' || 
-            $booking->status_pembayaran !== 'belum dibayar' || 
-            $booking->bukti_tf !== null) {
-            return redirect()->route('user.bookings.detail', $id)
-                ->with('error', 'Booking ini tidak dapat diubah.');
-        }
+    
 
-        $validated = $request->validate([
-            'lama_sewa' => 'required|integer|min:1|max:12',
-            'catatan' => 'nullable|string|max:500'
-        ]);
+    $booking = Booking::with('kamar.kosan')
+        ->where('id_booking', $id)
+        ->where('id_user', $userId)
+        ->firstOrFail();
 
-        $lamaSewaLama = $booking->lama_sewa;
-        $lamaSewaBaru = $validated['lama_sewa'];
-        $hargaPerBulan = $booking->harga; // harga tetap per bulan
-
-        // Cek perubahan lama sewa
-        if ($lamaSewaBaru > $lamaSewaLama) {
-            $selisih = $lamaSewaBaru - $lamaSewaLama;
-            $totalHargaBaru = ($hargaPerBulan * $lamaSewaLama) + ($hargaPerBulan * $selisih);
-        } elseif ($lamaSewaBaru < $lamaSewaLama) {
-            $selisih = $lamaSewaLama - $lamaSewaBaru;
-            $totalHargaBaru = ($hargaPerBulan * $lamaSewaLama) - ($hargaPerBulan * $selisih);
-        } else {
-            // Kalau durasi sama, total tetap
-            $totalHargaBaru = $hargaPerBulan * $lamaSewaLama;
-        }
-
-        // Update data
-        $booking->lama_sewa = $lamaSewaBaru;
-        $booking->total_harga = $totalHargaBaru; // pastikan punya kolom total_harga di DB
-        $booking->catatan = $validated['catatan'] ?? $booking->catatan;
-
-        $booking->save();
-
+    $kosan = Kosan::find($booking->kosan_id); 
+    
+    // Hanya boleh edit kalau masih menunggu & belum bayar
+    if (
+        $booking->status_sewa !== 'menunggu' ||
+        $booking->status_pembayaran !== 'belum dibayar' ||
+        $booking->bukti_tf !== null
+    ) {
         return redirect()->route('user.bookings.detail', $id)
-            ->with('success', 'Booking berhasil diupdate. Total pembayaran: Rp ' . number_format($totalHargaBaru, 0, ',', '.'));
+            ->with('error', 'Booking ini tidak dapat diubah.');
     }
+
+    $validated = $request->validate([
+        'lama_sewa' => 'required|integer|min:1|max:12',
+        'catatan' => 'nullable|string|max:500'
+    ]);
+
+    // Ambil harga kos per bulan dari relasi Kosan, bukan dari booking
+    $hargaPerBulan = $booking->kamar->kosan->harga;
+
+    // Hitung total harga baru
+    $lamaSewaBaru = $validated['lama_sewa'];
+    $totalHargaBaru = $hargaPerBulan * $lamaSewaBaru;
+
+    // Update data booking
+    $booking->update([
+        'lama_sewa' => $lamaSewaBaru,
+        'harga' => $totalHargaBaru,
+        'catatan' => $validated['catatan'] ?? $booking->catatan,
+        
+        
+    ]);
+
+    return redirect()->route('user.bookings.detail', $id)
+        ->with('success', 'Booking berhasil diupdate. Total pembayaran: Rp ' . number_format($totalHargaBaru, 0, ',', '.'));
+}
+
 
 
 
@@ -378,7 +379,6 @@ class BookingController extends Controller
             'tanggal_mulai.date' => 'Format tanggal tidak valid',
         ];
     }
-
 
 }
 
