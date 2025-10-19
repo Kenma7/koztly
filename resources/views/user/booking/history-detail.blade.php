@@ -490,10 +490,9 @@
                             </div>
 
                             <div class="space-y-3">
-                                booking detail
                                 <div class="flex justify-between items-center text-sm">
                                     <span class="text-gray-600">
-                                        <i class="far fa-calendar text-gray-400 mr-1"></i> Booking Date
+                                        <i class="far fa-calendar text-gray-400 mr-1"></i> Tanggal Booking
                                     </span>
                                     <span class="font-semibold text-gray-800">
                                         {{ $booking->created_at ? $booking->created_at->format('d M Y') : '-' }}
@@ -501,15 +500,15 @@
                                 </div>
                                 <div class="flex justify-between items-center text-sm">
                                     <span class="text-gray-600">
-                                        <i class="far fa-clock text-gray-400 mr-1"></i> Duration
+                                        <i class="far fa-clock text-gray-400 mr-1"></i> Durasi
                                     </span>
                                     <span class="font-semibold text-gray-800">
-                                        {{ $booking->lama_sewa ?? 0 }} Months
+                                        {{ $booking->lama_sewa ?? 0 }} Bulan
                                     </span>
                                 </div>
                                 <div class="flex justify-between items-center text-sm">
                                     <span class="text-gray-600">
-                                        <i class="fas fa-money-bill-wave text-gray-400 mr-1"></i> Total Payment
+                                        <i class="fas fa-money-bill-wave text-gray-400 mr-1"></i> Total Harga
                                     </span>
                                     <span class="font-semibold text-blue-600">
                                         Rp
