@@ -141,4 +141,22 @@ class BookingController extends Controller
         return redirect()->route('admin.booking.index')
                          ->with('success', 'Booking berhasil dihapus.');
     }
+
+    public function selesaikan($id)
+{
+    $booking = Booking::with('kamar')->findOrFail($id);
+
+    // Ubah status booking jadi selesai
+    $booking->status_sewa = 'selesai';
+    $booking->save();
+
+    // Ubah status kamar jadi tersedia kembali
+    if ($booking->kamar) {
+        $booking->kamar->status = 'tersedia';
+        $booking->kamar->save();
+    }
+
+    return redirect()->route('admin.booking.index')->with('success', 'Booking diselesaikan dan kamar tersedia kembali.');
+}
+
 }
