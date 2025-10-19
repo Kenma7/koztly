@@ -77,7 +77,9 @@
                     <label class="block text-sm font-medium text-gray-700">Tanggal mulai</label>
                     <input type="date" name="tanggal_mulai" 
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="{{ date('Y-m-d') }}" required>
+                           min="{{ date('Y-m-d') }}" 
+                           value="{{ old('tanggal_mulai') }}"
+                           required>
                 </div>
 
                 <div>

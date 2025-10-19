@@ -49,7 +49,7 @@
     <a href="{{ route('user.bookings.index') }}" 
        class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
         <i class="fas fa-history text-[#ea3882] w-4"></i>
-        <span>Booking History</span>
+        <span>Riwayat Booking</span>
     </a>
 
     <hr class="my-2">

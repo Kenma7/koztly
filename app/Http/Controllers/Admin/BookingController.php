@@ -110,25 +110,35 @@ class BookingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'status_sewa' => 'required|in:menunggu,disetujui,aktif,selesai,batal',
-        ]);
+public function update(Request $request, string $id)
+{
+    $request->validate([
+        'status_sewa' => 'required|in:menunggu,disetujui,aktif,selesai,batal',
+    ]);
 
-        $booking = Booking::findOrFail($id);
-        $booking->status_sewa = $request->status_sewa;
+    $booking = Booking::with('kamar')->findOrFail($id);
+    $booking->status_sewa = $request->status_sewa;
+    $booking->save();
 
-        // Opsional: logika tambahan jika status aktif dan pembayaran belum dibayar
-        if ($request->status_sewa === 'aktif' && $booking->status_pembayaran === 'belum dibayar') {
-            // bisa tambahkan logika pembayaran
+    // 🧠 Tambahan logika otomatis:
+    if (in_array($request->status_sewa, ['selesai', 'batal'])) {
+        // Kalau booking selesai atau dibatalkan → kamar jadi tersedia
+        if ($booking->kamar) {
+            $booking->kamar->status = 'tersedia';
+            $booking->kamar->save();
         }
-
-        $booking->save();
-
-        return redirect()->route('admin.booking.index')
-                         ->with('success', 'Status booking berhasil diubah.');
+    } elseif ($request->status_sewa === 'aktif') {
+        // Kalau booking diaktifkan → kamar otomatis terisi
+        if ($booking->kamar) {
+            $booking->kamar->status = 'dibooking';
+            $booking->kamar->save();
+        }
     }
+
+    return redirect()->route('admin.booking.index')
+                     ->with('success', 'Status booking berhasil diperbarui.');
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -141,4 +151,22 @@ class BookingController extends Controller
         return redirect()->route('admin.booking.index')
                          ->with('success', 'Booking berhasil dihapus.');
     }
+
+    public function selesaikan($id)
+{
+    $booking = Booking::with('kamar')->findOrFail($id);
+
+    // Ubah status booking jadi selesai
+    $booking->status_sewa = 'selesai';
+    $booking->save();
+
+    // Ubah status kamar jadi tersedia kembali
+    if ($booking->kamar) {
+        $booking->kamar->status = 'tersedia';
+        $booking->kamar->save();
+    }
+
+    return redirect()->route('admin.booking.index')->with('success', 'Booking diselesaikan dan kamar tersedia kembali.');
+}
+
 }
