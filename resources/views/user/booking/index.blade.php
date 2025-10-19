@@ -445,7 +445,7 @@
                             class="w-full border border-gray-300 rounded-l-lg px-4 py-2
                                 focus:border-pink-300 focus:outline-none transition">
                         <button type="submit"
-                            class="bg-pink-500 text-white px-4 py-2 rounded-r-lg hover:bg-pink-600 transition">
+                            class="bg-pink-500 text-white px-4 py-3 rounded-r-lg hover:bg-pink-600 transition">
                             <i class="fas fa-search"></i>
                         </button>
                     </form>
