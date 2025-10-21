@@ -529,3 +529,7 @@ img {
 .grid > *:nth-child(4) { animation-delay: 0.4s; }
 .grid > *:nth-child(5) { animation-delay: 0.5s; }
 .grid > *:nth-child(6) { animation-delay: 0.6s; }
+
+#sidebar {
+  overflow: visible !important;
+}

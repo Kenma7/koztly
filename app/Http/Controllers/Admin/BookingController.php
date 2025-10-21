@@ -143,13 +143,29 @@ public function update(Request $request, string $id)
     /**
      * Remove the specified resource from storage.
      */
+
+
+    public function cancel($id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->update(['status_sewa' => 'batal']);
+            if ($booking->kamar) {
+                $booking->kamar->update(['status' => 'tersedia']);
+            }
+
+        return redirect()->route('admin.booking.index')
+                     ->with('success', 'Booking berhasil dibatalkan.');
+    }
+
+
+
     public function destroy(string $id)
     {
         $booking = Booking::findOrFail($id);
         $booking->delete();
 
         return redirect()->route('admin.booking.index')
-                         ->with('success', 'Booking berhasil dihapus.');
+                     ->with('success', 'Booking berhasil dihapus permanen.');
     }
 
     public function selesaikan($id)
