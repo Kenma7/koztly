@@ -19,7 +19,6 @@ public function update(Request $request)
 {
     $user = Auth::user();
 
-
     $request->validate([
         'name' => 'required|string|max:255',
         'username' => 'required|string|max:255',

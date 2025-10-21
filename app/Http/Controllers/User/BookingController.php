@@ -76,7 +76,6 @@ class BookingController extends Controller
             ];
 
             $totalBiaya = $kos->harga * $bookingData['lama_sewa'];
-
             $user = Auth::user();
 
             return view('user.booking.create', compact('kos', 'bookingData', 'totalBiaya', 'user'));
@@ -85,6 +84,7 @@ class BookingController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan sistem');
         }
     }
+
 
     public function show($id)
     {
@@ -96,7 +96,7 @@ class BookingController extends Controller
             ->where('id_user', $userId)
             ->firstOrFail();
 
-        return view('user.booking.show', compact('booking'));
+        return view('user.booking.history-detail', compact('booking'));
     }
 
      public function store(Request $request, $id)
@@ -168,7 +168,7 @@ class BookingController extends Controller
         logger('Kamar status updated');
         
         logger('=== BOOKING STORE SUCCESS ===');
-        return redirect()->route('user.booking.show', $booking->id_booking)
+        return redirect()->route('user.bookings.detail', $booking->id_booking)
             ->with('sweet_success', 'Booking Berhasil! 🎉');
 
     } catch (\Exception $e) {
@@ -212,47 +212,55 @@ class BookingController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        // Ambil ID user yang sedang login
-        $userId = Auth::id();
-        
-        $booking = Booking::where('id_booking', $id)
-            ->where('id_user', $userId)
-            ->firstOrFail();
+{
+    $userId = Auth::id();
 
-        // Validasi: hanya booking dengan status menunggu, belum bayar, dan belum upload bukti yang bisa diupdate
-        if ($booking->status_sewa !== 'menunggu' || 
-            $booking->status_pembayaran !== 'belum dibayar' || 
-            $booking->bukti_tf !== null) {
-            return redirect()->route('user.booking.show', $id)
-                ->with('error', 'Booking ini tidak dapat diubah.');
-        }
+    
 
-        // Validasi input
-        $validated = $request->validate([
-            'lama_sewa' => 'required|integer|min:1|max:12',
-            'catatan' => 'nullable|string|max:500'
-        ], [
-            'lama_sewa.required' => 'Durasi sewa harus diisi',
-            'lama_sewa.integer' => 'Durasi sewa harus berupa angka',
-            'lama_sewa.min' => 'Durasi sewa minimal 1 bulan',
-            'lama_sewa.max' => 'Durasi sewa maksimal 12 bulan',
-            'catatan.max' => 'Catatan maksimal 500 karakter'
-        ]);
+    $booking = Booking::with('kamar.kosan')
+        ->where('id_booking', $id)
+        ->where('id_user', $userId)
+        ->firstOrFail();
 
-        // Update booking
-        $booking->lama_sewa = $validated['lama_sewa'];
-        
-        // Jika ada kolom catatan di database, update juga
-        if (isset($validated['catatan'])) {
-            $booking->catatan = $validated['catatan'];
-        }
-        
-        $booking->save();
-
-        return redirect()->route('user.booking.show', $id)
-            ->with('success', 'Booking berhasil diupdate. Total pembayaran: Rp ' . number_format($booking->harga * $booking->lama_sewa, 0, ',', '.'));
+    $kosan = Kosan::find($booking->kosan_id); 
+    
+    // Hanya boleh edit kalau masih menunggu & belum bayar
+    if (
+        $booking->status_sewa !== 'menunggu' ||
+        $booking->status_pembayaran !== 'belum dibayar' ||
+        $booking->bukti_tf !== null
+    ) {
+        return redirect()->route('user.bookings.detail', $id)
+            ->with('error', 'Booking ini tidak dapat diubah.');
     }
+
+    $validated = $request->validate([
+        'lama_sewa' => 'required|integer|min:1|max:12',
+        'catatan' => 'nullable|string|max:500'
+    ]);
+
+    // Ambil harga kos per bulan dari relasi Kosan, bukan dari booking
+    $hargaPerBulan = $booking->kamar->kosan->harga;
+
+    // Hitung total harga baru
+    $lamaSewaBaru = $validated['lama_sewa'];
+    $totalHargaBaru = $hargaPerBulan * $lamaSewaBaru;
+
+    // Update data booking
+    $booking->update([
+        'lama_sewa' => $lamaSewaBaru,
+        'harga' => $totalHargaBaru,
+        'catatan' => $validated['catatan'] ?? $booking->catatan,
+        
+        
+    ]);
+
+    return redirect()->route('user.bookings.detail', $id)
+        ->with('success', 'Booking berhasil diupdate. Total pembayaran: Rp ' . number_format($totalHargaBaru, 0, ',', '.'));
+}
+
+
+
 
     public function cancel($id)
     {
@@ -264,7 +272,7 @@ class BookingController extends Controller
                 ->firstOrFail();
             
             if ($booking->status_sewa == 'batal') {
-                return redirect()->route('user.booking.show', $id)->with('info', 'Booking sudah dibatalkan.');
+                return redirect()->route('user.bookings.detail', $id)->with('info', 'Booking sudah dibatalkan.');
             }
             
             if ($booking->status_pembayaran == 'sudah dibayar') {
@@ -305,7 +313,7 @@ class BookingController extends Controller
 
         $booking->delete();
 
-        return redirect()->route('user.booking.index')
+        return redirect()->route('user.bookings.index')
             ->with('success', 'Booking berhasil dihapus.');
     }
 
@@ -371,7 +379,6 @@ class BookingController extends Controller
             'tanggal_mulai.date' => 'Format tanggal tidak valid',
         ];
     }
-
 
 }
 

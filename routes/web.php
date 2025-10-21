@@ -71,7 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Edit & Delete History
         Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
-        Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+        Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('booking.update');
         Route::delete('/bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
         
     });
@@ -87,6 +87,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'rolecheck:admin'])-
     Route::resource('kosan', App\Http\Controllers\Admin\KostController::class);
     Route::resource('kamar', App\Http\Controllers\Admin\KamarController::class);
     Route::resource('booking', App\Http\Controllers\Admin\BookingController::class);
+
+    Route::put('/booking/{id}/selesai', [App\Http\Controllers\Admin\BookingController::class, 'selesaikan'])->name('booking.selesaikan');
+
 });
 
 // ----------------------

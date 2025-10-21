@@ -320,9 +320,9 @@
 </form>
 
     @elseif($booking->status_sewa == 'aktif')
-        <form action="{{ route('admin.booking.update', $booking->id_booking) }}" method="POST">
+        <form action="{{ route('admin.booking.selesaikan', $booking->id_booking) }}" method="POST">
             @csrf
-            @method('PATCH')
+            @method('PUT')
             <input type="hidden" name="status_sewa" value="selesai">
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">Selesai</button>
         </form>
