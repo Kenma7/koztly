@@ -201,7 +201,7 @@
     /* Gambar Vector */
     .vector-image {
         position: absolute;
-        bottom: -330px;
+        bottom: -280px;
         right: -35px;
         width: 163%;
         z-index: 1;
@@ -255,8 +255,8 @@
     /* Tombol "Cari Kos" di Pojok Kiri Bawah */
     .bottom-left-button {
         position: absolute;
-        bottom: 30px;
-        left: 33px;
+        bottom: 18px;
+        left: 54px;
         z-index: 10;
         opacity: 0;
         transform: translateY(50px);
@@ -1837,7 +1837,7 @@
                     <img src="{{ $kos->gambar_kos 
                             ? (filter_var($kos->gambar_kos, FILTER_VALIDATE_URL) 
                                 ? $kos->gambar_kos 
-                                : asset('storage/uploads/kosan/'.$kos->gambar_kos)) 
+                                : asset('uploads/kosan/'.$kos->gambar_kos)) 
                             : 'https://via.placeholder.com/800x400' }}"  
                     class="kos-image" 
                     alt="{{ $kos->nama_kos }}">
@@ -1882,7 +1882,7 @@
                     <div class="kos-info">
                         <div class="info-item">
                             <i class="fas fa-bed"></i>
-                            <span>{{ $kos->sisaKamar() }} Kamar Tersisa</span>
+                            <span>{{ $kos->kamar->count() }} Kamar Tersisa</span>
                         </div>
                     </div>
 
@@ -3035,18 +3035,19 @@
 
     // ============================================================================
     // SECTION: AUTHENTICATION CHECK
-    // Cek status login user dan handle redirect untuk protected actions
-    // CATATAN: Menggunakan Laravel blade syntax untuk IS_LOGGED_IN
+    // Mengecek status login user dan mengatur redirect untuk aksi tertentu
     // ============================================================================
-    // Flag login dari Laravel (akan di-inject oleh blade)
-    // const IS_LOGGED_IN = @json(auth()->check());
 
+    // Flag login dari Laravel (akan otomatis di-inject dari Blade)
+    const IS_LOGGED_IN = @json(auth()->check());
+
+    // Fungsi untuk memeriksa apakah user sudah login
     function isUserLoggedIn() {
-        // Return IS_LOGGED_IN jika sudah di-define oleh Laravel
         return typeof IS_LOGGED_IN !== 'undefined' ? IS_LOGGED_IN : false;
     }
 
-    // Check login untuk button "Lihat Lainnya"
+    // Fungsi: checkLoginLainnya()
+    // Dipakai ketika tombol "Lihat Lainnya" diklik
     function checkLoginLainnya(event) {
         event.preventDefault();
         
@@ -3054,7 +3055,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Login Diperlukan',
-                text: 'Silakan login terlebih dahulu untuk melihat daftar kosan lengkap',
+                text: 'Silakan login terlebih dahulu untuk melihat daftar kosan lengkap.',
                 confirmButtonText: 'Login Sekarang',
                 confirmButtonColor: '#E93B81',
                 showCancelButton: true,
@@ -3062,27 +3063,25 @@
                 cancelButtonColor: '#6b7280'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirect ke route login Laravel
-                    // window.location.href = "{{ route('login') }}";
                     window.location.href = "/login";
                 }
             });
         } else {
-            // User sudah login, redirect ke daftar kosan
-            // window.location.href = "{{ route('kosan.index') }}";
+            // Jika sudah login, arahkan ke halaman daftar kosan
             window.location.href = "/kosan";
         }
     }
-
-    // Check login untuk click pada card kosan
+ 
+    // Fungsi: checkLoginCard()
+    // Dipakai ketika card kosan diklik
     function checkLoginCard(event, kosId) {
         event.preventDefault();
-        
+
         if (!isUserLoggedIn()) {
             Swal.fire({
                 icon: 'info',
                 title: 'Login Diperlukan',
-                text: 'Silakan login terlebih dahulu untuk melihat detail kosan',
+                text: 'Silakan login terlebih dahulu untuk melihat detail kosan.',
                 confirmButtonText: 'Login Sekarang',
                 confirmButtonColor: '#E93B81',
                 showCancelButton: true,
@@ -3090,17 +3089,15 @@
                 cancelButtonColor: '#6b7280'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirect ke login dengan parameter redirect
-                    // window.location.href = "{{ route('login') }}?redirect=" + encodeURIComponent(window.location.pathname);
+                    // Redirect ke login dan simpan halaman asal
                     window.location.href = "/login?redirect=" + encodeURIComponent(window.location.pathname);
                 }
             });
         } else {
-            // User sudah login, redirect ke detail kosan
-            // window.location.href = "{{ url('kosan') }}/" + kosId;
             window.location.href = "/kosan/" + kosId;
         }
     }
+
 
 
     // ============================================================================
