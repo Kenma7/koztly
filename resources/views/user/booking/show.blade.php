@@ -32,6 +32,14 @@
                 } else {
                     $currentStep = 1; // Default
                 }
+
+                $isCancelled = $booking->status_sewa == 'batal';
+
+                if ($isCancelled) {
+                    $step[3]['label'] = 'Dibatalkan';
+                    $step[3]['color'] = 'red';
+                }
+
             @endphp
 
             @foreach($steps as $stepNumber => $step)
@@ -52,11 +60,32 @@
                 </div>
             </div>
     
-            @if(!$loop->last)
-                <div class="flex-1 h-1 @if($stepNumber < $currentStep) bg-{{ $steps[$stepNumber + 1]['color'] }}-600 @else bg-gray-300 @endif"></div>
+           @if(!$loop->last)
+                <div class="flex-1 h-1 
+                    @if($currentStep == 4)
+                        bg-red-600
+                    @elseif($stepNumber < $currentStep)
+                        bg-{{ $steps[$stepNumber + 1]['color'] }}-600
+                    @else
+                        bg-gray-300
+                    @endif">
+                </div>
             @endif
         @endforeach
         </div>
+        
+        <!-- ALERT KECIL -->
+            <div class="text-center mt-2">
+                @if ($isCancelled)
+                    <div class="text-yellow-600 text-sm font-medium">Pemesanan telah dibatalkan oleh admin.</div>
+                @elseif ($currentStep == 1)
+                    <div class="text-yellow-600 text-sm font-medium">Menunggu pembayaran dari penyewa...</div>
+                @elseif ($currentStep == 2)
+                    <div class="text-blue-600 text-sm font-medium">Pembayaran berhasil! Tunggu konfirmasi admin.</div>
+                @elseif ($currentStep == 3)
+                    <div class="text-green-600 text-sm font-medium">Kamar aktif! Silakan check-in.</div>   
+                @endif
+            </div>
 
         <!-- Current Status -->
 <div class="mt-4 p-4 
