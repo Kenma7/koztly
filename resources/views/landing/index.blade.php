@@ -201,9 +201,9 @@
     /* Gambar Vector */
     .vector-image {
         position: absolute;
-        bottom: -280px;
+        bottom: -285px;
         right: -35px;
-        width: 163%;
+        width: 155%;
         z-index: 1;
         pointer-events: none;
         opacity: 0;
@@ -214,7 +214,7 @@
     /* Text Overlay di Atas Gambar Vector */
     .vector-text-overlay {
         position: absolute;
-        left: -47%;
+        left: -45%;
         bottom: -50%;
         transform: translate(-50%, -50%);
         text-align: left;
@@ -255,7 +255,7 @@
     /* Tombol "Cari Kos" di Pojok Kiri Bawah */
     .bottom-left-button {
         position: absolute;
-        bottom: 18px;
+        bottom: 20px;
         left: 54px;
         z-index: 10;
         opacity: 0;
@@ -266,7 +266,7 @@
     .btn-outlined {
         display: inline-flex;
         align-items: center;
-        padding: 17px 215px;
+        padding: 17px 235px;
         background: transparent;
         border: 2px solid #E93B81;
         border-radius: 22px;
@@ -790,7 +790,6 @@
 
     /* ============================================================================
     SECTION: TESTIMONI
-    Infinite horizontal scroll carousel dengan animasi masuk/keluar
     ============================================================================ */
 
     .section-testimoni {
@@ -905,13 +904,6 @@
 
     .testimoni-container:active {
         cursor: grabbing;
-    }
-
-    /* Sembunyikan Scrollbar untuk semua browser */
-    .testimoni-container::-webkit-scrollbar {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
     }
 
     .testimoni-container {
@@ -1669,7 +1661,6 @@
 
     /* ============================================================================
     KEYFRAME ANIMATIONS
-    Definisi animasi yang digunakan di berbagai section
     ============================================================================ */
 
     @keyframes fadeInUp {
@@ -2402,7 +2393,7 @@
     // ============================================================================
     // SECTION: GENERAL SCROLL ANIMATIONS
     // Animasi umum untuk berbagai elemen saat scroll (fade in, scale, dll)
-    // Berlaku untuk: Hero, Cards, Form Section, Location Section
+    // untuk: Hero, Cards, Form Section, Location Section
     // ============================================================================
     function initGeneralScrollAnimations() {
         const observerOptions = {
@@ -2457,7 +2448,7 @@
 
     // ============================================================================
     // SECTION: CONTACT FORM HANDLER
-    // Handle submit form kontak dengan animasi button
+    // untuk submit form kontak dengan animasi button
     // ============================================================================
     function initContactForm() {
         const contactForm = document.getElementById('contactForm');
@@ -2484,7 +2475,7 @@
 
     // ============================================================================
     // SECTION: SOCIAL MEDIA INTERACTIONS
-    // Handle click pada social media icons dengan animasi
+    // untuk click pada social media icons dengan animasi
     // ============================================================================
     function initSocialMediaIcons() {
         const socialIcons = document.querySelectorAll('.social-icon');
@@ -2517,8 +2508,7 @@
 
     // ============================================================================
     // SECTION: TENTANG (ABOUT) - SCROLL PARALLAX ANIMATION
-    // Animasi parallax kompleks untuk section "Tentang"
-    // Elemen: gambar, content, badge, title, description, angka, stats
+    // Animasi parallax untuk section "Tentang"
     // ============================================================================
     function handleTentangScrollAnimations() {
         const tentangSection = document.getElementById('tentang');
@@ -2884,7 +2874,6 @@
             window.animationTimeout = setTimeout(() => cleanupAfterAnimateOut(), 1800);
         }
         
-        // === HELPER FUNCTIONS ===
         function resetToInitialState() {
             testimoniSection.classList.remove('animate-in', 'animate-out', 'pulse');
             sectionTitle.classList.remove('animate-in', 'animate-out');
