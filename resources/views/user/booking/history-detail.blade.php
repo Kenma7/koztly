@@ -21,6 +21,7 @@
 
             {{--
 
+
             @if (session('success'))
                 <div class="bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-4 rounded-lg mb-6">
                     <div class="flex items-center gap-3">
@@ -369,6 +370,11 @@
                         </div>
 
                     </div>
+                    <a href="{{ route('booking.exportPDF', $booking->id_booking) }}" target="_blank"
+    class="inline-flex items-center bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 mb-4">
+    <i class="fas fa-file-pdf mr-2"></i> Export PDF
+</a>
+
 
                     {{--
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200">

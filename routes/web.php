@@ -100,4 +100,7 @@ Route::post('/sidebar/toggle', function (Request $request) {
     return response()->json(['success' => true]);
 })->name('sidebar.toggle');
 
+// Export detail booking ke PDF
+Route::get('/booking/{id}/pdf', [BookingController::class, 'exportPDF'])->name('booking.exportPDF');
+
 require __DIR__.'/auth.php';
