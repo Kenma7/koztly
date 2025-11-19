@@ -132,8 +132,9 @@
 
                 <div class="flex items-center text-sm text-gray-600 mt-3">
                     <i class="fas fa-bed mr-2 text-indigo-500"></i>
-                    {{ $kos->kamar->count() }} Kamar Tersisa
+                    {{ $kos->sisa_kamar_count }} Kamar Tersisa
                 </div>
+
 
                 <div class="border-t mt-4 pt-3 flex gap-3 text-gray-400 text-lg">
                     <i class="fas fa-wifi"></i>
