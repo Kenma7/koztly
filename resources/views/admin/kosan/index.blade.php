@@ -349,7 +349,50 @@
                 </tr>
                 @endforelse
             </tbody>
-        </table>
+    </table>
+    </div>
+    <!-- pagination -->
+    <div class="mt-6 flex justify-center">
+        <div class="flex items-center space-x-1">
+            <!-- Previous Button -->
+            @if ($kosan->onFirstPage())
+            <span class="px-3 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed">
+                &laquo;
+            </span>
+            @else
+            <a href="{{ $kosan->previousPageUrl() }}"
+                class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-pink-100 hover:text-blue-600 transition">
+                &laquo;
+            </a>
+            @endif
+
+            <!-- Page Numbers -->
+@foreach ($kosan->getUrlRange(1, $kosan->lastPage()) as $page => $url)
+    @if ($page == $kosan->currentPage())
+        <span class="px-3 py-2 border border-pink-500 bg-pink-500 text-white rounded-lg">
+            {{ $page }}
+        </span>
+    @else
+        <a href="{{ $url }}"
+           class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-pink-100 hover:text-pink-600 transition">
+            {{ $page }}
+        </a>
+    @endif
+@endforeach
+
+
+            <!-- Next Button -->
+            @if ($kosan->hasMorePages())
+            <a href="{{ $kosan->nextPageUrl() }}"
+                class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-pink-100 hover:text-blue-600 transition">
+                &raquo;
+            </a>
+            @else
+            <span class="px-3 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed">
+                &raquo;
+            </span>
+            @endif
+        </div>
     </div>
 
     <!-- Modal Tambah Kosan -->

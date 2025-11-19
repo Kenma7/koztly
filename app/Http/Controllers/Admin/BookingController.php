@@ -41,7 +41,7 @@ class BookingController extends Controller
         }
 
         // Pagination
-        $bookings = $query->paginate(10);
+        $bookings = $query->paginate(20);
 
 
         // Statistik

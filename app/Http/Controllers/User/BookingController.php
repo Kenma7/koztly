@@ -9,6 +9,7 @@ use App\Models\Kamar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use PDF; // DomPDF
 
 class BookingController extends Controller
 {
@@ -380,5 +381,16 @@ class BookingController extends Controller
         ];
     }
 
+    public function exportPDF($id)
+{
+    $booking = Booking::with(['user', 'kosan', 'kamar'])->findOrFail($id);
+
+ $pdf = PDF::loadView('user.booking.pdf', compact('booking'));
+return $pdf->download('booking-'.$booking->id_booking.'.pdf');
+
 }
+
+}
+
+
 
