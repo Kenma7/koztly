@@ -345,6 +345,44 @@
         </tbody>
     </table>
 </div>
+<!-- pagination -->
+<div class="mt-4 flex justify-center">
+    @if ($kamar->hasPages())
+        <ul class="inline-flex -space-x-px">
+            {{-- Previous Page Link --}}
+            @if ($kamar->onFirstPage())
+                <li>
+                    <span class="px-3 py-2 ml-0 text-gray-500 bg-white rounded-l-lg cursor-not-allowed">‹</span>
+                </li>
+            @else
+                <li>
+                    <a href="{{ $kamar->previousPageUrl() }}" class="px-3 py-2 ml-0 text-gray-700 bg-white rounded-l-lg hover:bg-blue-100">‹</a>
+                </li>
+            @endif
+
+            {{-- Page Links --}}
+            @foreach ($kamar->getUrlRange(1, $kamar->lastPage()) as $page => $url)
+                @if ($page == $kamar->currentPage())
+                    <li><span class="px-3 py-2 text-white bg-pink-500">{{ $page }}</span></li>
+                @else
+                    <li><a href="{{ $url }}" class="px-3 py-2 text-gray-700 bg-white hover:bg-blue-100">{{ $page }}</a></li>
+                @endif
+            @endforeach
+
+            {{-- Next Page Link --}}
+            @if ($kamar->hasMorePages())
+                <li>
+                    <a href="{{ $kamar->nextPageUrl() }}" class="px-3 py-2 text-gray-700 bg-white rounded-r-lg hover:bg-blue-100">›</a>
+                </li>
+            @else
+                <li>
+                    <span class="px-3 py-2 text-gray-500 bg-white rounded-r-lg cursor-not-allowed">›</span>
+                </li>
+            @endif
+        </ul>
+    @endif
+</div>
+
     </main>
 
 <!-- Modal Tambah Kamar -->
@@ -388,7 +426,10 @@
         <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
             <i class="fas fa-times"></i>
         </button>
+
     </div>
+
+
 </div>
 
 <!-- Modal Edit Kamar -->

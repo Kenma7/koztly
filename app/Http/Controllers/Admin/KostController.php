@@ -36,7 +36,8 @@ class KostController extends Controller
             $query->where('kategori', $request->kategori);
         }
 
-        $kosan = $query->get();
+        $kosan = $query->orderBy('id_kos', 'desc')->paginate(5); // 
+
 
         // Statistik sederhana
         $totalKosan = Kosan::count();

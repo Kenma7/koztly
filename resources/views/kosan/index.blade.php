@@ -79,9 +79,6 @@
     <div class="mt-8"></div>
 
 
-
-
-
     <!-- Grid Kosan -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach ($kosan as $kos)
@@ -200,12 +197,12 @@
         <div class="text-sm text-gray-600">
             Show
             <select class="border rounded px-2 py-1 mx-1" onchange="window.location.href = this.value">
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 9]) }}"
-                    {{ request('per_page', 9) == 9 ? 'selected' : '' }}>9</option>
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 15]) }}"
-                    {{ request('per_page') == 15 ? 'selected' : '' }}>15</option>
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 24]) }}"
-                    {{ request('per_page') == 24 ? 'selected' : '' }}>24</option>
+                <option value="{{ request()->fullUrlWithQuery(['per_page' => 3]) }}"
+                    {{ request('per_page', 3) == 3 ? 'selected' : '' }}>3</option>
+                <option value="{{ request()->fullUrlWithQuery(['per_page' => 5]) }}"
+                    {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
+                <option value="{{ request()->fullUrlWithQuery(['per_page' => 10]) }}"
+                    {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
             </select>
             items per page
         </div>

@@ -23,7 +23,7 @@ class KosanController extends Controller
     // Daftar Kosan
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 9);
+        $perPage = $request->get('per_page', 5);
         $search = $request->get('search');
         $lokasi = $request->get('lokasi');
         $harga = $request->get('harga');

@@ -13,67 +13,66 @@ class KamarController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-           // Ambil semua kosan untuk dropdown
+{
     $kosanList = Kosan::all();
 
-    // Definisikan query awal kamar beserta relasi kosan dan booking_kos.user
+    // Query awal
     $query = Kamar::with('kosan', 'booking_kos.user');
 
     // Filter pencarian nomor kamar
-    if ($request->has('search') && $request->search != '') {
+    if ($request->filled('search')) {
         $query->where('nomor_kamar', 'like', '%' . $request->search . '%');
     }
 
     // Filter berdasarkan kosan
-    if ($request->has('kosan') && $request->kosan != '') {
+    if ($request->filled('kosan')) {
         $query->where('id_kos', $request->kosan);
     }
 
-    // Ambil hasil query
-    $kamar = $query->get();
-
-    // Sinkronisasi status kamar dengan booking terbaru
-    foreach ($kamar as $k) {
-    $latestBooking = $k->booking_kos()->latest()->first();
-    if ($latestBooking) {
-        if ($latestBooking->status_sewa === 'aktif') {
-            $k->status_terbaru = 'dibooking';
-        } else {
-            // kalau menunggu, selesai, batal → dianggap tersedia
-            $k->status_terbaru = 'tersedia';
+    // Filter status terbaru
+    if ($request->filled('status')) {
+        if ($request->status === 'tersedia') {
+            $query->whereDoesntHave('booking_kos', function($q){
+                $q->where('status_sewa', 'aktif');
+            });
+        } elseif ($request->status === 'dibooking') {
+            $query->whereHas('booking_kos', function($q){
+                $q->where('status_sewa', 'aktif');
+            });
         }
-    } else {
-        $k->status_terbaru = $k->status; // fallback
-    }
-}
-
-    // Filter berdasarkan status terbaru (opsional)
-    if ($request->has('status') && $request->status != '') {
-        $kamar = $kamar->filter(function ($k) use ($request) {
-            return $k->status_terbaru === $request->status;
-        });
     }
 
-    // Statistik berdasarkan status terbaru
-    $totalKamar = $kamar->count();
-    $tersedia   = $kamar->where('status_terbaru', 'tersedia')->count();
-    $terisi     = $kamar->where('status_terbaru', 'dibooking')->count();
+    // Pagination 5 kamar per halaman
+    $kamar = $query->paginate(5)->withQueryString();
 
-    // Persentase
+    // Tambahkan status terbaru untuk view
+    foreach ($kamar as $k) {
+        $latestBooking = $k->booking_kos->sortByDesc('created_at')->first();
+        if ($latestBooking) {
+            $k->status_terbaru = $latestBooking->status_sewa === 'aktif' ? 'dibooking' : 'tersedia';
+        } else {
+            $k->status_terbaru = $k->status;
+        }
+    }
+
+    // Statistik
+    $totalKamar = Kamar::count();
+    $tersedia   = Kamar::whereDoesntHave('booking_kos', function($q){
+        $q->where('status_sewa', 'aktif');
+    })->count();
+    $terisi     = $totalKamar - $tersedia;
     $persentaseTersedia = $totalKamar > 0 ? round(($tersedia / $totalKamar) * 100) : 0;
     $persentaseTerisi   = $totalKamar > 0 ? round(($terisi / $totalKamar) * 100) : 0;
 
-    // Top 3 Kosan berdasarkan jumlah kamar terbanyak
+    // Top 3 kosan
     $topKosan = Kosan::orderByDesc('jumlah_kamar')->take(3)->get();
 
     return view('admin.kamar.index', compact(
-        'kamar', 'kosanList',
-        'totalKamar', 'tersedia', 'terisi',
+        'kamar', 'kosanList', 'totalKamar', 'tersedia', 'terisi',
         'persentaseTersedia', 'persentaseTerisi', 'topKosan'
     ));
-        
-    }
+}
+
 
     /**
      * Show the form for creating a new resource.
